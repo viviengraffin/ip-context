@@ -1,0 +1,15 @@
+{
+  "tasks": {
+    "test": "vitest",
+    "bench": "deno bench benchmarks/*.ts",
+    "bench:json": "deno bench --json benchmarks/*.ts",
+    "build": "deno run --allow-write --allow-read --allow-env --allow-run build.ts"
+  },
+  "imports": {
+    "@onyx/esbuild-plugin-rewrite-relative-import-extensions": "jsr:@onyx/esbuild-plugin-rewrite-relative-import-extensions@^0.0.2",
+    "esbuild": "npm:esbuild@^0.25.10",
+    "vitest": "npm:vitest@^3.2.4"
+  },
+  "license": "MIT",
+  "version": "0.0.1"
+}
