@@ -1,6 +1,7 @@
 {
   "tasks": {
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch":"vitest watch",
     "bench": "deno bench benchmarks/*.ts",
     "bench:json": "deno bench --json benchmarks/*.ts",
     "build": "deno run --allow-write --allow-read --allow-env --allow-run build.ts"
