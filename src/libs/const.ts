@@ -1,4 +1,5 @@
 import type {
+  AddressArrayForVersion,
   AddressArrays,
   AddressVersionDefinition,
   AddressVersions,
@@ -76,10 +77,10 @@ export const SUBMASK_POSSIBLE_BLOCKS = {
  * @param cidr The cidr
  * @returns {AddressArrays} Submask typed array
  */
-function createSubmaskArray(
-  version: AddressVersions,
+function createSubmaskArray<T extends AddressVersions>(
+  version: T,
   cidr: number,
-): AddressArrays {
+): AddressArrayForVersion<T> {
   const { arrayConstructor, arrayLength, bitsByItem } =
     ADDRESS_VERSIONS[version];
   const possibleBlocks = SUBMASK_POSSIBLE_BLOCKS[version];
@@ -96,24 +97,18 @@ function createSubmaskArray(
     }
   }
 
-  return res;
+  return res as AddressArrayForVersion<T>;
 }
 
 /**
  * Generate the submask array for all cidr
  *
  * @param version - IP version to generate this array
- * @returns {Uint16Array[]} Submask array for all cidr
+ * @returns {(Uint8Array | Uint16Array)[]} Submask array for all cidr
  */
-function createSubmaskArrays(version: 6): Uint16Array[];
-/**
- * Generate the submask array for all cidr
- *
- * @param version - IP version to generate this array
- * @returns {Uint8Array[]} Submask array for all cidr
- */
-function createSubmaskArrays(version: 4): Uint8Array[];
-function createSubmaskArrays(version: AddressVersions): AddressArrays[] {
+function createSubmaskArrays<T extends AddressVersions>(
+  version: T,
+): AddressArrayForVersion<T>[] {
   const { totalBits } = ADDRESS_VERSIONS[version];
   const res = new Array(totalBits + 1);
 

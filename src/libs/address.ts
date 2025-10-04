@@ -106,15 +106,17 @@ export abstract class Address<
     public version: Version,
     items: number[] | AddressArrayForVersion<Version>,
     check?: CheckAddressFunction<Version>,
-    { check:checkValue=true,knownProperties }: AddressOtherProperties<KnownProperties> = {},
+    { check: checkValue = true, knownProperties }: AddressOtherProperties<
+      KnownProperties
+    > = {},
   ) {
-    this.array = checkValue ?
-        createAddressArray(version,items,check) :
-        (
-          Array.isArray(items) ?
-            new ADDRESS_VERSIONS[version].arrayConstructor(items) as AddressArrayForVersion<Version> :
-            items
-        )
+    this.array = checkValue ? createAddressArray(version, items, check) : (
+      Array.isArray(items)
+        ? new ADDRESS_VERSIONS[version].arrayConstructor(
+          items,
+        ) as AddressArrayForVersion<Version>
+        : items
+    );
 
     if (knownProperties !== undefined) {
       if (knownProperties._string !== undefined) {

@@ -79,9 +79,10 @@ export function createAddressArray<T extends AddressVersions>(
   return (address === undefined
     ? new arrayConstructor(arrayLength) as AddressArrayForVersion<T>
     : (
-        address instanceof arrayConstructor ? address :
-        new arrayConstructor(address)) as AddressArrayForVersion<T>
-    );
+      address instanceof arrayConstructor
+        ? address
+        : new arrayConstructor(address)
+    ) as AddressArrayForVersion<T>);
 }
 
 export function createAddress(
@@ -99,18 +100,10 @@ export function createAddress(
  * @param version IP version address
  * @param address Address representation to copy
  */
-export function copyAddress(
-  version: 6,
-  address: number[] | Uint16Array,
-): Uint16Array;
-export function copyAddress(
-  version: 4,
-  address: number[] | Uint8Array,
-): Uint8Array;
-export function copyAddress(
-  version: AddressVersions,
-  address: number[] | AddressArrays,
-): AddressArrays {
+export function copyAddress<T extends AddressVersions>(
+  version: T,
+  address: number[] | AddressArrayForVersion<T>,
+): AddressArrayForVersion<T> {
   if (Array.isArray(address)) {
     // deno-lint-ignore ban-ts-comment
     // @ts-ignore
@@ -118,7 +111,7 @@ export function copyAddress(
   }
 
   const { arrayConstructor } = ADDRESS_VERSIONS[version];
-  return new arrayConstructor(Array.from(address));
+  return new arrayConstructor(Array.from(address)) as AddressArrayForVersion<T>;
 }
 
 /**
@@ -394,7 +387,7 @@ export function parseIPv4Address(
  */
 export function hasZoneId(address: string): [string, string] | null {
   const idx = address.indexOf("%");
-  if (idx === -1) return null; // Pas de zone, retour direct
+  if (idx === -1) return null;
 
   const addressPart = address.substring(0, idx);
   const zonePart = address.substring(idx + 1);

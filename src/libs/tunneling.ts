@@ -192,7 +192,7 @@ export class Mapped extends TunnelingMode {
       copyIPv4ToIPv6Address(ipv4.array, ipv6, 6, true),
       zoneId,
       undefined,
-      string ? { knownProperties:{ _ipv4MappedString: string } } : undefined,
+      string ? { knownProperties: { _ipv4MappedString: string } } : undefined,
     );
   }
 

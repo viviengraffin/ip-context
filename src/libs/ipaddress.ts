@@ -86,7 +86,9 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
    * @returns {IPv4Address} New IPv4Address instance
    */
   static override fromString(string: string): IPv4Address {
-    return new IPv4Address(parseIPv4Address(string),undefined,{check:false});
+    return new IPv4Address(parseIPv4Address(string), undefined, {
+      check: false,
+    });
   }
 
   static override fromBinaryString(binaryString: string): IPv4Address {
@@ -119,10 +121,10 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
    */
   static override fromUint(uint: number): IPv4Address {
     return new this(UintToArray(4, uint), undefined, {
-      check:false,
-      knownProperties:{
-        _uint: uint
-      }
+      check: false,
+      knownProperties: {
+        _uint: uint,
+      },
     });
   }
 
@@ -141,7 +143,7 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
         address: bytes,
       });
     }
-    return new this(bytes,undefined,{ check:false });
+    return new this(bytes, undefined, { check: false });
   }
 
   /**
@@ -311,10 +313,11 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
     uint: bigint,
     zoneId: string | null = null,
   ): IPv6Address {
-    return new this(UintToArray(6, uint), zoneId, undefined, { 
-      knownProperties:{
-        _uint: uint 
-      }});
+    return new this(UintToArray(6, uint), zoneId, undefined, {
+      knownProperties: {
+        _uint: uint,
+      },
+    });
   }
 
   /**
@@ -337,9 +340,9 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
       });
     }
     return new this(byteArrayToUint16Array(bytes), zoneId, undefined, {
-      knownProperties:{
+      knownProperties: {
         _byteArray: bytes,
-      }
+      },
     });
   }
 
@@ -399,7 +402,8 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
         this._byteArray = otherProperties.knownProperties._byteArray;
       }
       if (otherProperties.knownProperties._ipv4MappedString !== undefined) {
-        this._ipv4MappedString = otherProperties.knownProperties._ipv4MappedString;
+        this._ipv4MappedString =
+          otherProperties.knownProperties._ipv4MappedString;
       }
     }
   }

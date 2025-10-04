@@ -158,7 +158,10 @@ function getSizeFromCidr<T extends AddressVersions>(
 function generateSubmaskFromHosts<T extends AddressVersions>(
   version: T,
   hosts: NumberTypeForVersion<T>,
-): GenerateSubmaskFromHostsResult<AddressArrayForVersion<T>,NumberTypeForVersion<T>> {
+): GenerateSubmaskFromHostsResult<
+  AddressArrayForVersion<T>,
+  NumberTypeForVersion<T>
+> {
   const { totalBits } = ADDRESS_VERSIONS[version];
   const maxHosts =
     (version === 4
@@ -242,10 +245,12 @@ export abstract class Submask<
         this._cidr = otherProperties.knownProperties._cidr;
       }
       if (otherProperties.knownProperties._size !== undefined) {
-        this._size = otherProperties.knownProperties._size as NumberTypeForVersion<Version>;
+        this._size = otherProperties.knownProperties
+          ._size as NumberTypeForVersion<Version>;
       }
       if (otherProperties.knownProperties._hosts !== undefined) {
-        this._hosts = otherProperties.knownProperties._hosts as NumberTypeForVersion<Version>;
+        this._hosts = otherProperties.knownProperties
+          ._hosts as NumberTypeForVersion<Version>;
       }
     }
   }
@@ -311,10 +316,10 @@ export class IPv4Submask extends Submask<4, SubmaskKnownProperties<number>> {
    */
   static override fromCidr(cidr: number): IPv4Submask {
     return new IPv4Submask(generateSubmaskFromCidr(4, cidr), {
-      check:false,
-      knownProperties:{
-        _cidr: cidr
-      }
+      check: false,
+      knownProperties: {
+        _cidr: cidr,
+      },
     });
   }
 
@@ -328,12 +333,12 @@ export class IPv4Submask extends Submask<4, SubmaskKnownProperties<number>> {
     const { submask, size, hosts: availableHosts, cidr } =
       generateSubmaskFromHosts(4, hosts);
     return new IPv4Submask(submask, {
-      check:false,
-      knownProperties:{
+      check: false,
+      knownProperties: {
         _size: size,
         _hosts: availableHosts,
         _cidr: cidr,
-      }
+      },
     });
   }
 
@@ -344,7 +349,7 @@ export class IPv4Submask extends Submask<4, SubmaskKnownProperties<number>> {
    * @returns {IPv4Submask} New IPv4Submask instance
    */
   static override fromString(string: string): IPv4Submask {
-    return new IPv4Submask(parseIPv4Address(string), { check:true });
+    return new IPv4Submask(parseIPv4Address(string), { check: true });
   }
 
   /**
@@ -368,18 +373,20 @@ export class IPv4Submask extends Submask<4, SubmaskKnownProperties<number>> {
       case "A":
       case "B":
       case "C":
-        return new IPv4Submask(IPv4_CLASS_TO_SUBMASK[addressClass],{ check:false });
+        return new IPv4Submask(IPv4_CLASS_TO_SUBMASK[addressClass], {
+          check: false,
+        });
       default:
         return null;
     }
   }
 
   static override fromUint(uint: number): IPv4Submask {
-    return new this(Array.from(UintToArray(4, uint)), { 
-      check:false,
-      knownProperties:{
-        _uint: uint
-      }
+    return new this(Array.from(UintToArray(4, uint)), {
+      check: false,
+      knownProperties: {
+        _uint: uint,
+      },
     });
   }
 
@@ -456,8 +463,7 @@ export class IPv4Submask extends Submask<4, SubmaskKnownProperties<number>> {
  * Class representing an IPv6 submask.
  * Provides methods to create, validate, and manipulate IPv6 subnets.
  */
-export class IPv6Submask
-  extends Submask<6, IPv6SubmaskKnownProperties> {
+export class IPv6Submask extends Submask<6, IPv6SubmaskKnownProperties> {
   /**
    * Creates an IPv6Submask from a CIDR value.
    *
@@ -466,10 +472,10 @@ export class IPv6Submask
    */
   static override fromCidr(cidr: number): IPv6Submask {
     return new IPv6Submask(generateSubmaskFromCidr(6, cidr) as Uint16Array, {
-      check:false,
-      knownProperties:{
-        _cidr: cidr
-      }
+      check: false,
+      knownProperties: {
+        _cidr: cidr,
+      },
     });
   }
 
@@ -483,12 +489,12 @@ export class IPv6Submask
     const { submask, size, hosts: availableHosts, cidr } =
       generateSubmaskFromHosts(6, hosts);
     return new IPv6Submask(submask, {
-      check:false,
-      knownProperties:{
+      check: false,
+      knownProperties: {
         _hosts: availableHosts,
         _size: size,
         _cidr: cidr,
-      }
+      },
     });
   }
 
@@ -499,8 +505,8 @@ export class IPv6Submask
    * @returns {IPv6Submask} New IPv6Submask instance
    */
   static override fromString(string: string): IPv6Submask {
-    return new IPv6Submask(parseIPv6Address(string),{
-      check:true
+    return new IPv6Submask(parseIPv6Address(string), {
+      check: true,
     });
   }
 
@@ -512,10 +518,10 @@ export class IPv6Submask
    */
   static override fromByteArray(bytes: Uint8Array): IPv6Submask {
     return new IPv6Submask(byteArrayToUint16Array(bytes), {
-      check:true,
-      knownProperties:{
-        _byteArray: bytes
-      }
+      check: true,
+      knownProperties: {
+        _byteArray: bytes,
+      },
     });
   }
 
@@ -527,10 +533,10 @@ export class IPv6Submask
    */
   static override fromUint(uint: bigint): IPv6Submask {
     return new IPv6Submask(Array.from(UintToArray(6, uint)), {
-      check:true,
-      knownProperties:{
-        _uint: uint
-      }
+      check: true,
+      knownProperties: {
+        _uint: uint,
+      },
     });
   }
 
@@ -574,7 +580,8 @@ export class IPv6Submask
     super(6, items, otherProperties);
 
     if (
-      otherProperties.knownProperties !== undefined && otherProperties.knownProperties._byteArray !== undefined
+      otherProperties.knownProperties !== undefined &&
+      otherProperties.knownProperties._byteArray !== undefined
     ) {
       this._byteArray = otherProperties.knownProperties._byteArray;
     }

@@ -215,12 +215,18 @@ export type IPv6SubmaskKnownProperties =
   & SubmaskKnownProperties<bigint>
   & IPv6KnownProperties;
 
-export type AllAddressKnownProperties = AddressKnownProperties<number> | SubmaskKnownProperties<number> | IPv6AddressKnownProperties | IPv6SubmaskKnownProperties
+export type AllAddressKnownProperties =
+  | AddressKnownProperties<number>
+  | SubmaskKnownProperties<number>
+  | IPv6AddressKnownProperties
+  | IPv6SubmaskKnownProperties;
 
-export type AddressOtherProperties<KnownProperties extends AddressKnownProperties> = {
-  check?: boolean
-  knownProperties?: KnownProperties
-}
+export type AddressOtherProperties<
+  KnownProperties extends AddressKnownProperties,
+> = {
+  check?: boolean;
+  knownProperties?: KnownProperties;
+};
 
 export type GenerateSubmaskFromHostsResult<
   AddressArray extends AddressArrays = AddressArrays,
