@@ -209,7 +209,7 @@ export class IPv4Context extends Context<4> {
    */
   static fromClass(address: IPv4Address | string): IPv4Context | null {
     if (typeof address === "string") {
-      address=new IPv4Address(parseIPv4Address(address));
+      address = new IPv4Address(parseIPv4Address(address));
     }
     const mask = IPv4Submask.fromClass(address.class);
 
