@@ -15,6 +15,7 @@ import {
   hasCidrInString,
   isIPv4StringAddress,
   memoize,
+  parseIPv4Address,
 } from "./common.ts";
 import { arrayToUint, toUint } from "./uint.ts";
 import { ADDRESS_CONSTRUCTORS, IPv4Address, IPv6Address } from "./ipaddress.ts";
@@ -208,7 +209,7 @@ export class IPv4Context extends Context<4> {
    */
   static fromClass(address: IPv4Address | string): IPv4Context | null {
     if (typeof address === "string") {
-      return this.fromClass(address);
+      address=new IPv4Address(parseIPv4Address(address));
     }
     const mask = IPv4Submask.fromClass(address.class);
 
