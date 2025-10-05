@@ -6,7 +6,7 @@ ip-context is a Deno.js library for performing calculations based on IPv4/IPv6 a
 
 ## How to contribute?
 
-If you would like to contribute to this project, go here (HOW_TO_CONTRIBUTE.md)
+If you would like to contribute to this project, go [here](HOW_TO_CONTRIBUTE.md)
 
 ## Basic Examples
 
@@ -15,7 +15,7 @@ If you would like to contribute to this project, go here (HOW_TO_CONTRIBUTE.md)
 To retrieve the size of a network, you need to create an IPv4 context that
 will contain an IPv4 address and a subnet mask. Here are several ways to do this:
 
-```
+```ts
 // With the context function
 import { context } from "@viviengraffin/ip-context";
 
@@ -55,7 +55,7 @@ console.log(ctx.hosts)
 
 ### Retrieve the network addresses, broadcast addresses, first addressable address, last addressable address
 
-```
+```ts
 // IPv4
 import { context } from "@viviengraffin/ip-context"
 
@@ -81,11 +81,11 @@ There are two methods for checking the presence of an IP address in a network co
 - includes: Checks if this IP address is present in this network
 - isHost: Checks if this IP address is addressable in this network
 
-```
+```ts
 // IPv4 (works the same way in IPv6)
 import { context } from "@viviengraffin/ip-context"
 
-const ctx=console.log("192.168.1.1/24")
+const ctx=context("192.168.1.1/24")
 ctx.includes("192.168.1.0") // True, even if 192.168.1.0 is the network address, it is present in this network
 ctx.isHost("192.168.1.0") // False, even if this address is present in this network, it is the network address that is not addressable
 ```

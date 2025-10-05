@@ -18,7 +18,7 @@ Pour récupérer la taille d'un réseau, vous devez créer un contexte IPv4 qui
 contiendra une adresse IPv4 ainsi qu'un masque de sous-réseau. Voici plusieurs
 manières de le faire :
 
-```
+```ts
 // Avec la fonction context
 import { context } from "@viviengraffin/ip-context";
 
@@ -58,7 +58,7 @@ console.log(ctx.hosts)
 
 ### Récupérer les adresses réseau, broadcast, première adresse adressable, dernière adresse adressable
 
-```
+```ts
 // IPv4
 import { context } from "@viviengraffin/ip-context"
 
@@ -85,11 +85,11 @@ contexte réseau :
 - includes : Vérifie si cette adresse IP est présent dans ce réseau
 - isHost : Vérifie si cette adresse IP est adressable dans ce réseau
 
-```
+```ts
 // IPv4 (fonctionne de la même manière en IPv6)
 import { context } from "@viviengraffin/ip-context"
 
-const ctx=console.log("192.168.1.1/24")
+const ctx=context("192.168.1.1/24")
 ctx.includes("192.168.1.0") // Vrai, même si 192.168.1.0 est l'adresse réseau, elle est présente dans ce réseau
 ctx.isHost("192.168.1.0") // Faux, même si cette adresse est présente dans ce réseau, c'est l'adresse réseau qui n'est pas adressable
 ```
