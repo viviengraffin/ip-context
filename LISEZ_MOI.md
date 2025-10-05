@@ -62,7 +62,7 @@ console.log(ctx.lastHost.toString()) // Affiche la dernière adresse adressable
 // IPv6
 import { context } from "<nom de paquet à définir>"
 
-const ctx=context("192.168.1.1/24")
+const ctx=context("2001:db6::1/64")
 console.log(ctx.network.toString()) // Affiche l'adresse réseau
 console.log(ctx.firstHost.toString()) // Affiche la première adresse adressable
 console.log(ctx.lastHost.toString()) // Affiche la dernière adresse adressable
