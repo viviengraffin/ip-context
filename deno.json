@@ -10,6 +10,6 @@
   },
   "license": "MIT",
   "version": "0.0.1",
-  "name": "ip-context",
-  "exports":"./src/main.ts"
+  "name": "@viviengraffin/ip-context",
+  "exports": "./src/main.ts"
 }
