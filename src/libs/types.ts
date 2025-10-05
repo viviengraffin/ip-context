@@ -256,8 +256,10 @@ export type IPAddressTypeForVersion<Version extends AddressVersions> =
 export type SubmaskTypeForVersion<Version extends AddressVersions> =
   Version extends 4 ? IPv4Submask : IPv6Submask;
 
-export type TunnelingModes = {
+export type TunnelingModesObject = {
   MAPPED: typeof Mapped;
   SIX_TO_FOUR: typeof SixToFour;
   TEREDO: typeof Teredo;
 };
+
+export type TunnelingModes = typeof Mapped | typeof SixToFour | typeof Teredo

@@ -14,7 +14,7 @@ import {
   uint16ArrayToByteArray,
   verifyZoneId,
 } from "./common.ts";
-import { Context, IPv4Context, IPv6Context } from "./context.ts";
+import { type Context, IPv4Context, IPv6Context } from "./context.ts";
 import { Mapped, Teredo } from "./tunneling.ts";
 import { IncorrectAddressError } from "./error.ts";
 import { IPv4Submask, IPv6Submask } from "./submask.ts";
