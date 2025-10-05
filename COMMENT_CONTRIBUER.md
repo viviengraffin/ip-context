@@ -1,0 +1,19 @@
+# Comment contribuer ?
+
+## En tant que développeur
+
+En tant que développeur, vous devez d'abord installer Deno sur votre ordinateur. 
+
+La commande à utiliser pour installer Deno se trouve [ici](https://deno.com)
+
+Une fois Deno installé, vous devez tapez cette commande dans le répertoire du projet :
+
+```deno install```
+
+Vous aurez accès aux commandes suivantes:
+
+- deno task bench : Fait un test de performance
+- deno task test : Éxecute les tests unitaires
+- deno task build : Construit les versions web de cette bibliothèque
+
+À partir de là, vous pourrez contribuer au développement de cette bibliothèque.

@@ -12,6 +12,5 @@
     "vitest": "npm:vitest@^3.2.4"
   },
   "license": "MIT",
-  "version": "0.0.1",
-  "name": "ip-context"
+  "version": "0.0.1"
 }
