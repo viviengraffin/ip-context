@@ -1,4 +1,4 @@
-import {
+import type {
   AddressContainers,
   AddressVersions,
   ContextErrorDatas,
@@ -36,7 +36,7 @@ export class IncorrectAddressError extends Error {
     super(IncorrectAddressError.getErrorMessage(datas));
   }
 
-  static getErrorMessage(datas: IncorrectAddressErrorDatas) {
+  static getErrorMessage(datas: IncorrectAddressErrorDatas): string {
     switch (datas.type) {
       case "incorrect-item":
         return "The item " + datas.item + " is incorrect in " +
@@ -69,7 +69,7 @@ export class ContextError extends Error {
     super(ContextError.getErrorMessage(datas));
   }
 
-  static getErrorMessage(datas: ContextErrorDatas) {
+  static getErrorMessage(datas: ContextErrorDatas): string {
     switch (datas.type) {
       case "different-ip-versions":
         return "The IP versions of " + datas.addresses[0] + " and " +
