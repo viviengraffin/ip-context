@@ -9,7 +9,9 @@ La commande à utiliser pour installer Deno se trouve [ici](https://deno.com)
 Une fois Deno installé, vous devez tapez cette commande dans le répertoire du
 projet :
 
-`deno install`
+```sh 
+deno install
+```
 
 Vous aurez accès aux commandes suivantes:
 
