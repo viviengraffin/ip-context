@@ -1,8 +1,10 @@
 # ip-context
 
-This is the french version of the presentation of this library, if you don't speak french, go [here](README.md)
+This is the french version of the presentation of this library, if you don't
+speak french, go [here](README.md)
 
-ip-context est une librairie Deno.js pour faire des calculs à partir d'adresses IPv4/IPv6 ou de contexte réseau.
+ip-context est une librairie Deno.js pour faire des calculs à partir d'adresses
+IPv4/IPv6 ou de contexte réseau.
 
 ## Comment contribuer ?
 
@@ -12,7 +14,9 @@ Si vous souhaitez contribuer à ce projet, allez [ici](COMMENT_CONTRIBUER.md)
 
 ### Récupérer la taille d'un réseau en IPv4
 
-Pour récupérer la taille d'un réseau, vous devez créer un contexte IPv4 qui contiendra une adresse IPv4 ainsi qu'un masque de sous-réseau. Voici plusieurs manières de le faire : 
+Pour récupérer la taille d'un réseau, vous devez créer un contexte IPv4 qui
+contiendra une adresse IPv4 ainsi qu'un masque de sous-réseau. Voici plusieurs
+manières de le faire :
 
 ```
 // Avec la fonction context
@@ -74,7 +78,9 @@ console.log(ctx.lastHost.toString()) // Affiche la dernière adresse adressable
 ```
 
 ### Vérification de la présence d'une adresse dans un contexte réseau
-Il existe deux méthodes pour vérifier la présence d'une adresse IP dans un contexte réseau :
+
+Il existe deux méthodes pour vérifier la présence d'une adresse IP dans un
+contexte réseau :
 
 - includes : Vérifie si cette adresse IP est présent dans ce réseau
 - isHost : Vérifie si cette adresse IP est adressable dans ce réseau

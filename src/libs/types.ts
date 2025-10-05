@@ -9,7 +9,6 @@ import type {
   Mapped,
   SixToFour,
   Teredo,
-  TUNNELING_MODES,
 } from "./tunneling.ts";
 
 export type Constructor<T> = { new (...args: unknown[]): T };
@@ -240,7 +239,6 @@ export type GenerateSubmaskFromHostsResult<
 
 export type ObjectValues<T extends object> = T[keyof T];
 
-export type TunnelingModes = ObjectValues<typeof TUNNELING_MODES>;
 export type TunnelingModeWithParams4To6 = typeof Teredo;
 export type TunnelingModeWithoutParams4To6 = typeof Mapped | typeof SixToFour;
 export type TunnelingModeParams4To6<
@@ -257,3 +255,9 @@ export type IPAddressTypeForVersion<Version extends AddressVersions> =
 
 export type SubmaskTypeForVersion<Version extends AddressVersions> =
   Version extends 4 ? IPv4Submask : IPv6Submask;
+
+export type TunnelingModes = {
+  MAPPED: typeof Mapped;
+  SIX_TO_FOUR: typeof SixToFour;
+  TEREDO: typeof Teredo;
+};

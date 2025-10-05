@@ -3,7 +3,7 @@ import {
   NonImplementedStaticMethodError,
 } from "./error.ts";
 import { IPv4Address, IPv6Address } from "./ipaddress.ts";
-import { Constructor, TeredoDatas } from "./types.ts";
+import type { Constructor, TeredoDatas, TunnelingModes } from "./types.ts";
 
 /**
  * Copies the IPv4 part from an IPv6 address (Uint16Array) to a new IPv4Address.
@@ -290,8 +290,8 @@ export class Teredo extends TunnelingMode {
   }
 }
 
-export const TUNNELING_MODES = {
+export const TUNNELING_MODES: TunnelingModes = {
   MAPPED: Mapped,
   SIX_TO_FOUR: SixToFour,
   TEREDO: Teredo,
-} as const satisfies Record<string, Constructor<TunnelingMode>>;
+} as const;
