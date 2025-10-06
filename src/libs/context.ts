@@ -45,9 +45,9 @@ function calculateLastAddress<T extends AddressVersions>(
  * Provides methods to calculate network, first/last host, and check inclusion.
  */
 export abstract class Context<Version extends AddressVersions> {
-  _network?: IPAddressTypeForVersion<Version>;
-  _firstHost?: IPAddressTypeForVersion<Version>;
-  _lastHost?: IPAddressTypeForVersion<Version>;
+  protected _network?: IPAddressTypeForVersion<Version>;
+  protected _firstHost?: IPAddressTypeForVersion<Version>;
+  protected _lastHost?: IPAddressTypeForVersion<Version>;
 
   /**
    * Creates a new Context instance from a string with CIDR notation.
@@ -154,8 +154,8 @@ export abstract class Context<Version extends AddressVersions> {
    * @param address - Address to check (as Address or string)
    * @returns {boolean} True if the address is an available host, false otherwise
    */
-  isHost(address: Address | string): boolean {
-    address = getAddressFromAddressContainers(this.address.version, address);
+  isHost(address: IPAddressTypeForVersion<Version> | string): boolean {
+    address = getAddressFromAddressContainers(this.address.version, address) as IPAddressTypeForVersion<Version>;
 
     const firstHost = this.firstHost;
     const lastHost = this.lastHost;
