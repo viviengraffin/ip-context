@@ -466,7 +466,7 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
     return conversionMode.isValid(this);
   }
 
-  _byteArray?: Uint8Array;
+  protected _byteArray?: Uint8Array;
 
   /**
    * Converts this IPv6 address to an IPv4 address if it is tunneling one.

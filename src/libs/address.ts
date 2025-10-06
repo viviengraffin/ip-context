@@ -91,7 +91,7 @@ export abstract class Address<
     throw new NonImplementedStaticMethodError();
   }
 
-  public array: AddressArrayForVersion<Version>;
+  protected _array: AddressArrayForVersion<Version>;
   protected _uint?: NumberTypeForVersion<Version>;
   protected _string?: string;
 
@@ -110,7 +110,7 @@ export abstract class Address<
       KnownProperties
     > = {},
   ) {
-    this.array = checkValue ? createAddressArray(version, items, check) : (
+    this._array = checkValue ? createAddressArray(version, items, check) : (
       Array.isArray(items)
         ? new ADDRESS_VERSIONS[version].arrayConstructor(
           items,
@@ -126,6 +126,14 @@ export abstract class Address<
         this._uint = knownProperties._uint as NumberTypeForVersion<Version>;
       }
     }
+  }
+
+  /**
+   * Get the blocks typed array representing this address
+   */
+  get array(): AddressArrayForVersion<Version>
+  {
+    return this._array
   }
 
   /**
