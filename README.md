@@ -7,7 +7,7 @@ addresses or network context.
 
 ## How to contribute?
 
-If you would like to contribute to this project, go [here](HOW_TO_CONTRIBUTE.md)
+If you would like to contribute to this project, go [here](md/en/HOW_TO_CONTRIBUTE.md)
 
 ## Basic Examples
 
