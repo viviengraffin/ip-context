@@ -12,7 +12,7 @@
     "exclude": ["*.md"]
   },
   "license": "MIT",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "name": "@viviengraffin/ip-context",
   "exports": "./src/main.ts"
 }
