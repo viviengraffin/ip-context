@@ -155,7 +155,10 @@ export abstract class Context<Version extends AddressVersions> {
    * @returns {boolean} True if the address is an available host, false otherwise
    */
   isHost(address: IPAddressTypeForVersion<Version> | string): boolean {
-    address = getAddressFromAddressContainers(this.address.version, address) as IPAddressTypeForVersion<Version>;
+    address = getAddressFromAddressContainers(
+      this.address.version,
+      address,
+    ) as IPAddressTypeForVersion<Version>;
 
     const firstHost = this.firstHost;
     const lastHost = this.lastHost;

@@ -9,7 +9,7 @@
     "vitest": "npm:vitest@^3.2.4"
   },
   "license": "MIT",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "name": "@viviengraffin/ip-context",
   "exports": "./src/main.ts"
 }
