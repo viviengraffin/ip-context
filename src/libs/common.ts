@@ -1,7 +1,10 @@
-import { IPv4Address, IPv6Address } from "../main.ts";
 import { ADDRESS_VERSIONS, FORBIDDEN_CHARS } from "./const.ts";
 import { ContextError, IncorrectAddressError } from "./error.ts";
-import { ADDRESS_CONSTRUCTORS } from "./ipaddress.ts";
+import {
+  ADDRESS_CONSTRUCTORS,
+  type IPv4Address,
+  type IPv6Address,
+} from "./ipaddress.ts";
 import type {
   AddressArrayForVersion,
   AddressArrays,

@@ -1,4 +1,4 @@
-import { Address } from "./address.ts";
+import type { Address } from "./address.ts";
 import { IPv4Submask, IPv6Submask } from "./submask.ts";
 import { and, not, or } from "./operation.ts";
 import type {

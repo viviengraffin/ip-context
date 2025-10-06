@@ -5,11 +5,7 @@
 
 import type { IPv4Address, IPv6Address } from "./ipaddress.ts";
 import type { IPv4Submask, IPv6Submask } from "./submask.ts";
-import type {
-  Mapped,
-  SixToFour,
-  Teredo,
-} from "./tunneling.ts";
+import type { Mapped, SixToFour, Teredo } from "./tunneling.ts";
 
 export type Constructor<T> = { new (...args: unknown[]): T };
 
@@ -82,16 +78,6 @@ export type ExtractCidrFromStringResult = {
  * Order direction for bit values.
  */
 export type Order = "ASC" | "DESC";
-
-/**
- * Supported bits per item in address arrays.
- */
-export type BitsByItems = 8 | 16;
-
-/**
- * Definition of bit values order for different bit sizes.
- */
-export type OrderDefinition = Record<BitsByItems, number[]>;
 
 /**
  * IPv4 address classes.
@@ -262,4 +248,4 @@ export type TunnelingModesObject = {
   TEREDO: typeof Teredo;
 };
 
-export type TunnelingModes = typeof Mapped | typeof SixToFour | typeof Teredo
+export type TunnelingModes = typeof Mapped | typeof SixToFour | typeof Teredo;
