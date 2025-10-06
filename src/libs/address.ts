@@ -131,9 +131,8 @@ export abstract class Address<
   /**
    * Get the blocks typed array representing this address
    */
-  get array(): AddressArrayForVersion<Version>
-  {
-    return this._array
+  get array(): AddressArrayForVersion<Version> {
+    return this._array;
   }
 
   /**
