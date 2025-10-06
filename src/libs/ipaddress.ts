@@ -97,7 +97,7 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
 
   /**
    * Create an IPv4Address from an hex string representation
-   * 
+   *
    * @param hexString Hex string representation of the IPv4 address
    * @returns {IPv4Address} New IPv4Address instance
    */
@@ -221,7 +221,7 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
   ): IPv6Address;
   /**
    * Converts this IPv4 address to an IPv6 address using the specified conversion mode.
-   * 
+   *
    * @param tunnelingMode - Conversion mode (for example: TUNNELING_MODES.MAPPED,TUNNELING_MODES.SIX_TO_FOUR)
    * @returns {IPv6Address} New IPv6Address instance
    * @throws {IncorrectAddressError} If the conversion mode is not supported
@@ -238,7 +238,7 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
 
   /**
    * Checks if this address is a loopback address
-   * 
+   *
    * @returns {boolean} True if the address is loopback, false otherwise
    */
   override isLoopback(): boolean {
@@ -470,7 +470,7 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
 
   /**
    * Returns the IPv4-mapped string representation of this address.
-   * 
+   *
    * @returns {string} IPv4-mapped string representation (for example: "::ffff:192.168.1.1")
    */
   toIPv4MappedString(): string {

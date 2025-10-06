@@ -1,4 +1,4 @@
-import { context, IPv4Context, IPv6Context } from "../src/main.ts";
+import { context, type IPv4Context, type IPv6Context } from "../src/main.ts";
 
 function isHost(ctx: IPv4Context | IPv6Context, address: string) {
   ctx.isHost(address);

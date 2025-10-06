@@ -8,7 +8,10 @@ import {
   IPv6Submask,
 } from "../src/main.ts";
 import { describe, expect, test } from "vitest";
-import { IPv4GetDatasFromResult, IPv6GetDatasFromResult } from "./types.ts";
+import type {
+  IPv4GetDatasFromResult,
+  IPv6GetDatasFromResult,
+} from "./types.ts";
 
 describe("Context function API", () => {
   test("IPv4", () => {

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { ip, IPv4Address, IPv6Address } from "../src/main.ts";
-import { IPv4TestAddressDatas, IPv6TestAddressDatas } from "./types.ts";
+import type { IPv4TestAddressDatas, IPv6TestAddressDatas } from "./types.ts";
 
 describe("IP function API", () => {
   test("IPv4", () => {

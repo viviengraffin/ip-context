@@ -1,4 +1,9 @@
-import { ip, IPv4Address, IPv6Address, TUNNELING_MODES } from "../src/main.ts";
+import {
+  ip,
+  type IPv4Address,
+  type IPv6Address,
+  TUNNELING_MODES,
+} from "../src/main.ts";
 
 Deno.bench("IPv4 -> IPv6 mapped", () => {
   (ip("192.168.0.1") as IPv4Address).toIPv6Address(TUNNELING_MODES.MAPPED);

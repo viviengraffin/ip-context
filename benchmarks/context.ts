@@ -2,7 +2,7 @@ import {
   context,
   contextWithHosts,
   IPv4Context,
-  IPv6Context,
+  type IPv6Context,
 } from "../src/main.ts";
 
 function readContextDatas(ctx: IPv4Context | IPv6Context, includes: string) {

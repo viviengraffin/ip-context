@@ -1,5 +1,5 @@
-import { IPv4AddressClasses, NumberTypes } from "../src/libs/types.ts";
-import {
+import type { IPv4AddressClasses, NumberTypes } from "../src/libs/types.ts";
+import type {
   IPv4Address,
   IPv4Context,
   IPv6Address,

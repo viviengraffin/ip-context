@@ -1,6 +1,7 @@
 {
   "version": "5",
   "specifiers": {
+    "npm:vitest@3.2.4": "3.2.4_vite@7.1.9__picomatch@4.0.3",
     "npm:vitest@^3.2.4": "3.2.4_vite@7.1.9__picomatch@4.0.3"
   },
   "npm": {
