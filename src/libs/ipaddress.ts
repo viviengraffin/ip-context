@@ -95,6 +95,12 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
     return this.fromUint(binaryStringToUint(4, binaryString));
   }
 
+  /**
+   * Create an IPv4Address from an hex string representation
+   * 
+   * @param hexString Hex string representation of the IPv4 address
+   * @returns {IPv4Address} New IPv4Address instance
+   */
   static override fromHexString(hexString: string): IPv4Address {
     return this.fromUint(hexStringToUint(4, hexString));
   }
@@ -204,7 +210,7 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
   /**
    * Converts this IPv4 address to an IPv6 address using the specified conversion mode.
    *
-   * @param conversionMode - Conversion mode (for example: "mapped", "6to4", "teredo")
+   * @param conversionMode - Conversion mode (for example: TUNNELING_MODES.TEREDO)
    * @param params - Parameters for the conversion (for example: teredo params)
    * @returns {IPv6Address} New IPv6Address instance
    * @throws {IncorrectAddressError} If the conversion mode is not supported
@@ -213,6 +219,13 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
     tunnelingMode: T,
     params: TunnelingModeParams4To6<T>,
   ): IPv6Address;
+  /**
+   * Converts this IPv4 address to an IPv6 address using the specified conversion mode.
+   * 
+   * @param tunnelingMode - Conversion mode (for example: TUNNELING_MODES.MAPPED,TUNNELING_MODES.SIX_TO_FOUR)
+   * @returns {IPv6Address} New IPv6Address instance
+   * @throws {IncorrectAddressError} If the conversion mode is not supported
+   */
   toIPv6Address(tunnelingMode: TunnelingModeWithoutParams4To6): IPv6Address;
   toIPv6Address(
     tunnelingMode: TunnelingModes,
@@ -223,6 +236,11 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
       : (tunnelingMode as TunnelingModeWithoutParams4To6).toIPv6(this);
   }
 
+  /**
+   * Checks if this address is a loopback address
+   * 
+   * @returns {boolean} True if the address is loopback, false otherwise
+   */
   override isLoopback(): boolean {
     return this.toUint() === 2130706433;
   }
@@ -247,11 +265,23 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
     return (this.array[0] & 0b11110000) === 224;
   }
 
+  /**
+   * Creates a network context for this address with the given number of hosts.
+   *
+   * @param hosts - Desired number of hosts in the subnet
+   * @returns {IPv4Address} New network context instance
+   */
   override createContextWithHosts(hosts: number): IPv4Context {
     const submask = IPv4Submask.fromHosts(hosts);
     return new IPv4Context(this, submask);
   }
 
+  /**
+   * Creates a network context for this address with the given submask.
+   *
+   * @param submask - Submask as array, string, or CIDR value
+   * @returns {IPv4Context} New network context instance
+   */
   override createContextWithSubmask(
     submask: string | number | Uint8Array,
   ): IPv4Context {
@@ -270,6 +300,11 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
     return new IPv4Context(this, cSubmask);
   }
 
+  /**
+   * Returns the address as a byte array.
+   *
+   * @returns {Uint8Array} Byte array representation of the address
+   */
   override toByteArray(): Uint8Array {
     return this.array;
   }
@@ -433,6 +468,11 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
     );
   }
 
+  /**
+   * Returns the IPv4-mapped string representation of this address.
+   * 
+   * @returns {string} IPv4-mapped string representation (for example: "::ffff:192.168.1.1")
+   */
   toIPv4MappedString(): string {
     return memoize(
       this._ipv4MappedString,
@@ -480,6 +520,11 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
     return tunnelingMode.toIPv4(this);
   }
 
+  /**
+   * Checks if this address is a loopback address.
+   *
+   * @returns {boolean} True if the address is a loopback address, false otherwise
+   */
   override isLoopback(): boolean {
     return this.toUint() === 1n;
   }
@@ -529,11 +574,23 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
     return (this.array[0] >> 8) === 0;
   }
 
+  /**
+   * Creates a network context for this address with the given number of hosts.
+   *
+   * @param hosts - Desired number of hosts in the subnet
+   * @returns {IPv6Context} New network context instance
+   */
   override createContextWithHosts(hosts: bigint): IPv6Context {
     const submask = IPv6Submask.fromHosts(hosts);
     return new IPv6Context(this, submask);
   }
 
+  /**
+   * Creates a network context for this address with the given submask.
+   *
+   * @param submask - Submask as array, string, or CIDR value
+   * @returns {IPv6Context} New network context instance
+   */
   override createContextWithSubmask(
     submask: string | number | Uint16Array,
   ): IPv6Context {
@@ -552,6 +609,11 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
     return new IPv6Context(this, cSubmask);
   }
 
+  /**
+   * Returns the address as a byte array.
+   *
+   * @returns {Uint8Array} Byte array representation of the address
+   */
   override toByteArray(): Uint8Array {
     return memoize(
       this._byteArray,
