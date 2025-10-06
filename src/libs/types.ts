@@ -223,10 +223,19 @@ export type AllAddressKnownProperties =
   | IPv6AddressKnownProperties
   | IPv6SubmaskKnownProperties;
 
+/**
+ * Define other properties for address constructor
+ */
 export type AddressOtherProperties<
   KnownProperties extends AddressKnownProperties,
 > = {
+  /**
+   * Enable/disable check function (default: true)
+   */
   check?: boolean;
+  /**
+   * Set known properties
+   */
   knownProperties?: KnownProperties;
 };
 
@@ -241,9 +250,17 @@ export type GenerateSubmaskFromHostsResult<
 };
 
 export type ObjectValues<T extends object> = T[keyof T];
-
+/**
+ * All tunneling classes with params for IPv4 -> IPv6
+ */
 export type TunnelingModeWithParams4To6 = typeof Teredo;
+/**
+ * All Tunneling method classes without params for IPv4 -> IPv6
+ */
 export type TunnelingModeWithoutParams4To6 = typeof Mapped | typeof SixToFour;
+/**
+ * Get the params for a tunneling method for IPv4 -> IPv6
+ */
 export type TunnelingModeParams4To6<
   TunnelingMode extends TunnelingModeWithParams4To6,
 > = TunnelingMode extends typeof Teredo ? TeredoDatas : never;

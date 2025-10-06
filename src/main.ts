@@ -1,5 +1,7 @@
+export type { Address } from "./libs/address.ts"
 export {
   ip,
+  type IPAddress,
   IPv4Address,
   IPv6Address,
   isValidAddress,
@@ -10,6 +12,7 @@ export {
   contextWithHosts,
   IPv4Context,
   IPv6Context,
+  type Context
 } from "./libs/context.ts";
 export {
   ContextError,
@@ -20,6 +23,7 @@ export {
   type Mapped,
   type SixToFour,
   type Teredo,
+  type TunnelingMode,
   TUNNELING_MODES,
 } from "./libs/tunneling.ts";
 
@@ -45,5 +49,6 @@ export type {
   TunnelingModesObject,
   TunnelingModeWithoutParams4To6,
   TunnelingModeWithParams4To6,
-  IPv4AddressClasses
+  IPv4AddressClasses,
+  Valid
 } from "./libs/types.ts";
