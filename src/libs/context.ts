@@ -130,7 +130,9 @@ export abstract class Context<Version extends AddressVersions> {
    *
    * @returns {NumberTypes} Number of available hosts
    */
-  abstract get hosts(): NumberTypeForVersion<Version>;
+  get hosts(): NumberTypeForVersion<Version> {
+    return this.submask.hosts as NumberTypeForVersion<Version>;
+  }
 
   /**
    * Gets the CIDR value of this subnet.
@@ -146,7 +148,9 @@ export abstract class Context<Version extends AddressVersions> {
    *
    * @return {NumberTypes} The size of this subnet
    */
-  abstract get size(): NumberTypeForVersion<Version>;
+  get size(): NumberTypeForVersion<Version> {
+    return this.submask.size as NumberTypeForVersion<Version>;
+  }
 
   /**
    * Checks if the given address is an available host in this subnet.
@@ -268,14 +272,6 @@ export class IPv4Context extends Context<4> {
       () => this._lastHost as IPv4Address,
     );
   }
-
-  override get hosts(): number {
-    return this.submask.hosts;
-  }
-
-  override get size(): number {
-    return this.submask.size;
-  }
 }
 
 /**
@@ -297,14 +293,6 @@ export class IPv6Context extends Context<6> {
         this._lastHost = calculateLastAddress(6, this.address, this.submask),
       () => this._lastHost as IPv6Address,
     );
-  }
-
-  override get hosts(): bigint {
-    return this.submask.hosts;
-  }
-
-  override get size(): bigint {
-    return this.submask.size;
   }
 }
 
