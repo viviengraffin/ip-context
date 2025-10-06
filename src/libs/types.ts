@@ -170,24 +170,35 @@ export type ContextErrorDatas = {
  */
 export type Undefineded<T> = T | undefined;
 
+/**
+ * Object to set the known properties in an address
+ */
 export type AddressKnownProperties<
   NumberType extends NumberTypes = NumberTypes,
 > = {
   _uint?: NumberType;
   _string?: string;
-  [k: string]: unknown;
 };
 
+/**
+ * Object to set the known properties in an IPv6 address
+ */
 export type IPv6KnownProperties =
   & AddressKnownProperties<bigint>
   & {
     _byteArray?: Uint8Array;
   };
 
+/**
+ * Object to set the known properties in an IPv6Address instance
+ */
 export type IPv6AddressKnownProperties = IPv6KnownProperties & {
   _ipv4MappedString?: string;
 };
 
+/**
+ * Object to set the known properties in a Submask instance
+ */
 export type SubmaskKnownProperties<
   NumberType extends NumberTypes = NumberTypes,
 > = AddressKnownProperties<NumberType> & {
@@ -196,10 +207,16 @@ export type SubmaskKnownProperties<
   _hosts?: NumberType;
 };
 
+/**
+ * Object to set the known properties in an IPv6Submask instance
+ */
 export type IPv6SubmaskKnownProperties =
   & SubmaskKnownProperties<bigint>
   & IPv6KnownProperties;
 
+/**
+ * All Known properties definitions
+ */
 export type AllAddressKnownProperties =
   | AddressKnownProperties<number>
   | SubmaskKnownProperties<number>
@@ -231,21 +248,39 @@ export type TunnelingModeParams4To6<
   TunnelingMode extends TunnelingModeWithParams4To6,
 > = TunnelingMode extends typeof Teredo ? TeredoDatas : never;
 
+/**
+ * The typed array for the IP version (Uint8Array for IPv4, Uint16Array for IPv6)
+ */
 export type AddressArrayForVersion<Version extends AddressVersions> =
   Version extends 4 ? Uint8Array : Uint16Array;
+/**
+ * The number type for IP version (number for IPv4, bigint for IPv6)
+ */
 export type NumberTypeForVersion<Version extends AddressVersions> =
   Version extends 4 ? number : bigint;
 
+/**
+ * The class representing the IP address for this version
+ */
 export type IPAddressTypeForVersion<Version extends AddressVersions> =
   Version extends 4 ? IPv4Address : IPv6Address;
 
+/**
+ * The class representing the Submask for this IP version
+ */
 export type SubmaskTypeForVersion<Version extends AddressVersions> =
   Version extends 4 ? IPv4Submask : IPv6Submask;
 
+/**
+ * An object contains all tunneling methods for convert an IPv6 address to an IPv4 address or vice versa
+ */
 export type TunnelingModesObject = {
   MAPPED: typeof Mapped;
   SIX_TO_FOUR: typeof SixToFour;
   TEREDO: typeof Teredo;
 };
 
+/**
+ * Type representing all Tunneling method classes
+ */
 export type TunnelingModes = typeof Mapped | typeof SixToFour | typeof Teredo;

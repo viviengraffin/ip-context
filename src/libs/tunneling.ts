@@ -290,6 +290,9 @@ export class Teredo extends TunnelingMode {
   }
 }
 
+/**
+ * An object contains all tunneling methods for convert an IPv6 address to an IPv4 address or vice versa
+ */
 export const TUNNELING_MODES: TunnelingModesObject = {
   MAPPED: Mapped,
   SIX_TO_FOUR: SixToFour,

@@ -31,6 +31,9 @@ function getStringOfAddressContainer(
   }
 }
 
+/**
+ * Class representing an invalid error
+ */
 export class IncorrectAddressError extends Error {
   constructor(public datas: IncorrectAddressErrorDatas) {
     super(IncorrectAddressError.getErrorMessage(datas));
@@ -63,7 +66,9 @@ export class IncorrectAddressError extends Error {
     }
   }
 }
-
+/**
+ * Class representating an error in a network context
+ */
 export class ContextError extends Error {
   constructor(public datas: ContextErrorDatas) {
     super(ContextError.getErrorMessage(datas));
@@ -91,6 +96,9 @@ export class ContextError extends Error {
   }
 }
 
+/**
+ * This error is throwed if a static method is not defined in a subclass
+ */
 export class NonImplementedStaticMethodError extends Error {
   constructor() {
     super("This static method is not implemented");

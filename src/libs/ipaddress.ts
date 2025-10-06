@@ -42,7 +42,7 @@ import { arrayToUint, UintToArray } from "./uint.ts";
  * @template AddressArray - The typed array used to store the address (Uint8Array for IPv4, Uint16Array for IPv6)
  * @template NumberType - The numeric type used for integer representation (number for IPv4, bigint for IPv6)
  */
-abstract class IPAddress<
+export abstract class IPAddress<
   Version extends AddressVersions,
   KnownProperties extends AddressKnownProperties = AddressKnownProperties,
 > extends Address<Version, KnownProperties> {
@@ -205,7 +205,7 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
    * Converts this IPv4 address to an IPv6 address using the specified conversion mode.
    *
    * @param conversionMode - Conversion mode (for example: "mapped", "6to4", "teredo")
-   * @param params - Optional parameters for the conversion (for example: teredo params)
+   * @param params - Parameters for the conversion (for example: teredo params)
    * @returns {IPv6Address} New IPv6Address instance
    * @throws {IncorrectAddressError} If the conversion mode is not supported
    */
