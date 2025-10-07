@@ -23,7 +23,6 @@ import type {
   AddressKnownProperties,
   AddressOtherProperties,
   AddressVersions,
-  CheckAddressFunction,
   IPv4AddressClasses,
   IPv6AddressKnownProperties,
   NumberTypeForVersion,
@@ -46,6 +45,20 @@ export abstract class IPAddress<
   Version extends AddressVersions,
   KnownProperties extends AddressKnownProperties = AddressKnownProperties,
 > extends Address<Version, KnownProperties> {
+  /**
+   * Constructor of IPAddress abstract class
+   *
+   * @param version IP version of this address
+   * @param items Array representing this address
+   */
+  constructor(
+    version: Version,
+    items: number[] | AddressArrayForVersion<Version>,
+    otherProperties: AddressOtherProperties<KnownProperties>,
+  ) {
+    super(version, items, undefined, otherProperties);
+  }
+
   /**
    * Checks if this address is a loopback address.
    *
@@ -86,7 +99,7 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
    * @returns {IPv4Address} New IPv4Address instance
    */
   static override fromString(string: string): IPv4Address {
-    return new IPv4Address(parseIPv4Address(string), undefined, {
+    return new IPv4Address(parseIPv4Address(string), {
       check: false,
     });
   }
@@ -126,7 +139,7 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
    * @returns {IPv4Address} New IPv4Address instance
    */
   static override fromUint(uint: number): IPv4Address {
-    return new this(UintToArray(4, uint), undefined, {
+    return new this(UintToArray(4, uint), {
       check: false,
       knownProperties: {
         _uint: uint,
@@ -149,7 +162,7 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
         address: bytes,
       });
     }
-    return new this(bytes, undefined, { check: false });
+    return new this(bytes, { check: false });
   }
 
   /**
@@ -160,10 +173,10 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
    */
   constructor(
     items: number[] | AddressArrayForVersion<4>,
-    check?: CheckAddressFunction<4>,
-    otherProperties?: AddressOtherProperties<AddressKnownProperties<number>>,
+    otherProperties: AddressOtherProperties<AddressKnownProperties<number>> =
+      {},
   ) {
-    super(4, items, check, otherProperties);
+    super(4, items, otherProperties);
   }
 
   /**
@@ -348,7 +361,7 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
     uint: bigint,
     zoneId: string | null = null,
   ): IPv6Address {
-    return new this(UintToArray(6, uint), zoneId, undefined, {
+    return new this(UintToArray(6, uint), zoneId, {
       knownProperties: {
         _uint: uint,
       },
@@ -374,7 +387,7 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
         address: bytes,
       });
     }
-    return new this(byteArrayToUint16Array(bytes), zoneId, undefined, {
+    return new this(byteArrayToUint16Array(bytes), zoneId, {
       knownProperties: {
         _byteArray: bytes,
       },
@@ -421,7 +434,6 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
   constructor(
     items: number[] | AddressArrayForVersion<6>,
     protected _zoneId: string | null = null,
-    check?: CheckAddressFunction<6>,
     otherProperties: AddressOtherProperties<IPv6AddressKnownProperties> = {},
   ) {
     if (!verifyZoneId(_zoneId)) {
@@ -430,7 +442,7 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
         zoneId: _zoneId!,
       });
     }
-    super(6, items, check, otherProperties);
+    super(6, items, otherProperties);
 
     if (otherProperties.knownProperties !== undefined) {
       if (otherProperties.knownProperties._byteArray !== undefined) {

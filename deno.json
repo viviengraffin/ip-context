@@ -5,7 +5,7 @@
     "bench": "deno bench benchmarks/*.ts",
     "bench:json": "deno bench --json benchmarks/*.ts",
     "build": "deno --allow-env --allow-read --allow-write --allow-run build.ts",
-    "doc":"deno doc --html src/main.ts"
+    "doc": "deno doc --html src/main.ts"
   },
   "imports": {
     "@std/fs": "jsr:@std/fs@^1.0.19",
