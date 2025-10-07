@@ -3,9 +3,14 @@
     "test": "vitest run",
     "test:watch": "vitest watch",
     "bench": "deno bench benchmarks/*.ts",
-    "bench:json": "deno bench --json benchmarks/*.ts"
+    "bench:json": "deno bench --json benchmarks/*.ts",
+    "build": "deno --allow-env --allow-read --allow-write --allow-run build.ts",
+    "doc":"deno doc --html src/main.ts"
   },
   "imports": {
+    "@std/fs": "jsr:@std/fs@^1.0.19",
+    "@std/path": "jsr:@std/path@^1.1.2",
+    "esbuild": "npm:esbuild@^0.25.10",
     "vitest": "npm:vitest@^3.2.4"
   },
   "fmt": {
