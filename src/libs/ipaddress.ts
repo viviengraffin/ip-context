@@ -104,6 +104,11 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
     });
   }
 
+  /**
+   * Create an Address instance from a binary string representation
+   *
+   * @param binaryString Binary string representation
+   */
   static override fromBinaryString(binaryString: string): IPv4Address {
     return this.fromUint(binaryStringToUint(4, binaryString));
   }
@@ -169,7 +174,6 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
    * Creates a new IPv4Address instance.
    *
    * @param items - Array or Uint8Array representing the address
-   * @param check - Optional function to validate the address
    */
   constructor(
     items: number[] | AddressArrayForVersion<4>,
@@ -343,6 +347,12 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
 
   protected _ipv4MappedString?: string;
 
+  /**
+   * Creates an IPv6Address from an IPv4-mapped string
+   * 
+   * @param string IPv4-mapped string representation
+   * @returns {IPv6Address} New IPv6Address instance
+   */
   static fromIPv4MappedString(string: string): IPv6Address {
     const splittedIP = hasZoneId(string);
     return splittedIP === null
@@ -394,10 +404,21 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
     });
   }
 
+  /**
+   * Create an Address instance from a binary string representation
+   *
+   * @param _binaryString Binary string representation
+   */
   static override fromBinaryString(binaryString: string): IPv6Address {
     return this.fromUint(binaryStringToUint(6, binaryString));
   }
 
+  /**
+   * Create an IPv4Address from an hex string representation
+   *
+   * @param hexString Hex string representation of the IPv4 address
+   * @returns {IPv6Address} New IPv4Address instance
+   */
   static override fromHexString(
     hexString: string,
     zoneId: string | null = null,
@@ -428,7 +449,6 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
    *
    * @param items - Array or Uint16Array representing the address
    * @param zoneId - Optional zone identifier
-   * @param check - Optional function to validate the address
    * @throws {IncorrectAddressError} If the zone identifier is invalid
    */
   constructor(

@@ -121,14 +121,14 @@ export abstract class Context<Version extends AddressVersions> {
   /**
    * Gets the last host address of this subnet.
    *
-   * @returns {AddressType} The last host address
+   * @returns {IPAddressTypeForVersion<Version>} The last host address
    */
   abstract get lastHost(): IPAddressTypeForVersion<Version>;
 
   /**
    * Gets the number of available hosts in this subnet.
    *
-   * @returns {NumberTypes} Number of available hosts
+   * @returns {NumberTypeForVersion<Version>} Number of available hosts
    */
   get hosts(): NumberTypeForVersion<Version> {
     return this.submask.hosts as NumberTypeForVersion<Version>;
@@ -265,6 +265,11 @@ export class IPv4Context extends Context<4> {
     );
   }
 
+  /**
+   * Gets the last host address of this subnet.
+   *
+   * @returns {IPv4Address} The last host address
+   */
   override get lastHost(): IPv4Address {
     return memoize(
       this._lastHost,
@@ -286,6 +291,11 @@ export class IPv6Context extends Context<6> {
     return new IPv6Context(address, submask);
   }
 
+  /**
+   * Gets the last host address of this subnet.
+   *
+   * @returns {IPv6Address} The last host address
+   */
   override get lastHost(): IPv6Address {
     return memoize(
       this._lastHost,
