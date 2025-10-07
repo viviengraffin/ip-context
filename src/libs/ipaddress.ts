@@ -666,7 +666,7 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
  * ```ts
  * import { ip } from "@viviengraffin/ip-context";
  *
- * const ip4=ip("192.168.1.1");
+ * const ip4=ip("192.168.1.1"); // Instance of IPv4Address
  * ```
  *
  * @example Use with IPv6
@@ -674,7 +674,7 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
  * ```ts
  * import { ip } from "@viviengraffin/ip-context";
  *
- * const ip6=ip("2001:db6::1");
+ * const ip6=ip("2001:db6::1"); // Instance of IPv6Address
  * ```
  *
  * @example Use with IPv4-mapped string

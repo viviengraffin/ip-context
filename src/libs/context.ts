@@ -318,7 +318,7 @@ export class IPv6Context extends Context<6> {
  * ```ts
  * import { context } from "@viviengraffin/ip-context";
  *
- * const ctx=context("192.168.1.1/24");
+ * const ctx=context("192.168.1.1/24"); // Instance of IPv4Address
  * ```
  *
  * @example Use with IPv4 without cidr
@@ -335,7 +335,7 @@ export class IPv6Context extends Context<6> {
  * ```ts
  * import { context } from "@viviengraffin/ip-context";
  *
- * const ctx=context("2001:db6::1/64");
+ * const ctx=context("2001:db6::1/64"); // Instance of IPv6Address
  * ```
  */
 export function context(string: string): IPv4Context | IPv6Context;
