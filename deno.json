@@ -15,7 +15,8 @@
     "include": [
       "src/",
       "README.md",
-      "deno.json"
+      "deno.json",
+      "LICENCE"
     ]
   },
   "license": "MIT",
