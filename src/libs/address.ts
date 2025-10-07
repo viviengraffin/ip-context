@@ -32,7 +32,7 @@ export abstract class Address<
    * @throws {Error} If not implemented by child class
    */
   static fromString(_string: string): Address<AddressVersions> {
-    throw new Error("This static method is not implemented");
+    throw new NonImplementedStaticMethodError();
   }
 
   /**
@@ -44,7 +44,7 @@ export abstract class Address<
    * @throws {Error} If not implemented by child class
    */
   static isValidAddress(_address: number[] | string): boolean {
-    throw new Error("This static method is not implemented");
+    throw new NonImplementedStaticMethodError();
   }
 
   /**
