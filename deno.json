@@ -11,6 +11,13 @@
   "fmt": {
     "exclude": ["*.md"]
   },
+  "publish": {
+    "include": [
+      "src/",
+      "README.md",
+      "deno.json"
+    ]
+  },
   "license": "MIT",
   "version": "0.0.4",
   "name": "@viviengraffin/ip-context",
