@@ -14,7 +14,7 @@
     "vitest": "npm:vitest@^3.2.4"
   },
   "fmt": {
-    "exclude": ["*.md"]
+    "exclude": ["*.md","dist","docs"]
   },
   "publish": {
     "include": [
