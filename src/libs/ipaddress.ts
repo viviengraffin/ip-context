@@ -349,7 +349,7 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
 
   /**
    * Creates an IPv6Address from an IPv4-mapped string
-   * 
+   *
    * @param string IPv4-mapped string representation
    * @returns {IPv6Address} New IPv6Address instance
    */
