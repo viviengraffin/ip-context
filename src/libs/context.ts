@@ -312,6 +312,31 @@ export class IPv6Context extends Context<6> {
  * @param string - String in format "address/cidr" or "address" (for example: "192.168.1.0/24" or "192.168.1.0")
  * @returns {IPv4Context | IPv6Context} New IP context instance
  * @throws {ContextError} If the IP version is unknown or parameters are invalid
+ *
+ * @example Use with IPv4
+ *
+ * ```ts
+ * import { context } from "@viviengraffin/ip-context";
+ *
+ * const ctx=context("192.168.1.1/24");
+ * ```
+ *
+ * @example Use with IPv4 without cidr
+ *
+ * ```ts
+ * import { context } from "@viviengraffin/ip-context";
+ *
+ * const ctx=context("192.168.1.1") as IPv4Address;
+ * console.log(ctx.class); // "C"
+ * ```
+ *
+ * @example Use with IPv6
+ *
+ * ```ts
+ * import { context } from "@viviengraffin/ip-context";
+ *
+ * const ctx=context("2001:db6::1/64");
+ * ```
  */
 export function context(string: string): IPv4Context | IPv6Context;
 /**
@@ -321,6 +346,22 @@ export function context(string: string): IPv4Context | IPv6Context;
  * @param submask - Submask (for example: "255.255.255.0")
  * @returns {IPv4Context | IPv6Context} New IP context instance
  * @throws {ContextError} If the IP version is unknown or parameters are invalid
+ *
+ * @example Use with IPv4
+ *
+ * ```ts
+ * import { context } from "@viviengraffin/ip-context";
+ *
+ * const ctx=context("192.168.1.1","255.255.255.0");
+ * ```
+ *
+ * @example Use with IPv6
+ *
+ * ```ts
+ * import { context } from "@viviengraffin/ip-context";
+ *
+ * const ctx=context("2001:db6::1","ffff:ffff:ffff:ffff::");
+ * ```
  */
 export function context(ip: string, submask: string): IPv4Context | IPv6Context;
 export function context(

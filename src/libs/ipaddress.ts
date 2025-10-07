@@ -660,6 +660,30 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
  *
  * @param ip - String representation of the IP address (for example:. "192.168.1.1" or "2001:db8::1")
  * @returns {IPv4Address | IPv6Address} New IP address instance
+ *
+ * @example Use with IPv4
+ *
+ * ```ts
+ * import { ip } from "@viviengraffin/ip-context";
+ *
+ * const ip4=ip("192.168.1.1");
+ * ```
+ *
+ * @example Use with IPv6
+ *
+ * ```ts
+ * import { ip } from "@viviengraffin/ip-context";
+ *
+ * const ip6=ip("2001:db6::1");
+ * ```
+ *
+ * @example Use with IPv4-mapped string
+ *
+ * ```ts
+ * import { ip } from "@viviengraffin/ip-context";
+ *
+ * const ip6=ip("::ffff:192.168.1.1"); // Instance of IPv6Address
+ * ```
  */
 export function ip(ip: string): IPv4Address | IPv6Address {
   if (Mapped.isValidString(ip)) {
