@@ -529,7 +529,7 @@ export function hexStringToUint<T extends AddressVersions>(
   }
   try {
     const res = numberConstructor("0x" + hexString);
-    if (typeof res === "number" && isNaN(res)) {
+    if (typeof res === "number" && !Number.isInteger(res)) {
       throw new IncorrectAddressError({
         type: "incorrect-binary-string",
         version,
@@ -545,4 +545,17 @@ export function hexStringToUint<T extends AddressVersions>(
       value: hexString,
     });
   }
+}
+
+export function addressEquals<T extends AddressVersions>(
+  a: AddressArrayForVersion<T>,
+  b: AddressArrayForVersion<T>,
+): boolean {
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) {
+      return false;
+    }
+  }
+
+  return true;
 }

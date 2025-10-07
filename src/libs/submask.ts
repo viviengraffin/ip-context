@@ -1,5 +1,6 @@
 import { Address } from "./address.ts";
 import {
+  addressEquals,
   binaryStringToUint,
   byteArrayToUint16Array,
   hexStringToUint,
@@ -413,6 +414,17 @@ export class IPv4Submask extends Submask<4, SubmaskKnownProperties<number>> {
   }
 
   /**
+   * Check if the addresses are the same
+   *
+   * @param a Address to compare
+   * @param b Address to compare
+   * @returns {boolean} True if these addresses are the same, false otherwise.
+   */
+  static override equals(a: IPv4Submask, b: IPv4Submask): boolean {
+    return addressEquals<4>(a.array, b.array);
+  }
+
+  /**
    * Creates a new IPv4Submask instance.
    *
    * @param items - Array or Uint8Array representing the submask
@@ -566,7 +578,18 @@ export class IPv6Submask extends Submask<6, IPv6SubmaskKnownProperties> {
     return isCorrectSubmask(6, submask).valid;
   }
 
-  _byteArray?: Uint8Array;
+  /**
+   * Check if the addresses are the same
+   *
+   * @param a Address to compare
+   * @param b Address to compare
+   * @returns {boolean} True if these addresses are the same, false otherwise.
+   */
+  static override equals(a: IPv6Submask, b: IPv6Submask): boolean {
+    return addressEquals<6>(a.array, b.array);
+  }
+
+  protected _byteArray?: Uint8Array;
 
   /**
    * Creates a new IPv6Submask instance.

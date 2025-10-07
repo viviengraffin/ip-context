@@ -1,5 +1,6 @@
 import { Address } from "./address.ts";
 import {
+  addressEquals,
   binaryStringToUint,
   byteArrayToUint16Array,
   hasZoneId,
@@ -168,6 +169,17 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
       });
     }
     return new this(bytes, { check: false });
+  }
+
+  /**
+   * Check if the addresses are the same
+   *
+   * @param a Address to compare
+   * @param b Address to compare
+   * @returns {boolean} True if these addresses are the same, false otherwise.
+   */
+  static override equals(a: IPv4Address, b: IPv4Address): boolean {
+    return addressEquals<4>(a.array, b.array);
   }
 
   /**
@@ -442,6 +454,17 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
     }
 
     return isCorrectAddress(6, address).valid;
+  }
+
+  /**
+   * Check if the addresses are the same
+   *
+   * @param a Address to compare
+   * @param b Address to compare
+   * @returns {boolean} True if these addresses are the same, false otherwise.
+   */
+  static override equals(a: IPv6Address, b: IPv6Address): boolean {
+    return addressEquals<6>(a.array, b.array);
   }
 
   /**
