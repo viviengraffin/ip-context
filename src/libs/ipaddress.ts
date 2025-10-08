@@ -779,6 +779,9 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
  * ```
  */
 export function ip(ip: string): IPv4Address | IPv6Address {
+  if (isIP6ArpaString(ip)) {
+    return IPv6Address.fromIP6ArpaString(ip);
+  }
   if (Mapped.isValidString(ip)) {
     return IPv6Address.fromIPv4MappedString(ip);
   }
