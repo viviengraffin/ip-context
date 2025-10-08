@@ -194,6 +194,7 @@ export type IPv6KnownProperties =
  */
 export type IPv6AddressKnownProperties = IPv6KnownProperties & {
   _ipv4MappedString?: string;
+  _ip6ArpaString?: string;
 };
 
 /**

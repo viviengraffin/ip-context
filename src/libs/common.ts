@@ -559,3 +559,7 @@ export function addressEquals<T extends AddressVersions>(
 
   return true;
 }
+
+export function isIP6ArpaString(string: string): boolean {
+  return string.endsWith(".ip6.arpa");
+}
