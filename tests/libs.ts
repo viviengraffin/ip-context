@@ -8,6 +8,12 @@ import type {
   IPv6GetDatasFromResult,
   IPv6TestAddressDatas,
 } from "./types.ts";
+import type {
+  AddressArrayForVersion,
+  AddressVersions,
+  SubmaskForVersion,
+} from "../src/libs/types.ts";
+import { addressEquals } from "../src/libs/common.ts";
 
 export function addressTestEquality(
   name: string,
@@ -206,5 +212,18 @@ export function testAddressDatas<T extends IPv4Address | IPv6Address>(
     test("unsigned integer", () => {
       expect(address.toUint()).toBe(datas.unsignedInteger);
     });
+  });
+}
+
+export function testSubmask<T extends AddressVersions>(
+  name: string,
+  a: SubmaskForVersion<T>,
+  b: AddressArrayForVersion<T>,
+  expected: boolean = true,
+): void {
+  test(name, () => {
+    expect(addressEquals(a.array as AddressArrayForVersion<T>, b)).toBe(
+      expected,
+    );
   });
 }
