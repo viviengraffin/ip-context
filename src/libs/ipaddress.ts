@@ -466,11 +466,14 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
    * @param string - ip6.arpa string representation
    * @returns {IPv6Address} New instance of IPv6Address
    */
-  static fromIP6ArpaString(
-    string: string,
-    zoneId: string | null = null,
-  ): IPv6Address {
+  static fromIP6ArpaString(string: string): IPv6Address {
     string = string.toLowerCase();
+    let zoneId: string | null = null;
+    const rHasZoneId = hasZoneId(string);
+    if (rHasZoneId !== null) {
+      string = rHasZoneId[0];
+      zoneId = rHasZoneId[1];
+    }
     if (!isIP6ArpaString(string)) {
       throw new IncorrectAddressError({
         type: "incorrect-format",
