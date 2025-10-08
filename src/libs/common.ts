@@ -561,5 +561,9 @@ export function addressEquals<T extends AddressVersions>(
 }
 
 export function isIP6ArpaString(string: string): boolean {
-  return string.endsWith(".ip6.arpa");
+  const rHasZoneId = hasZoneId(string);
+  if (rHasZoneId !== null) {
+    string = rHasZoneId[0];
+  }
+  return string.endsWith(".ip6.arpa") && string.length === 72;
 }
