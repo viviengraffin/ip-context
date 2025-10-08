@@ -594,7 +594,7 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
     return memoize(
       this._uint,
       () => this._uint = arrayToUint(6, this.array),
-      () => this._uint as bigint,
+      () => this._uint!,
     );
   }
 
@@ -613,10 +613,29 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
   /**
    * Converts this IPv6 address to an IPv4 address if it is tunneling one.
    *
-   * @param conversionMode - Conversion mode (for example: "mapped", "6to4", "teredo", "auto")
-   * @param params - Optional parameters for the conversion (for example: 6rd prefix)
+   * @param conversionMode - Conversion mode
    * @returns {IPv4Address} New IPv4Address instance
    * @throws {IncorrectAddressError} If the address is not tunneling an IPv4 address
+   * 
+   * @example Use with mapped
+   * 
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   * 
+   * const ip6=IPv6Address.fromIPv4MappedString("::ffff:192.168.1.1");
+   * const ip4=ip6.toIPv4Address(TUNNELING_MODES.MAPPED); // IPv4Address
+   * console.log(ip4.toString()); // "192.168.1.1" 
+   * ```
+   * 
+   * @example Use with 6to4
+   * 
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   * 
+   * const ip6=IPv6Address.fromString("2002:c0a8:101::");
+   * const ip4=ip6.toIPv4Address(TUNNELING_MODES.SIX_TO_FOUR); // IPv4Address
+   * console.log(ip4.toString()); // "192.168.1.1"
+   * ```
    */
   toIPv4Address(tunnelingMode: TunnelingModes): IPv4Address {
     return tunnelingMode.toIPv4(this);
