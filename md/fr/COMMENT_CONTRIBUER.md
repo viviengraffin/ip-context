@@ -23,5 +23,7 @@ Vous aurez accès aux commandes suivantes:
 
 - deno task bench : Fait un test de performance
 - deno task test : Éxecute les tests unitaires
+- deno task test:watch: Éxecute les test unitaires pendant le développement
+- deno task build : Construit les versions web
 
 À partir de là, vous pourrez contribuer au développement de cette bibliothèque.

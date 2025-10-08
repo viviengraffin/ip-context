@@ -20,7 +20,9 @@ deno install
 
 You will have access to the following commands:
 
-- deno task bench: Runs a performance test
-- deno task test: Runs the unit tests
+- deno task bench : Runs a performance test
+- deno task test : Runs the unit tests
+- deno task test:watch : Executes unit tests during development
+- deno task build : Build bundles for web
 
 From here, you can contribute to the development of this library.
