@@ -780,7 +780,7 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
  * 
  * @example Use with ip6.arpa string
  * 
- * ```ŧs
+ * ```ts
  * import { ip } from "@viviengraffin/ip-context";
  * 
  * const ip6=ip("b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4.ip6.arpa"); // Instance of IPv6Address
