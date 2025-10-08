@@ -6,7 +6,13 @@ En tant que développeur, vous devez d'abord installer Deno sur votre ordinateur
 
 La commande à utiliser pour installer Deno se trouve [ici](https://deno.com)
 
-Une fois Deno installé, vous devez tapez cette commande dans le répertoire du
+Une fois Deno installé, vous devez copier la branche dev de ce dépot. Pour ce faire, tapez la commande suivante : 
+
+```sh
+git clone -b dev https://github.com/viviengraffin/ip-context.git
+```
+
+Ensuite, vous devez tapez cette commande dans le répertoire du
 projet :
 
 ```sh
@@ -17,5 +23,7 @@ Vous aurez accès aux commandes suivantes:
 
 - deno task bench : Fait un test de performance
 - deno task test : Éxecute les tests unitaires
+- deno task test:watch: Éxecute les test unitaires pendant le développement
+- deno task build : Construit les versions web
 
 À partir de là, vous pourrez contribuer au développement de cette bibliothèque.

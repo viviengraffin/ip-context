@@ -14,7 +14,7 @@
     "vitest": "npm:vitest@^3.2.4"
   },
   "fmt": {
-    "exclude": ["*.md"]
+    "exclude": ["md", "README.md", "dist", "docs"]
   },
   "publish": {
     "include": [
@@ -25,7 +25,7 @@
     ]
   },
   "license": "MIT",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "name": "@viviengraffin/ip-context",
   "exports": "./src/main.ts"
 }

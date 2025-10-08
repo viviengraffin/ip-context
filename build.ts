@@ -16,6 +16,7 @@ const BUILD_CONFIGS = [
     platform: "browser",
     outfile: pathJoin(DIST, "ip-context.js"),
     format: "iife",
+    sourcemap: "inline",
     globalName: IIFE_GLOBAL_NAME,
   },
   {
@@ -33,6 +34,7 @@ const BUILD_CONFIGS = [
     platform: "browser",
     minify: false,
     outfile: pathJoin(DIST, "ip-context.es.js"),
+    sourcemap: "inline",
     format: "esm",
   },
   {

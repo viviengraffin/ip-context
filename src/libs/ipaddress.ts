@@ -1,10 +1,12 @@
 import { Address } from "./address.ts";
 import {
+  addressEquals,
   binaryStringToUint,
   byteArrayToUint16Array,
   hasZoneId,
   hexStringToUint,
   isCorrectAddress,
+  isIP6ArpaString,
   isIPv4StringAddress,
   memoize,
   parseIPv4Address,
@@ -168,6 +170,17 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
       });
     }
     return new this(bytes, { check: false });
+  }
+
+  /**
+   * Check if the addresses are the same
+   *
+   * @param a Address to compare
+   * @param b Address to compare
+   * @returns {boolean} True if these addresses are the same, false otherwise.
+   */
+  static override equals(a: IPv4Address, b: IPv4Address): boolean {
+    return addressEquals<4>(a.array, b.array);
   }
 
   /**
@@ -370,10 +383,12 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
   static override fromUint(
     uint: bigint,
     zoneId: string | null = null,
+    _ip6ArpaString?: string,
   ): IPv6Address {
     return new this(UintToArray(6, uint), zoneId, {
       knownProperties: {
         _uint: uint,
+        _ip6ArpaString,
       },
     });
   }
@@ -405,16 +420,16 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
   }
 
   /**
-   * Create an Address instance from a binary string representation
+   * Create an IPv6Address instance from a binary string representation
    *
-   * @param _binaryString Binary string representation
+   * @param binaryString Binary string representation
    */
   static override fromBinaryString(binaryString: string): IPv6Address {
     return this.fromUint(binaryStringToUint(6, binaryString));
   }
 
   /**
-   * Create an IPv4Address from an hex string representation
+   * Create an IPv6Address from an hex string representation
    *
    * @param hexString Hex string representation of the IPv4 address
    * @returns {IPv6Address} New IPv4Address instance
@@ -445,6 +460,60 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
   }
 
   /**
+   * Create an IPv6Address from an ip6.arpa string representation.
+   * See [RFC 3596](https://datatracker.ietf.org/doc/html/rfc3596)
+   *
+   * @param string - ip6.arpa string representation
+   * @returns {IPv6Address} New instance of IPv6Address
+   */
+  static fromIP6ArpaString(string: string): IPv6Address {
+    string = string.toLowerCase();
+    let zoneId: string | null = null;
+    const rHasZoneId = hasZoneId(string);
+    if (rHasZoneId !== null) {
+      string = rHasZoneId[0];
+      zoneId = rHasZoneId[1];
+    }
+    if (!isIP6ArpaString(string)) {
+      throw new IncorrectAddressError({
+        type: "incorrect-format",
+        version: 6,
+        address: string,
+      });
+    }
+
+    const parts = string.replace(".ip6.arpa", "").split(".");
+
+    if (parts.length !== 32) {
+      throw new IncorrectAddressError({
+        type: "incorrect-format",
+        version: 6,
+        address: string,
+      });
+    }
+    let uint = 0n;
+    for (let i = 31; i >= 0; i--) {
+      const n = BigInt("0x" + parts[i]);
+      uint = (uint << 4n) | n;
+    }
+    return this.fromUint(uint, zoneId, string);
+  }
+
+  /**
+   * Check if the addresses are the same
+   *
+   * @param a Address to compare
+   * @param b Address to compare
+   * @returns {boolean} True if these addresses are the same, false otherwise.
+   */
+  static override equals(a: IPv6Address, b: IPv6Address): boolean {
+    return addressEquals<6>(a.array, b.array);
+  }
+
+  protected _ip6ArpaString?: string;
+  protected _byteArray?: Uint8Array;
+
+  /**
    * Creates a new IPv6Address instance.
    *
    * @param items - Array or Uint16Array representing the address
@@ -471,6 +540,9 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
       if (otherProperties.knownProperties._ipv4MappedString !== undefined) {
         this._ipv4MappedString =
           otherProperties.knownProperties._ipv4MappedString;
+      }
+      if (otherProperties.knownProperties._ip6ArpaString !== undefined) {
+        this._ip6ArpaString = otherProperties.knownProperties._ip6ArpaString;
       }
     }
   }
@@ -537,8 +609,6 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
   isIPv4Tunneling<T extends TunnelingModes>(conversionMode: T): boolean {
     return conversionMode.isValid(this);
   }
-
-  protected _byteArray?: Uint8Array;
 
   /**
    * Converts this IPv6 address to an IPv4 address if it is tunneling one.
@@ -653,6 +723,29 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
       () => this._byteArray!,
     );
   }
+
+  /**
+   * Get the ip6.arpa representation of this address.
+   * See [RFC 3596](https://datatracker.ietf.org/doc/html/rfc3596)
+   *
+   * @returns {string} ip6.arpa representation of this address
+   */
+  toIP6ArpaString(): string {
+    return memoize(
+      this._ip6ArpaString,
+      () => {
+        const hexString = this.toHexString();
+        const chars: string[] = new Array(32);
+        let index = 0;
+        for (let i = 31; i >= 0; i--) {
+          chars[index++] = hexString[i];
+        }
+
+        this._ip6ArpaString = chars.join(".") + ".ip6.arpa";
+      },
+      () => this._ip6ArpaString!,
+    );
+  }
 }
 
 /**
@@ -660,8 +753,43 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
  *
  * @param ip - String representation of the IP address (for example:. "192.168.1.1" or "2001:db8::1")
  * @returns {IPv4Address | IPv6Address} New IP address instance
+ *
+ * @example Use with IPv4
+ *
+ * ```ts
+ * import { ip } from "@viviengraffin/ip-context";
+ *
+ * const ip4=ip("192.168.1.1"); // Instance of IPv4Address
+ * ```
+ *
+ * @example Use with IPv6
+ *
+ * ```ts
+ * import { ip } from "@viviengraffin/ip-context";
+ *
+ * const ip6=ip("2001:db6::1"); // Instance of IPv6Address
+ * ```
+ *
+ * @example Use with IPv4-mapped string
+ *
+ * ```ts
+ * import { ip } from "@viviengraffin/ip-context";
+ *
+ * const ip6=ip("::ffff:192.168.1.1"); // Instance of IPv6Address
+ * ```
+ * 
+ * @example Use with ip6.arpa string
+ * 
+ * ```ŧs
+ * import { ip } from "@viviengraffin/ip-context";
+ * 
+ * const ip6=ip("b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4.ip6.arpa"); // Instance of IPv6Address
+ * ```
  */
 export function ip(ip: string): IPv4Address | IPv6Address {
+  if (isIP6ArpaString(ip.toLowerCase())) {
+    return IPv6Address.fromIP6ArpaString(ip);
+  }
   if (Mapped.isValidString(ip)) {
     return IPv6Address.fromIPv4MappedString(ip);
   }

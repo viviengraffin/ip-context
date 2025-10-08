@@ -1,4 +1,4 @@
-import { createAddressArray } from "./common.ts";
+import { addressEquals, createAddressArray } from "./common.ts";
 import { ADDRESS_VERSIONS } from "./const.ts";
 import { NonImplementedStaticMethodError } from "./error.ts";
 import type {
@@ -32,7 +32,7 @@ export abstract class Address<
    * @throws {Error} If not implemented by child class
    */
   static fromString(_string: string): Address<AddressVersions> {
-    throw new Error("This static method is not implemented");
+    throw new NonImplementedStaticMethodError();
   }
 
   /**
@@ -44,7 +44,7 @@ export abstract class Address<
    * @throws {Error} If not implemented by child class
    */
   static isValidAddress(_address: number[] | string): boolean {
-    throw new Error("This static method is not implemented");
+    throw new NonImplementedStaticMethodError();
   }
 
   /**
@@ -88,6 +88,17 @@ export abstract class Address<
   static fromByteArray(
     _bytes: Uint8Array,
   ): Address {
+    throw new NonImplementedStaticMethodError();
+  }
+
+  /**
+   * Check if the addresses are the same
+   *
+   * @param _a Address to compare
+   * @param _b Address to compare
+   * @returns {boolean} True if these addresses are the same, false otherwise.
+   */
+  static equals(_a: Address, _b: Address): boolean {
     throw new NonImplementedStaticMethodError();
   }
 
@@ -186,5 +197,15 @@ export abstract class Address<
   toHexString(): string {
     const { totalBits } = ADDRESS_VERSIONS[this.version];
     return this.toUint().toString(16).padStart(totalBits / 4, "0");
+  }
+
+  /**
+   * Check if the addresses are the same
+   *
+   * @param b Address to compare
+   * @returns {boolean} True if these addresses are the same, false otherwise.
+   */
+  equals(b: this): boolean {
+    return addressEquals(this.array, b.array);
   }
 }

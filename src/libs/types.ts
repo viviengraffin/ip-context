@@ -194,6 +194,7 @@ export type IPv6KnownProperties =
  */
 export type IPv6AddressKnownProperties = IPv6KnownProperties & {
   _ipv4MappedString?: string;
+  _ip6ArpaString?: string;
 };
 
 /**
@@ -301,3 +302,9 @@ export type TunnelingModesObject = {
  * Type representing all Tunneling method classes
  */
 export type TunnelingModes = typeof Mapped | typeof SixToFour | typeof Teredo;
+
+/**
+ * Type representing the Submask class for IP version
+ */
+export type SubmaskForVersion<Version extends AddressVersions> = Version extends
+  4 ? IPv4Submask : IPv6Submask;
