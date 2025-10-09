@@ -131,7 +131,7 @@ ctx.isHost("192.168.1.0"); // False, even if this address is present in this net
 
 ### Create a context for a number of hosts
 
-There are two methods for that:
+There are three methods for that:
 
 #### Create an IPAddress ([IPv4Address](https://jsr.io/@viviengraffin/ip-context/doc/~/IPv4Address) or [IPv6Address](https://jsr.io/@viviengraffin/ip-context/doc/~/IPv6Address)) and use the createContextWithHosts method
 
