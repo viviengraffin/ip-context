@@ -1,4 +1,4 @@
-# ip-context
+# ip-context [![JSR](https://jsr.io/badges/@viviengraffin/ip-context)](https://jsr.io/@viviengraffin/ip-context)
 
 Si vous êtes francophone, vous pouvez aller [ici](./md/fr/LISEZ_MOI.md)
 

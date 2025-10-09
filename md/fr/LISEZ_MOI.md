@@ -1,4 +1,4 @@
-# ip-context
+# ip-context [![JSR](https://jsr.io/badges/@viviengraffin/ip-context)](https://jsr.io/@viviengraffin/ip-context)
 
 This is the french version of the presentation of this library, if you don't
 speak french, go [here](../../README.md)
