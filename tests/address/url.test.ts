@@ -1,5 +1,7 @@
 import { IPv4Address, IPv6Address } from "../../src/libs/ipaddress.ts";
 import { testIPFromURL } from "../libs.ts";
+import { expect, test } from "vitest";
+import { IncorrectAddressError, URLError } from "../../src/libs/error.ts";
 
 testIPFromURL(
   "IPv4Address with full URL",
@@ -62,3 +64,19 @@ testIPFromURL(
     url: "http://[2001:db6::1]",
   },
 );
+
+test("IPv4Address fail waited (port 65536)", () => {
+  expect(() => IPv4Address.fromURL("192.168.0.1:65536")).toThrow(URLError);
+});
+
+test("IPv4Address fail waited (address: 256.192.0.1)", () => {
+  expect(
+    () => IPv4Address.fromURL("http://256.192.0.1"),
+  ).toThrow(IncorrectAddressError);
+});
+
+test("IPv4Address fail waited (incorrect format)", () => {
+  expect(
+    () => IPv4Address.fromURL("http://192.168.1.1://8080"),
+  ).toThrowError();
+});
