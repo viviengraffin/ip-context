@@ -570,7 +570,7 @@ export function isIP6ArpaString(string: string): boolean {
 }
 
 export function isCorrectPort(port: number): boolean {
-  return port > 0 && port < 65535;
+  return port > 0 && port < 0xFFFF;
 }
 
 function parseUrl(

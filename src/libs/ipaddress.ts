@@ -24,6 +24,7 @@ import { Mapped, Teredo } from "./tunneling.ts";
 import {
   IncorrectAddressError,
   NonImplementedStaticMethodError,
+  URLError,
 } from "./error.ts";
 import { IPv4Submask, IPv6Submask } from "./submask.ts";
 import type {
@@ -67,13 +68,27 @@ export abstract class IPAddress<
    */
   public protocol?: string;
 
+  /**
+   * Get port
+   *
+   * @returns {number | undefined} Port
+   */
   get port(): number | undefined {
     return this._port;
   }
 
+  /**
+   * Set port
+   *
+   * @param value - Port to set
+   * @throws {URLError} when the port is invalid
+   */
   set port(value: number | undefined) {
     if (value !== undefined && !isCorrectPort(value)) {
-      throw new Error();
+      throw new URLError({
+        type: "invalid-port",
+        port: value,
+      });
     }
     this._port = value;
   }

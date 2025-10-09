@@ -335,3 +335,8 @@ export type ParseUrlResult = {
   address: string;
   port: number | undefined;
 };
+
+export type URLErrorDatas = {
+  type: "invalid-port";
+  port: number;
+};
