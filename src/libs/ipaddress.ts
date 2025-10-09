@@ -399,6 +399,16 @@ export class IPv4Address extends IPAddress<4> {
    *
    * @param hosts - Desired number of hosts in the subnet
    * @returns {IPv4Address} New network context instance
+   * 
+   * @example
+   * 
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   * 
+   * const ip=IPv4Address.fromString("192.168.1.1");
+   * const ctx=ip.createContextWithHosts(10_000);
+   * console.log(ctx.hosts); // 16_382
+   * ```
    */
   override createContextWithHosts(hosts: number): IPv4Context {
     const submask = IPv4Submask.fromHosts(hosts);
@@ -410,6 +420,36 @@ export class IPv4Address extends IPAddress<4> {
    *
    * @param submask - Submask as array, string, or CIDR value
    * @returns {IPv4Context} New network context instance
+   *
+   * @example Use with IPv4 submask string
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromString("192.168.1.1");
+   * const ctx=ip.createContextWithSubmask("255.255.255.0");
+   * console.log(ctx.size); // 256
+   * ```
+   *
+   * @example Use with Cidr
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromString("192.168.1.1");
+   * const ctx=ip.createContextWithSubmask(24);
+   * console.log(ctx.size); // 256
+   * ```
+   *
+   * @example Use with Uint8Array
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromString("192.168.1.1");
+   * const ctx=ip.createContextWithSubmask(new Uint8Array([255,255,255,0]));
+   * console.log(ctx.size); // 256
+   * ```
    */
   override createContextWithSubmask(
     submask: string | number | Uint8Array,
@@ -860,6 +900,16 @@ export class IPv6Address extends IPAddress<6> {
    *
    * @param hosts - Desired number of hosts in the subnet
    * @returns {IPv6Context} New network context instance
+   * 
+   * @example
+   * 
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   * 
+   * const ip=IPv6Address.fromString("2001:db6::1");
+   * const ctx=ip.createContextWithHosts(100_000_000n);
+   * console.log(ctx.hosts); // 134217727n
+   * ```
    */
   override createContextWithHosts(hosts: bigint): IPv6Context {
     const submask = IPv6Submask.fromHosts(hosts);
@@ -871,6 +921,34 @@ export class IPv6Address extends IPAddress<6> {
    *
    * @param submask - Submask as array, string, or CIDR value
    * @returns {IPv6Context} New network context instance
+   * 
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv6Address.fromString("2001:db6::1");
+   * const ctx=ip.createContextWithSubmask("ffff:ffff:ffff:ffff::");
+   * console.log(ctx.size); // 18446744073709551616n
+   * ```
+   *
+   * @example Use with Cidr
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv6Address.fromString("2001:db6::1");
+   * const ctx=ip.createContextWithSubmask(64);
+   * console.log(ctx.size); // 18446744073709551616n
+   * ```
+   *
+   * @example Use with Uint16Array
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv6Address.fromString("2001:db6::1");
+   * const ctx=ip.createContextWithSubmask(new Uint16Array([0xFFFF,0xFFFF,0xFFFF,0xFFFF,0,0,0,0]));
+   * console.log(ctx.size); // 18446744073709551616n
+   * ```
    */
   override createContextWithSubmask(
     submask: string | number | Uint16Array,
