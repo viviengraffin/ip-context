@@ -107,6 +107,9 @@ export class ContextError extends Error {
   }
 }
 
+/**
+ * This error is throwed if an URL is not valid
+ */
 export class URLError extends Error {
   constructor(public readonly datas: URLErrorDatas) {
     super();
