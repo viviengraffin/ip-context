@@ -241,6 +241,23 @@ export type AddressOtherProperties<
   knownProperties?: KnownProperties;
 };
 
+type IPBaseKnownAddress<KnownProperties extends AllAddressKnownProperties> =
+  & AddressOtherProperties<KnownProperties>
+  & {
+    protocol?: string;
+    port?: number;
+  };
+
+export type IPv4AddressOtherProperties = IPBaseKnownAddress<
+  AddressKnownProperties<number>
+>;
+
+export type IPv6AddressOtherProperties =
+  & IPBaseKnownAddress<IPv6AddressKnownProperties>
+  & {
+    zoneId?: string | null;
+  };
+
 export type GenerateSubmaskFromHostsResult<
   AddressArray extends AddressArrays = AddressArrays,
   NumberType extends NumberTypes = NumberTypes,

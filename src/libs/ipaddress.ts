@@ -6,6 +6,7 @@ import {
   hasZoneId,
   hexStringToUint,
   isCorrectAddress,
+  isCorrectPort,
   isIP6ArpaString,
   isIPv4StringAddress,
   memoize,
@@ -25,13 +26,13 @@ import {
 import { IPv4Submask, IPv6Submask } from "./submask.ts";
 import type {
   AddressArrayForVersion,
-  AddressKnownProperties,
   AddressOtherProperties,
   AddressVersions,
   AllAddressKnownProperties,
   ContextTypeForVersion,
   IPv4AddressClasses,
-  IPv6AddressKnownProperties,
+  IPv4AddressOtherProperties,
+  IPv6AddressOtherProperties,
   NumberTypeForVersion,
   TeredoDatas,
   TunnelingModeParams4To6,
@@ -53,6 +54,26 @@ export abstract class IPAddress<
 > extends Address<Version> {
   static fromURL(_url: string): IPAddress<AddressVersions> {
     throw new NonImplementedStaticMethodError();
+  }
+
+  /**
+   * Port
+   */
+  protected _port?: number;
+  /**
+   * Protocol (for example: http,https,ftp,...)
+   */
+  public protocol?: string;
+
+  get port(): number | undefined {
+    return this._port;
+  }
+
+  set port(value: number | undefined) {
+    if (value !== undefined && !isCorrectPort(value)) {
+      throw new Error();
+    }
+    this._port = value;
   }
 
   /**
@@ -198,8 +219,7 @@ export class IPv4Address extends IPAddress<4> {
    */
   constructor(
     items: number[] | AddressArrayForVersion<4>,
-    otherProperties: AddressOtherProperties<AddressKnownProperties<number>> =
-      {},
+    otherProperties: IPv4AddressOtherProperties = {},
   ) {
     super(4, items, otherProperties);
   }
@@ -531,7 +551,7 @@ export class IPv6Address extends IPAddress<6> {
   constructor(
     items: number[] | AddressArrayForVersion<6>,
     protected _zoneId: string | null = null,
-    otherProperties: AddressOtherProperties<IPv6AddressKnownProperties> = {},
+    otherProperties: IPv6AddressOtherProperties = {},
   ) {
     if (!verifyZoneId(_zoneId)) {
       throw new IncorrectAddressError({
@@ -612,7 +632,6 @@ export class IPv6Address extends IPAddress<6> {
    * @param conversionMode - Conversion mode (for example: "mapped", "6to4", "teredo", "auto")
    * @param params - Optional parameters for the conversion (for example: 6rd prefix)
    * @returns {boolean} True if the address is tunneling an IPv4 address, false otherwise
-   * @throws {IncorrectAddressError} If the conversion mode is not supported
    */
   isIPv4Tunneling<T extends TunnelingModes>(conversionMode: T): boolean {
     return conversionMode.isValid(this);

@@ -567,3 +567,7 @@ export function isIP6ArpaString(string: string): boolean {
   }
   return string.endsWith(".ip6.arpa") && string.length === 72;
 }
+
+export function isCorrectPort(port: number): boolean {
+  return port > 0 && port < 65535;
+}
