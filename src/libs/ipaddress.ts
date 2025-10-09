@@ -383,7 +383,7 @@ export class IPv6Address extends IPAddress<6> {
     const splittedIP = hasZoneId(string);
     return splittedIP === null
       ? new IPv6Address(parseIPv6Address(string))
-      : new IPv6Address(parseIPv6Address(splittedIP[0]), splittedIP[1]);
+      : new IPv6Address(parseIPv6Address(splittedIP[0]), { zoneId:splittedIP[1] });
   }
 
   protected _ipv4MappedString?: string;
@@ -410,10 +410,11 @@ export class IPv6Address extends IPAddress<6> {
    */
   static override fromUint(
     uint: bigint,
-    zoneId: string | null = null,
+    zoneId?: string,
     _ip6ArpaString?: string,
   ): IPv6Address {
-    return new this(UintToArray(6, uint), zoneId, {
+    return new this(UintToArray(6, uint), {
+      zoneId,
       knownProperties: {
         _uint: uint,
         _ip6ArpaString,
@@ -431,7 +432,7 @@ export class IPv6Address extends IPAddress<6> {
    */
   static override fromByteArray(
     bytes: Uint8Array,
-    zoneId: string | null = null,
+    zoneId?: string,
   ): IPv6Address {
     if (bytes.length !== 16) {
       throw new IncorrectAddressError({
@@ -440,7 +441,8 @@ export class IPv6Address extends IPAddress<6> {
         address: bytes,
       });
     }
-    return new this(byteArrayToUint16Array(bytes), zoneId, {
+    return new this(byteArrayToUint16Array(bytes), {
+      zoneId,
       knownProperties: {
         _byteArray: bytes,
       },
@@ -464,9 +466,9 @@ export class IPv6Address extends IPAddress<6> {
    */
   static override fromHexString(
     hexString: string,
-    zoneId: string | null = null,
+    zoneId?: string,
   ): IPv6Address {
-    return this.fromUint(hexStringToUint(6, hexString), zoneId);
+    return this.fromUint(hexStringToUint(6, hexString),zoneId);
   }
 
   /**
@@ -496,7 +498,7 @@ export class IPv6Address extends IPAddress<6> {
    */
   static fromIP6ArpaString(string: string): IPv6Address {
     string = string.toLowerCase();
-    let zoneId: string | null = null;
+    let zoneId: string | undefined = undefined;
     const rHasZoneId = hasZoneId(string);
     if (rHasZoneId !== null) {
       string = rHasZoneId[0];
@@ -524,7 +526,7 @@ export class IPv6Address extends IPAddress<6> {
       const n = BigInt("0x" + parts[i]);
       uint = (uint << 4n) | n;
     }
-    return this.fromUint(uint, zoneId, string);
+    return this.fromUint(uint,zoneId,string);
   }
 
   /**
@@ -540,6 +542,12 @@ export class IPv6Address extends IPAddress<6> {
 
   protected _ip6ArpaString?: string;
   protected _byteArray?: Uint8Array;
+  /**
+   * Gets the zone identifier of this IPv6 address.
+   *
+   * @returns {string | null} The zone identifier, or null if none
+   */
+  public readonly zoneId: string | null
 
   /**
    * Creates a new IPv6Address instance.
@@ -550,16 +558,22 @@ export class IPv6Address extends IPAddress<6> {
    */
   constructor(
     items: number[] | AddressArrayForVersion<6>,
-    protected _zoneId: string | null = null,
     otherProperties: IPv6AddressOtherProperties = {},
   ) {
-    if (!verifyZoneId(_zoneId)) {
-      throw new IncorrectAddressError({
-        type: "incorrect-zone-id",
-        zoneId: _zoneId!,
-      });
-    }
     super(6, items, otherProperties);
+    if(otherProperties.zoneId!==undefined) {
+      if (!verifyZoneId(otherProperties.zoneId)) {
+        throw new IncorrectAddressError({
+          type: "incorrect-zone-id",
+          zoneId: otherProperties.zoneId,
+        });
+      }
+      this.zoneId=otherProperties.zoneId
+    }
+    else
+    {
+      this.zoneId=null
+    }
 
     if (otherProperties.knownProperties !== undefined) {
       if (otherProperties.knownProperties._byteArray !== undefined) {
@@ -573,15 +587,6 @@ export class IPv6Address extends IPAddress<6> {
         this._ip6ArpaString = otherProperties.knownProperties._ip6ArpaString;
       }
     }
-  }
-
-  /**
-   * Gets the zone identifier of this IPv6 address.
-   *
-   * @returns {string | null} The zone identifier, or null if none
-   */
-  get zoneId(): string | null {
-    return this._zoneId;
   }
 
   /**

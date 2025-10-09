@@ -255,7 +255,7 @@ export type IPv4AddressOtherProperties = IPBaseKnownAddress<
 export type IPv6AddressOtherProperties =
   & IPBaseKnownAddress<IPv6AddressKnownProperties>
   & {
-    zoneId?: string | null;
+    zoneId?: string;
   };
 
 export type GenerateSubmaskFromHostsResult<
