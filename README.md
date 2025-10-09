@@ -169,5 +169,5 @@ See more about contextWithHosts function [here](https://jsr.io/@viviengraffin/ip
 import { contextWithHosts } from "@viviengraffin/ip-context";
 
 const ctx=contextWithHosts("192.168.1.1",512);
-console.log(ctx.hosts); // 512
+console.log(ctx.hosts); // 1022
 ```
