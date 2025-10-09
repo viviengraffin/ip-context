@@ -616,22 +616,22 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
    * @param conversionMode - Conversion mode
    * @returns {IPv4Address} New IPv4Address instance
    * @throws {IncorrectAddressError} If the address is not tunneling an IPv4 address
-   * 
+   *
    * @example Use with mapped
-   * 
+   *
    * ```ts
    * import { IPv6Address } from "@viviengraffin/ip-context";
-   * 
+   *
    * const ip6=IPv6Address.fromIPv4MappedString("::ffff:192.168.1.1");
    * const ip4=ip6.toIPv4Address(TUNNELING_MODES.MAPPED); // IPv4Address
-   * console.log(ip4.toString()); // "192.168.1.1" 
+   * console.log(ip4.toString()); // "192.168.1.1"
    * ```
-   * 
+   *
    * @example Use with 6to4
-   * 
+   *
    * ```ts
    * import { IPv6Address } from "@viviengraffin/ip-context";
-   * 
+   *
    * const ip6=IPv6Address.fromString("2002:c0a8:101::");
    * const ip4=ip6.toIPv4Address(TUNNELING_MODES.SIX_TO_FOUR); // IPv4Address
    * console.log(ip4.toString()); // "192.168.1.1"
@@ -796,12 +796,12 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
  *
  * const ip6=ip("::ffff:192.168.1.1"); // Instance of IPv6Address
  * ```
- * 
+ *
  * @example Use with ip6.arpa string
- * 
+ *
  * ```ts
  * import { ip } from "@viviengraffin/ip-context";
- * 
+ *
  * const ip6=ip("b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4.ip6.arpa"); // Instance of IPv6Address
  * ```
  */
