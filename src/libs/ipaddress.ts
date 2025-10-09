@@ -470,6 +470,57 @@ export class IPv4Address extends IPAddress<4> {
   }
 
   /**
+   * Creates a network context for this address with the class of this address.
+   * 
+   * @example Use with a class A IPv4Address
+   * 
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   * 
+   * const ip=IPv4Address.fromString("10.0.0.1");
+   * const ctx=ip.createContextFromClass();
+   * console.log(ctx.size); // 16777216
+   * ```
+   * 
+   * @example Use with a class B IPv4Address
+   * 
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   * 
+   * const ip=IPv4Address.fromString("172.16.0.1");
+   * const ctx=ip.createContextFromClass();
+   * console.log(ctx.size); // 65536
+   * ```
+   * 
+   * @example Use with a class C IPv4Address
+   * 
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   * 
+   * const ip=IPv4Address.fromString("192.168.1.1");
+   * const ctx=ip.createContextFromClass();
+   * console.log(ctx.size); // 256
+   * ```
+   * 
+   * @example Use with a class D or E IPv4Address
+   * 
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   * 
+   * const ip=IPv4Address.fromString("224.0.0.1");
+   * const ctx=ip.createContextFromClass(); // it returns null
+   * ```
+   */
+  createContextFromClass(): IPv4Context | null {
+    const submask=IPv4Submask.fromClass(this.class)
+    if(submask===null) {
+      return null;
+    }
+
+    return new IPv4Context(this,submask);
+  }
+
+  /**
    * Returns the address as a byte array.
    *
    * @returns {Uint8Array} Byte array representation of the address
