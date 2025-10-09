@@ -11,7 +11,9 @@ import {
   isIPv4StringAddress,
   memoize,
   parseIPv4Address,
+  parseIPv4Url,
   parseIPv6Address,
+  parseIPv6Url,
   stringifyIPv4Address,
   stringifyIPv6Address,
   uint16ArrayToByteArray,
@@ -116,6 +118,13 @@ export abstract class IPAddress<
   abstract createContextWithHosts(
     hosts: NumberTypeForVersion<Version>,
   ): ContextTypeForVersion<Version>;
+
+  /**
+   * Get the url from the protocol, address and port.
+   *
+   * @returns {string} URL
+   */
+  abstract toURL(): string;
 }
 
 /**
@@ -199,6 +208,53 @@ export class IPv4Address extends IPAddress<4> {
       });
     }
     return new this(bytes, { check: false });
+  }
+
+  /**
+   * Get an IPv4Address instance from an URL string
+   *
+   * @param url URL to parse
+   * @returns {IPv4Address} New IPv4Address instance
+   *
+   * @example Use with complete URL
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromURL("http://192.168.1.1:8080");
+   * console.log(ip.toString()); // "192.168.1.1"
+   * console.log(ip.port); // 8080
+   * console.log(ip.protocol); // "http"
+   * ```
+   *
+   * @example Use without protocol
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromURL("192.168.1.1:8080");
+   * console.log(ip.toString()); // "192.168.1.1"
+   * console.log(ip.port); // 8080
+   * console.log(ip.protocol); // undefined
+   * ```
+   *
+   * @example Use without port
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromURL("http://192.168.1.1");
+   * console.log(ip.toString()); // "192.168.1.1"
+   * console.log(ip.port); // undefined
+   * console.log(ip.protocol); // "http"
+   * ```
+   */
+  static override fromURL(url: string): IPv4Address {
+    const { protocol, address, port } = parseIPv4Url(url);
+    const res = this.fromString(address);
+    res.protocol = protocol;
+    res.port = port;
+    return res;
   }
 
   /**
@@ -366,6 +422,16 @@ export class IPv4Address extends IPAddress<4> {
   override toByteArray(): Uint8Array {
     return this.array;
   }
+
+  /**
+   * Get the url from the protocol, address and port.
+   *
+   * @returns {string} URL
+   */
+  override toURL(): string {
+    return (this.protocol !== undefined ? this.protocol + "://" : "") +
+      this.toString() + (this.port !== undefined ? ":" + this.port : "");
+  }
 }
 
 /**
@@ -383,7 +449,9 @@ export class IPv6Address extends IPAddress<6> {
     const splittedIP = hasZoneId(string);
     return splittedIP === null
       ? new IPv6Address(parseIPv6Address(string))
-      : new IPv6Address(parseIPv6Address(splittedIP[0]), { zoneId:splittedIP[1] });
+      : new IPv6Address(parseIPv6Address(splittedIP[0]), {
+        zoneId: splittedIP[1],
+      });
   }
 
   protected _ipv4MappedString?: string;
@@ -468,7 +536,7 @@ export class IPv6Address extends IPAddress<6> {
     hexString: string,
     zoneId?: string,
   ): IPv6Address {
-    return this.fromUint(hexStringToUint(6, hexString),zoneId);
+    return this.fromUint(hexStringToUint(6, hexString), zoneId);
   }
 
   /**
@@ -526,7 +594,54 @@ export class IPv6Address extends IPAddress<6> {
       const n = BigInt("0x" + parts[i]);
       uint = (uint << 4n) | n;
     }
-    return this.fromUint(uint,zoneId,string);
+    return this.fromUint(uint, zoneId, string);
+  }
+
+  /**
+   * Get an IPv6Address instance from an URL string
+   *
+   * @param url URL to parse
+   * @returns {IPv6Address} New IPv6Address instance
+   *
+   * @example Use with complete URL
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv6Address.fromURL("http://[2001:db6::1]:8080");
+   * console.log(ip.toString()); // "2001:db6::1"
+   * console.log(ip.port); // 8080
+   * console.log(ip.protocol); // "http"
+   * ```
+   *
+   * @example Use without protocol
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv6Address.fromURL("[2001:db6::1]:8080");
+   * console.log(ip.toString()); // "2001:db6::1"
+   * console.log(ip.port); // 8080
+   * console.log(ip.protocol); // undefined
+   * ```
+   *
+   * @example Use without port
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv6Address.fromURL("http://[2001:db6::1]");
+   * console.log(ip.toString()); // "2001:db6::1"
+   * console.log(ip.port); // undefined
+   * console.log(ip.protocol); // "http"
+   * ```
+   */
+  static override fromURL(url: string): IPv6Address {
+    const { protocol, address, port } = parseIPv6Url(url);
+    const res = this.fromString(address);
+    res.port = port;
+    res.protocol = protocol;
+    return res;
   }
 
   /**
@@ -547,7 +662,7 @@ export class IPv6Address extends IPAddress<6> {
    *
    * @returns {string | null} The zone identifier, or null if none
    */
-  public readonly zoneId: string | null
+  public readonly zoneId: string | null;
 
   /**
    * Creates a new IPv6Address instance.
@@ -561,18 +676,16 @@ export class IPv6Address extends IPAddress<6> {
     otherProperties: IPv6AddressOtherProperties = {},
   ) {
     super(6, items, otherProperties);
-    if(otherProperties.zoneId!==undefined) {
+    if (otherProperties.zoneId !== undefined) {
       if (!verifyZoneId(otherProperties.zoneId)) {
         throw new IncorrectAddressError({
           type: "incorrect-zone-id",
           zoneId: otherProperties.zoneId,
         });
       }
-      this.zoneId=otherProperties.zoneId
-    }
-    else
-    {
-      this.zoneId=null
+      this.zoneId = otherProperties.zoneId;
+    } else {
+      this.zoneId = null;
     }
 
     if (otherProperties.knownProperties !== undefined) {
@@ -796,6 +909,16 @@ export class IPv6Address extends IPAddress<6> {
       },
       () => this._ip6ArpaString!,
     );
+  }
+
+  /**
+   * Get the url from the protocol, address and port.
+   *
+   * @returns {string} URL
+   */
+  override toURL(): string {
+    return (this.protocol !== undefined ? this.protocol + "://" : "") + "[" +
+      this.toString() + "]" + (this.port !== undefined ? ":" + this.port : "");
   }
 }
 

@@ -329,3 +329,9 @@ export type SubmaskForVersion<Version extends AddressVersions> = Version extends
 
 export type ContextTypeForVersion<Version extends AddressVersions> =
   Version extends 4 ? IPv4Context : IPv6Context;
+
+export type ParseUrlResult = {
+  protocol: string | undefined;
+  address: string;
+  port: number | undefined;
+};
