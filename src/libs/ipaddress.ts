@@ -87,7 +87,7 @@ export abstract class IPAddress<
   constructor(
     version: Version,
     items: number[] | AddressArrayForVersion<Version>,
-    otherProperties: AddressOtherProperties<AllAddressKnownProperties>,
+    otherProperties: AddressOtherProperties<AllAddressKnownProperties> = {},
   ) {
     super(version, items, undefined, otherProperties);
   }
