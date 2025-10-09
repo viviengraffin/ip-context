@@ -3,6 +3,7 @@
  * @template T - The type of the instance to be constructed
  */
 
+import type { IPv4Context, IPv6Context } from "./context.ts";
 import type { IPv4Address, IPv6Address } from "./ipaddress.ts";
 import type { IPv4Submask, IPv6Submask } from "./submask.ts";
 import type { Mapped, SixToFour, Teredo } from "./tunneling.ts";
@@ -308,3 +309,6 @@ export type TunnelingModes = typeof Mapped | typeof SixToFour | typeof Teredo;
  */
 export type SubmaskForVersion<Version extends AddressVersions> = Version extends
   4 ? IPv4Submask : IPv6Submask;
+
+export type ContextTypeForVersion<Version extends AddressVersions> =
+  Version extends 4 ? IPv4Context : IPv6Context;

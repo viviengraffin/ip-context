@@ -16,15 +16,20 @@ import {
   uint16ArrayToByteArray,
   verifyZoneId,
 } from "./common.ts";
-import { type Context, IPv4Context, IPv6Context } from "./context.ts";
+import { IPv4Context, IPv6Context } from "./context.ts";
 import { Mapped, Teredo } from "./tunneling.ts";
-import { IncorrectAddressError } from "./error.ts";
+import {
+  IncorrectAddressError,
+  NonImplementedStaticMethodError,
+} from "./error.ts";
 import { IPv4Submask, IPv6Submask } from "./submask.ts";
 import type {
   AddressArrayForVersion,
   AddressKnownProperties,
   AddressOtherProperties,
   AddressVersions,
+  AllAddressKnownProperties,
+  ContextTypeForVersion,
   IPv4AddressClasses,
   IPv6AddressKnownProperties,
   NumberTypeForVersion,
@@ -45,8 +50,11 @@ import { arrayToUint, UintToArray } from "./uint.ts";
  */
 export abstract class IPAddress<
   Version extends AddressVersions,
-  KnownProperties extends AddressKnownProperties = AddressKnownProperties,
-> extends Address<Version, KnownProperties> {
+> extends Address<Version> {
+  static fromURL(_url: string): IPAddress<AddressVersions> {
+    throw new NonImplementedStaticMethodError();
+  }
+
   /**
    * Constructor of IPAddress abstract class
    *
@@ -56,7 +64,7 @@ export abstract class IPAddress<
   constructor(
     version: Version,
     items: number[] | AddressArrayForVersion<Version>,
-    otherProperties: AddressOtherProperties<KnownProperties>,
+    otherProperties: AddressOtherProperties<AllAddressKnownProperties>,
   ) {
     super(version, items, undefined, otherProperties);
   }
@@ -76,7 +84,7 @@ export abstract class IPAddress<
    */
   abstract createContextWithSubmask(
     submask: AddressArrayForVersion<Version> | string | number,
-  ): Context<Version>;
+  ): ContextTypeForVersion<Version>;
 
   /**
    * Creates a network context for this address with the given number of hosts.
@@ -86,14 +94,14 @@ export abstract class IPAddress<
    */
   abstract createContextWithHosts(
     hosts: NumberTypeForVersion<Version>,
-  ): Context<Version>;
+  ): ContextTypeForVersion<Version>;
 }
 
 /**
  * Class representing an IPv4 address.
  * Provides methods to create, validate, and manipulate IPv4 addresses.
  */
-export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
+export class IPv4Address extends IPAddress<4> {
   /**
    * Creates an IPv4Address from a string representation.
    *
@@ -344,7 +352,7 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
  * Class representing an IPv6 address.
  * Provides methods to create, validate, and manipulate IPv6 addresses.
  */
-export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
+export class IPv6Address extends IPAddress<6> {
   /**
    * Creates an IPv6Address from a string representation.
    *

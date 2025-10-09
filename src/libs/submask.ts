@@ -221,7 +221,7 @@ function getHostsFromSizeAndCidr<T extends AddressVersions>(
 export abstract class Submask<
   Version extends AddressVersions = AddressVersions,
   KnownProperties extends SubmaskKnownProperties = SubmaskKnownProperties,
-> extends Address<Version, KnownProperties> {
+> extends Address<Version> {
   static fromCidr(_cidr: number): Submask {
     throw new NonImplementedStaticMethodError();
   }
@@ -237,7 +237,9 @@ export abstract class Submask<
   constructor(
     version: Version,
     items: number[] | AddressArrayForVersion<Version>,
-    otherProperties: AddressOtherProperties<KnownProperties> = {},
+    otherProperties: AddressOtherProperties<
+      SubmaskKnownProperties<number> | IPv6SubmaskKnownProperties
+    > = {},
   ) {
     super(version, items, isCorrectSubmask, otherProperties);
 

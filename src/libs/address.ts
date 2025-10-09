@@ -3,7 +3,6 @@ import { ADDRESS_VERSIONS } from "./const.ts";
 import { NonImplementedStaticMethodError } from "./error.ts";
 import type {
   AddressArrayForVersion,
-  AddressKnownProperties,
   AddressOtherProperties,
   AddressVersions,
   AllAddressKnownProperties,
@@ -21,7 +20,6 @@ import type {
  */
 export abstract class Address<
   Version extends AddressVersions = AddressVersions,
-  KnownProperties extends AddressKnownProperties = AllAddressKnownProperties,
 > {
   /**
    * Creates an Address instance from a string representation.
@@ -118,7 +116,7 @@ export abstract class Address<
     items: number[] | AddressArrayForVersion<Version>,
     check?: CheckAddressFunction<Version>,
     { check: checkValue = true, knownProperties }: AddressOtherProperties<
-      KnownProperties
+      AllAddressKnownProperties
     > = {},
   ) {
     this._array = checkValue ? createAddressArray(version, items, check) : (
