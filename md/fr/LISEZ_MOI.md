@@ -130,6 +130,7 @@ const ctx = context("192.168.1.1/24");
 ctx.includes("192.168.1.0"); // Vrai, même si 192.168.1.0 est l'adresse réseau, elle est présente dans ce réseau
 ctx.isHost("192.168.1.0"); // Faux, même si cette adresse est présente dans ce réseau, c'est l'adresse réseau qui n'est pas adressable
 ```
+
 ### Créer un contexte réseau pour un nombre d'hôte
 
 Il y a trois méthodes pour cela :
