@@ -561,12 +561,17 @@ export function addressEquals<T extends AddressVersions>(
   return true;
 }
 
-export function isIP6ArpaString(string: string): boolean {
-  const rHasZoneId = hasZoneId(string);
-  if (rHasZoneId !== null) {
-    string = rHasZoneId[0];
+export function getIP6ArpaStringSuffix(string: string): string | null {
+  if(string.endsWith(".ip6.arpa") && string.length === 72)
+  {
+    return ".ip6.arpa"
   }
-  return string.endsWith(".ip6.arpa") && string.length === 72;
+  if(string.endsWith(".ip6.arpa.") && string.length === 73)
+  {
+    return ".ip6.arpa."
+  }
+
+  return null
 }
 
 export function isCorrectPort(port: number): boolean {
@@ -628,12 +633,4 @@ export function parseIPv6Url(url: string): ParseUrlResult {
       };
     }
   });
-}
-
-export function isCorrectInteger(
-  value: number,
-  min: number,
-  max: number,
-): boolean {
-  return Number.isInteger(value) && value >= min && value <= max;
 }
