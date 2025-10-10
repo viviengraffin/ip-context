@@ -561,13 +561,22 @@ export function addressEquals<T extends AddressVersions>(
   return true;
 }
 
-export function getIP6ArpaStringSuffix(string: string): string | null {
-  if(string.endsWith(".ip6.arpa") && string.length === 72)
-  {
-    return ".ip6.arpa"
+function splitIP6ArpaString(string: string): string[] | null {
+  const parts = string.split(".");
+
+  if (parts.length !== 32) {
+    return null;
   }
 
-  return null
+  return parts;
+}
+
+export function getIP6ArpaStringParts(string: string): string[] | null {
+  if (string.endsWith(".ip6.arpa") && string.length === 72) {
+    return splitIP6ArpaString(string.replace(".ip6.arpa", ""));
+  }
+
+  return null;
 }
 
 export function isCorrectPort(port: number): boolean {

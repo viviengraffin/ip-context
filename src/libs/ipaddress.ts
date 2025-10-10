@@ -3,7 +3,7 @@ import {
   addressEquals,
   binaryStringToUint,
   byteArrayToUint16Array,
-  getIP6ArpaStringSuffix,
+  getIP6ArpaStringParts,
   hasZoneId,
   hexStringToUint,
   isCorrectAddress,
@@ -669,12 +669,12 @@ export class IPv6Address extends IPAddress<6> {
    *
    * @param string - ip6.arpa string representation
    * @returns {IPv6Address} New instance of IPv6Address
-   * 
+   *
    * @example Use with RFC 3596 address example
-   * 
+   *
    * ```ts
    * import { IPv6Address } from "@viviengraffin/ip-context";
-   * 
+   *
    * const ip=IPv6Address.fromIP6ArpaString("b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4.ip6.arpa");
    * console.log(ip.toString()); // "4321::1:2:3:4:567:89ab"
    * ```
@@ -682,19 +682,9 @@ export class IPv6Address extends IPAddress<6> {
   static fromIP6ArpaString(string: string): IPv6Address {
     string = string.toLowerCase();
 
-    const suffix=getIP6ArpaStringSuffix(string)
+    const parts = getIP6ArpaStringParts(string);
 
-    if(suffix===null) {
-      throw new IncorrectAddressError({
-        type:"incorrect-format",
-        version:6,
-        address:string
-      })
-    }
-
-    const parts = string.replace(suffix, "").split(".");
-
-    if (parts.length !== 32) {
+    if (parts === null) {
       throw new IncorrectAddressError({
         type: "incorrect-format",
         version: 6,
@@ -711,36 +701,14 @@ export class IPv6Address extends IPAddress<6> {
       const c = Number("0x" + parts[i - 2]);
       const d = Number("0x" + parts[i - 3]);
 
-      if (!Number.isInteger(a)) {
+      if (
+        !Number.isInteger(a) || !Number.isInteger(b) || !Number.isInteger(c) ||
+        !Number.isInteger(d)
+      ) {
         throw new IncorrectAddressError({
-          type: "incorrect-item",
+          type: "incorrect-format",
           version: 6,
           address: string,
-          item: a,
-        });
-      }
-      if (!Number.isInteger(b)) {
-        throw new IncorrectAddressError({
-          type: "incorrect-item",
-          version: 6,
-          address: string,
-          item: b,
-        });
-      }
-      if (!Number.isInteger(c)) {
-        throw new IncorrectAddressError({
-          type: "incorrect-item",
-          version: 6,
-          address: string,
-          item: c,
-        });
-      }
-      if (!Number.isInteger(d)) {
-        throw new IncorrectAddressError({
-          type: "incorrect-item",
-          version: 6,
-          address: string,
-          item: d,
         });
       }
 
@@ -1155,7 +1123,7 @@ export class IPv6Address extends IPAddress<6> {
  * ```
  */
 export function ip(ip: string): IPv4Address | IPv6Address {
-  if (getIP6ArpaStringSuffix(ip.toLowerCase())!==null) {
+  if (getIP6ArpaStringParts(ip.toLowerCase()) !== null) {
     return IPv6Address.fromIP6ArpaString(ip);
   }
   if (Mapped.isValidString(ip)) {
