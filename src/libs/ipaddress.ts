@@ -670,6 +670,15 @@ export class IPv6Address extends IPAddress<6> {
    *
    * @param string - ip6.arpa string representation
    * @returns {IPv6Address} New instance of IPv6Address
+   * 
+   * @example Use with RFC 3596 address example
+   * 
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   * 
+   * const ip=IPv6Address.fromIP6ArpaString("b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4.ip6.arpa");
+   * console.log(ip.toString()); // "4321::1:2:3:4:567:89ab"
+   * ```
    */
   static fromIP6ArpaString(string: string): IPv6Address {
     string = string.toLowerCase();
