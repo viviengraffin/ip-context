@@ -62,3 +62,10 @@ export type IPv6TestAddressDatas = TestAddressDatasBase<bigint> & {
   isLocalLink: boolean;
   isUnicast: boolean;
 };
+
+export type IPFromURLExpectedValues = {
+  protocol?: string;
+  address: string;
+  port?: number;
+  url: string;
+};

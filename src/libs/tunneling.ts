@@ -184,14 +184,15 @@ export class Mapped extends TunnelingMode {
 
   static override toIPv6(
     ipv4: IPv4Address,
-    zoneId: string | null = null,
+    zoneId?: string,
     string?: string,
   ): IPv6Address {
     const ipv6 = this.fillPrefix([0, 0, 0, 0, 0, 0xffff]);
     return new IPv6Address(
       copyIPv4ToIPv6Address(ipv4.array, ipv6, 6, true),
-      zoneId,
-      string ? { knownProperties: { _ipv4MappedString: string } } : undefined,
+      string
+        ? { zoneId, knownProperties: { _ipv4MappedString: string } }
+        : undefined,
     );
   }
 
@@ -203,7 +204,7 @@ export class Mapped extends TunnelingMode {
     return "::ffff:" + this.toIPv4(ipv6).toString();
   }
 
-  static fromString(string: string, zoneId: string | null = null): IPv6Address {
+  static fromString(string: string, zoneId?: string): IPv6Address {
     if (!this.isValidString(string)) {
       throw new IncorrectAddressError({
         type: "incorrect-format",

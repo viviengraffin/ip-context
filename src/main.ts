@@ -18,6 +18,7 @@ export {
   ContextError,
   IncorrectAddressError,
   NonImplementedStaticMethodError,
+  URLError,
 } from "./libs/error.ts";
 export {
   type Mapped,
@@ -50,5 +51,6 @@ export type {
   TunnelingModesObject,
   TunnelingModeWithoutParams4To6,
   TunnelingModeWithParams4To6,
+  URLErrorDatas,
   Valid,
 } from "./libs/types.ts";

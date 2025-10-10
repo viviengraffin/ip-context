@@ -3,6 +3,7 @@ import { IPv4Address, IPv6Address } from "../src/libs/ipaddress.ts";
 import { IPv4Submask, IPv6Submask } from "../src/libs/submask.ts";
 import { IPv4Context, IPv6Context } from "../src/libs/context.ts";
 import type {
+  IPFromURLExpectedValues,
   IPv4GetDatasFromResult,
   IPv4TestAddressDatas,
   IPv6GetDatasFromResult,
@@ -225,5 +226,29 @@ export function testSubmask<T extends AddressVersions>(
     expect(addressEquals(a.array as AddressArrayForVersion<T>, b)).toBe(
       expected,
     );
+  });
+}
+
+export function testIPFromURL<T extends IPv4Address | IPv6Address>(
+  name: string,
+  ip: T,
+  expectedValues: IPFromURLExpectedValues,
+) {
+  describe(name, () => {
+    test("has good address string", () => {
+      expect(ip.toString()).toBe(expectedValues.address);
+    });
+
+    test("has good protocol", () => {
+      expect(ip.protocol).toBe(expectedValues.protocol);
+    });
+
+    test("has good port", () => {
+      expect(ip.port).toBe(expectedValues.port);
+    });
+
+    test("Generate good URL", () => {
+      expect(ip.toURL()).toBe(expectedValues.url);
+    });
   });
 }

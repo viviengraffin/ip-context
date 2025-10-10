@@ -12,6 +12,7 @@ import type {
   CheckAddressFunction,
   ExtractCidrFromStringResult,
   NumberTypeForVersion,
+  ParseUrlResult,
   Undefineded,
   Valid,
 } from "./types.ts";
@@ -560,10 +561,81 @@ export function addressEquals<T extends AddressVersions>(
   return true;
 }
 
-export function isIP6ArpaString(string: string): boolean {
-  const rHasZoneId = hasZoneId(string);
-  if (rHasZoneId !== null) {
-    string = rHasZoneId[0];
+function splitIP6ArpaString(string: string): string[] | null {
+  const parts = string.split(".");
+
+  if (parts.length !== 32) {
+    return null;
   }
-  return string.endsWith(".ip6.arpa") && string.length === 72;
+
+  return parts;
+}
+
+export function getIP6ArpaStringParts(string: string): string[] | null {
+  if (string.endsWith(".ip6.arpa") && string.length === 72) {
+    return splitIP6ArpaString(string.replace(".ip6.arpa", ""));
+  }
+
+  return null;
+}
+
+export function isCorrectPort(port: number): boolean {
+  return port > 0 && port < 0xFFFF;
+}
+
+function parseUrl(
+  url: string,
+  callback: (url: string) => Omit<ParseUrlResult, "protocol">,
+): ParseUrlResult {
+  let protocol: string | undefined = undefined;
+  const protocolIndex = url.indexOf("://");
+
+  if (protocolIndex !== -1) {
+    protocol = url.substring(0, protocolIndex);
+    url = url.substring(protocolIndex + 3);
+  }
+
+  const { address, port } = callback(url);
+
+  return {
+    protocol,
+    address,
+    port,
+  };
+}
+
+export function parseIPv4Url(url: string): ParseUrlResult {
+  return parseUrl(url, (url) => {
+    const separatorIndex = url.indexOf(":");
+
+    if (separatorIndex === -1) {
+      return {
+        address: url,
+        port: undefined,
+      };
+    } else {
+      return {
+        address: url.substring(0, separatorIndex),
+        port: Number(url.substring(separatorIndex + 1)),
+      };
+    }
+  });
+}
+
+export function parseIPv6Url(url: string): ParseUrlResult {
+  return parseUrl(url, (url) => {
+    const separatorIndex = url.indexOf("]:");
+
+    if (separatorIndex === -1) {
+      return {
+        address: url.replace("[", "").replace("]", ""),
+        port: undefined,
+      };
+    } else {
+      return {
+        address: url.substring(1, separatorIndex),
+        port: Number(url.substring(separatorIndex + 2)),
+      };
+    }
+  });
 }

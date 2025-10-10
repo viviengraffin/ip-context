@@ -3,6 +3,7 @@
  * @template T - The type of the instance to be constructed
  */
 
+import type { IPv4Context, IPv6Context } from "./context.ts";
 import type { IPv4Address, IPv6Address } from "./ipaddress.ts";
 import type { IPv4Submask, IPv6Submask } from "./submask.ts";
 import type { Mapped, SixToFour, Teredo } from "./tunneling.ts";
@@ -240,6 +241,29 @@ export type AddressOtherProperties<
   knownProperties?: KnownProperties;
 };
 
+type IPBaseKnownAddress<KnownProperties extends AllAddressKnownProperties> =
+  & AddressOtherProperties<KnownProperties>
+  & {
+    protocol?: string;
+    port?: number;
+  };
+
+/**
+ * Other properties for IPv4Address
+ */
+export type IPv4AddressOtherProperties = IPBaseKnownAddress<
+  AddressKnownProperties<number>
+>;
+
+/**
+ * Other properties for IPv6Address
+ */
+export type IPv6AddressOtherProperties =
+  & IPBaseKnownAddress<IPv6AddressKnownProperties>
+  & {
+    zoneId?: string;
+  };
+
 export type GenerateSubmaskFromHostsResult<
   AddressArray extends AddressArrays = AddressArrays,
   NumberType extends NumberTypes = NumberTypes,
@@ -308,3 +332,23 @@ export type TunnelingModes = typeof Mapped | typeof SixToFour | typeof Teredo;
  */
 export type SubmaskForVersion<Version extends AddressVersions> = Version extends
   4 ? IPv4Submask : IPv6Submask;
+
+/**
+ * Type representing the context class for IP version
+ */
+export type ContextTypeForVersion<Version extends AddressVersions> =
+  Version extends 4 ? IPv4Context : IPv6Context;
+
+export type ParseUrlResult = {
+  protocol: string | undefined;
+  address: string;
+  port: number | undefined;
+};
+
+/**
+ * Type representing the URL Errors
+ */
+export type URLErrorDatas = {
+  type: "invalid-port";
+  port: number;
+};

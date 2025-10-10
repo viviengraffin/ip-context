@@ -3,30 +3,39 @@ import {
   addressEquals,
   binaryStringToUint,
   byteArrayToUint16Array,
+  getIP6ArpaStringParts,
   hasZoneId,
   hexStringToUint,
   isCorrectAddress,
-  isIP6ArpaString,
+  isCorrectPort,
   isIPv4StringAddress,
   memoize,
   parseIPv4Address,
+  parseIPv4Url,
   parseIPv6Address,
+  parseIPv6Url,
   stringifyIPv4Address,
   stringifyIPv6Address,
   uint16ArrayToByteArray,
   verifyZoneId,
 } from "./common.ts";
-import { type Context, IPv4Context, IPv6Context } from "./context.ts";
+import { IPv4Context, IPv6Context } from "./context.ts";
 import { Mapped, Teredo } from "./tunneling.ts";
-import { IncorrectAddressError } from "./error.ts";
+import {
+  IncorrectAddressError,
+  NonImplementedStaticMethodError,
+  URLError,
+} from "./error.ts";
 import { IPv4Submask, IPv6Submask } from "./submask.ts";
 import type {
   AddressArrayForVersion,
-  AddressKnownProperties,
   AddressOtherProperties,
   AddressVersions,
+  AllAddressKnownProperties,
+  ContextTypeForVersion,
   IPv4AddressClasses,
-  IPv6AddressKnownProperties,
+  IPv4AddressOtherProperties,
+  IPv6AddressOtherProperties,
   NumberTypeForVersion,
   TeredoDatas,
   TunnelingModeParams4To6,
@@ -45,8 +54,45 @@ import { arrayToUint, UintToArray } from "./uint.ts";
  */
 export abstract class IPAddress<
   Version extends AddressVersions,
-  KnownProperties extends AddressKnownProperties = AddressKnownProperties,
-> extends Address<Version, KnownProperties> {
+> extends Address<Version> {
+  static fromURL(_url: string): IPAddress<AddressVersions> {
+    throw new NonImplementedStaticMethodError();
+  }
+
+  /**
+   * Port
+   */
+  protected _port?: number;
+  /**
+   * Protocol (for example: http,https,ftp,...)
+   */
+  public protocol?: string;
+
+  /**
+   * Get port
+   *
+   * @returns {number | undefined} Port
+   */
+  get port(): number | undefined {
+    return this._port;
+  }
+
+  /**
+   * Set port
+   *
+   * @param value - Port to set
+   * @throws {URLError} when the port is invalid
+   */
+  set port(value: number | undefined) {
+    if (value !== undefined && !isCorrectPort(value)) {
+      throw new URLError({
+        type: "invalid-port",
+        port: value,
+      });
+    }
+    this._port = value;
+  }
+
   /**
    * Constructor of IPAddress abstract class
    *
@@ -56,7 +102,7 @@ export abstract class IPAddress<
   constructor(
     version: Version,
     items: number[] | AddressArrayForVersion<Version>,
-    otherProperties: AddressOtherProperties<KnownProperties>,
+    otherProperties: AddressOtherProperties<AllAddressKnownProperties> = {},
   ) {
     super(version, items, undefined, otherProperties);
   }
@@ -76,7 +122,7 @@ export abstract class IPAddress<
    */
   abstract createContextWithSubmask(
     submask: AddressArrayForVersion<Version> | string | number,
-  ): Context<Version>;
+  ): ContextTypeForVersion<Version>;
 
   /**
    * Creates a network context for this address with the given number of hosts.
@@ -86,14 +132,21 @@ export abstract class IPAddress<
    */
   abstract createContextWithHosts(
     hosts: NumberTypeForVersion<Version>,
-  ): Context<Version>;
+  ): ContextTypeForVersion<Version>;
+
+  /**
+   * Get the url from the protocol, address and port.
+   *
+   * @returns {string} URL
+   */
+  abstract toURL(): string;
 }
 
 /**
  * Class representing an IPv4 address.
  * Provides methods to create, validate, and manipulate IPv4 addresses.
  */
-export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
+export class IPv4Address extends IPAddress<4> {
   /**
    * Creates an IPv4Address from a string representation.
    *
@@ -173,6 +226,53 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
   }
 
   /**
+   * Get an IPv4Address instance from an URL string
+   *
+   * @param url URL to parse
+   * @returns {IPv4Address} New IPv4Address instance
+   *
+   * @example Use with complete URL
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromURL("http://192.168.1.1:8080");
+   * console.log(ip.toString()); // "192.168.1.1"
+   * console.log(ip.port); // 8080
+   * console.log(ip.protocol); // "http"
+   * ```
+   *
+   * @example Use without protocol
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromURL("192.168.1.1:8080");
+   * console.log(ip.toString()); // "192.168.1.1"
+   * console.log(ip.port); // 8080
+   * console.log(ip.protocol); // undefined
+   * ```
+   *
+   * @example Use without port
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromURL("http://192.168.1.1");
+   * console.log(ip.toString()); // "192.168.1.1"
+   * console.log(ip.port); // undefined
+   * console.log(ip.protocol); // "http"
+   * ```
+   */
+  static override fromURL(url: string): IPv4Address {
+    const { protocol, address, port } = parseIPv4Url(url);
+    const res = this.fromString(address);
+    res.protocol = protocol;
+    res.port = port;
+    return res;
+  }
+
+  /**
    * Check if the addresses are the same
    *
    * @param a Address to compare
@@ -190,8 +290,7 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
    */
   constructor(
     items: number[] | AddressArrayForVersion<4>,
-    otherProperties: AddressOtherProperties<AddressKnownProperties<number>> =
-      {},
+    otherProperties: IPv4AddressOtherProperties = {},
   ) {
     super(4, items, otherProperties);
   }
@@ -300,6 +399,16 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
    *
    * @param hosts - Desired number of hosts in the subnet
    * @returns {IPv4Address} New network context instance
+   *
+   * @example
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromString("192.168.1.1");
+   * const ctx=ip.createContextWithHosts(10_000);
+   * console.log(ctx.hosts); // 16_382
+   * ```
    */
   override createContextWithHosts(hosts: number): IPv4Context {
     const submask = IPv4Submask.fromHosts(hosts);
@@ -311,6 +420,36 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
    *
    * @param submask - Submask as array, string, or CIDR value
    * @returns {IPv4Context} New network context instance
+   *
+   * @example Use with IPv4 submask string
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromString("192.168.1.1");
+   * const ctx=ip.createContextWithSubmask("255.255.255.0");
+   * console.log(ctx.size); // 256
+   * ```
+   *
+   * @example Use with Cidr
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromString("192.168.1.1");
+   * const ctx=ip.createContextWithSubmask(24);
+   * console.log(ctx.size); // 256
+   * ```
+   *
+   * @example Use with Uint8Array
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromString("192.168.1.1");
+   * const ctx=ip.createContextWithSubmask(new Uint8Array([255,255,255,0]));
+   * console.log(ctx.size); // 256
+   * ```
    */
   override createContextWithSubmask(
     submask: string | number | Uint8Array,
@@ -331,6 +470,57 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
   }
 
   /**
+   * Creates a network context for this address with the class of this address.
+   *
+   * @example Use with a class A IPv4Address
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromString("10.0.0.1");
+   * const ctx=ip.createContextFromClass();
+   * console.log(ctx.size); // 16777216
+   * ```
+   *
+   * @example Use with a class B IPv4Address
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromString("172.16.0.1");
+   * const ctx=ip.createContextFromClass();
+   * console.log(ctx.size); // 65536
+   * ```
+   *
+   * @example Use with a class C IPv4Address
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromString("192.168.1.1");
+   * const ctx=ip.createContextFromClass();
+   * console.log(ctx.size); // 256
+   * ```
+   *
+   * @example Use with a class D or E IPv4Address
+   *
+   * ```ts
+   * import { IPv4Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv4Address.fromString("224.0.0.1");
+   * const ctx=ip.createContextFromClass(); // it returns null
+   * ```
+   */
+  createContextFromClass(): IPv4Context | null {
+    const submask = IPv4Submask.fromClass(this.class);
+    if (submask === null) {
+      return null;
+    }
+
+    return new IPv4Context(this, submask);
+  }
+
+  /**
    * Returns the address as a byte array.
    *
    * @returns {Uint8Array} Byte array representation of the address
@@ -338,13 +528,23 @@ export class IPv4Address extends IPAddress<4, AddressKnownProperties<number>> {
   override toByteArray(): Uint8Array {
     return this.array;
   }
+
+  /**
+   * Get the url from the protocol, address and port.
+   *
+   * @returns {string} URL
+   */
+  override toURL(): string {
+    return (this.protocol !== undefined ? this.protocol + "://" : "") +
+      this.toString() + (this.port !== undefined ? ":" + this.port : "");
+  }
 }
 
 /**
  * Class representing an IPv6 address.
  * Provides methods to create, validate, and manipulate IPv6 addresses.
  */
-export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
+export class IPv6Address extends IPAddress<6> {
   /**
    * Creates an IPv6Address from a string representation.
    *
@@ -355,7 +555,9 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
     const splittedIP = hasZoneId(string);
     return splittedIP === null
       ? new IPv6Address(parseIPv6Address(string))
-      : new IPv6Address(parseIPv6Address(splittedIP[0]), splittedIP[1]);
+      : new IPv6Address(parseIPv6Address(splittedIP[0]), {
+        zoneId: splittedIP[1],
+      });
   }
 
   protected _ipv4MappedString?: string;
@@ -382,10 +584,11 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
    */
   static override fromUint(
     uint: bigint,
-    zoneId: string | null = null,
+    zoneId?: string,
     _ip6ArpaString?: string,
   ): IPv6Address {
-    return new this(UintToArray(6, uint), zoneId, {
+    return new this(UintToArray(6, uint), {
+      zoneId,
       knownProperties: {
         _uint: uint,
         _ip6ArpaString,
@@ -403,7 +606,7 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
    */
   static override fromByteArray(
     bytes: Uint8Array,
-    zoneId: string | null = null,
+    zoneId?: string,
   ): IPv6Address {
     if (bytes.length !== 16) {
       throw new IncorrectAddressError({
@@ -412,7 +615,8 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
         address: bytes,
       });
     }
-    return new this(byteArrayToUint16Array(bytes), zoneId, {
+    return new this(byteArrayToUint16Array(bytes), {
+      zoneId,
       knownProperties: {
         _byteArray: bytes,
       },
@@ -436,7 +640,7 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
    */
   static override fromHexString(
     hexString: string,
-    zoneId: string | null = null,
+    zoneId?: string,
   ): IPv6Address {
     return this.fromUint(hexStringToUint(6, hexString), zoneId);
   }
@@ -465,16 +669,22 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
    *
    * @param string - ip6.arpa string representation
    * @returns {IPv6Address} New instance of IPv6Address
+   *
+   * @example Use with RFC 3596 address example
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv6Address.fromIP6ArpaString("b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4.ip6.arpa");
+   * console.log(ip.toString()); // "4321::1:2:3:4:567:89ab"
+   * ```
    */
   static fromIP6ArpaString(string: string): IPv6Address {
     string = string.toLowerCase();
-    let zoneId: string | null = null;
-    const rHasZoneId = hasZoneId(string);
-    if (rHasZoneId !== null) {
-      string = rHasZoneId[0];
-      zoneId = rHasZoneId[1];
-    }
-    if (!isIP6ArpaString(string)) {
+
+    const parts = getIP6ArpaStringParts(string);
+
+    if (parts === null) {
       throw new IncorrectAddressError({
         type: "incorrect-format",
         version: 6,
@@ -482,21 +692,80 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
       });
     }
 
-    const parts = string.replace(".ip6.arpa", "").split(".");
+    const addressArray = new Uint16Array(8);
+    let index = 0;
 
-    if (parts.length !== 32) {
-      throw new IncorrectAddressError({
-        type: "incorrect-format",
-        version: 6,
-        address: string,
-      });
+    for (let i = parts.length - 1; i > 0; i -= 4) {
+      const a = Number("0x" + parts[i]);
+      const b = Number("0x" + parts[i - 1]);
+      const c = Number("0x" + parts[i - 2]);
+      const d = Number("0x" + parts[i - 3]);
+
+      if (
+        !Number.isInteger(a) || !Number.isInteger(b) || !Number.isInteger(c) ||
+        !Number.isInteger(d)
+      ) {
+        throw new IncorrectAddressError({
+          type: "incorrect-format",
+          version: 6,
+          address: string,
+        });
+      }
+
+      addressArray[index++] = (((((a << 4) | b) << 4) | c) << 4) | d;
     }
-    let uint = 0n;
-    for (let i = 31; i >= 0; i--) {
-      const n = BigInt("0x" + parts[i]);
-      uint = (uint << 4n) | n;
-    }
-    return this.fromUint(uint, zoneId, string);
+
+    return new IPv6Address(addressArray, {
+      check: false,
+      knownProperties: { _ip6ArpaString: string },
+    });
+  }
+
+  /**
+   * Get an IPv6Address instance from an URL string
+   *
+   * @param url URL to parse
+   * @returns {IPv6Address} New IPv6Address instance
+   *
+   * @example Use with complete URL
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv6Address.fromURL("http://[2001:db6::1]:8080");
+   * console.log(ip.toString()); // "2001:db6::1"
+   * console.log(ip.port); // 8080
+   * console.log(ip.protocol); // "http"
+   * ```
+   *
+   * @example Use without protocol
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv6Address.fromURL("[2001:db6::1]:8080");
+   * console.log(ip.toString()); // "2001:db6::1"
+   * console.log(ip.port); // 8080
+   * console.log(ip.protocol); // undefined
+   * ```
+   *
+   * @example Use without port
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv6Address.fromURL("http://[2001:db6::1]");
+   * console.log(ip.toString()); // "2001:db6::1"
+   * console.log(ip.port); // undefined
+   * console.log(ip.protocol); // "http"
+   * ```
+   */
+  static override fromURL(url: string): IPv6Address {
+    const { protocol, address, port } = parseIPv6Url(url);
+    const res = this.fromString(address);
+    res.port = port;
+    res.protocol = protocol;
+    return res;
   }
 
   /**
@@ -512,6 +781,12 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
 
   protected _ip6ArpaString?: string;
   protected _byteArray?: Uint8Array;
+  /**
+   * Gets the zone identifier of this IPv6 address.
+   *
+   * @returns {string | null} The zone identifier, or null if none
+   */
+  public readonly zoneId: string | null;
 
   /**
    * Creates a new IPv6Address instance.
@@ -522,16 +797,20 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
    */
   constructor(
     items: number[] | AddressArrayForVersion<6>,
-    protected _zoneId: string | null = null,
-    otherProperties: AddressOtherProperties<IPv6AddressKnownProperties> = {},
+    otherProperties: IPv6AddressOtherProperties = {},
   ) {
-    if (!verifyZoneId(_zoneId)) {
-      throw new IncorrectAddressError({
-        type: "incorrect-zone-id",
-        zoneId: _zoneId!,
-      });
-    }
     super(6, items, otherProperties);
+    if (otherProperties.zoneId !== undefined) {
+      if (!verifyZoneId(otherProperties.zoneId)) {
+        throw new IncorrectAddressError({
+          type: "incorrect-zone-id",
+          zoneId: otherProperties.zoneId,
+        });
+      }
+      this.zoneId = otherProperties.zoneId;
+    } else {
+      this.zoneId = null;
+    }
 
     if (otherProperties.knownProperties !== undefined) {
       if (otherProperties.knownProperties._byteArray !== undefined) {
@@ -545,15 +824,6 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
         this._ip6ArpaString = otherProperties.knownProperties._ip6ArpaString;
       }
     }
-  }
-
-  /**
-   * Gets the zone identifier of this IPv6 address.
-   *
-   * @returns {string | null} The zone identifier, or null if none
-   */
-  get zoneId(): string | null {
-    return this._zoneId;
   }
 
   /**
@@ -594,7 +864,7 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
     return memoize(
       this._uint,
       () => this._uint = arrayToUint(6, this.array),
-      () => this._uint as bigint,
+      () => this._uint!,
     );
   }
 
@@ -604,7 +874,6 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
    * @param conversionMode - Conversion mode (for example: "mapped", "6to4", "teredo", "auto")
    * @param params - Optional parameters for the conversion (for example: 6rd prefix)
    * @returns {boolean} True if the address is tunneling an IPv4 address, false otherwise
-   * @throws {IncorrectAddressError} If the conversion mode is not supported
    */
   isIPv4Tunneling<T extends TunnelingModes>(conversionMode: T): boolean {
     return conversionMode.isValid(this);
@@ -613,10 +882,29 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
   /**
    * Converts this IPv6 address to an IPv4 address if it is tunneling one.
    *
-   * @param conversionMode - Conversion mode (for example: "mapped", "6to4", "teredo", "auto")
-   * @param params - Optional parameters for the conversion (for example: 6rd prefix)
+   * @param conversionMode - Conversion mode
    * @returns {IPv4Address} New IPv4Address instance
    * @throws {IncorrectAddressError} If the address is not tunneling an IPv4 address
+   *
+   * @example Use with mapped
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip6=IPv6Address.fromIPv4MappedString("::ffff:192.168.1.1");
+   * const ip4=ip6.toIPv4Address(TUNNELING_MODES.MAPPED); // IPv4Address
+   * console.log(ip4.toString()); // "192.168.1.1"
+   * ```
+   *
+   * @example Use with 6to4
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip6=IPv6Address.fromString("2002:c0a8:101::");
+   * const ip4=ip6.toIPv4Address(TUNNELING_MODES.SIX_TO_FOUR); // IPv4Address
+   * console.log(ip4.toString()); // "192.168.1.1"
+   * ```
    */
   toIPv4Address(tunnelingMode: TunnelingModes): IPv4Address {
     return tunnelingMode.toIPv4(this);
@@ -681,6 +969,16 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
    *
    * @param hosts - Desired number of hosts in the subnet
    * @returns {IPv6Context} New network context instance
+   *
+   * @example
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv6Address.fromString("2001:db6::1");
+   * const ctx=ip.createContextWithHosts(100_000_000n);
+   * console.log(ctx.hosts); // 134217727n
+   * ```
    */
   override createContextWithHosts(hosts: bigint): IPv6Context {
     const submask = IPv6Submask.fromHosts(hosts);
@@ -692,6 +990,34 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
    *
    * @param submask - Submask as array, string, or CIDR value
    * @returns {IPv6Context} New network context instance
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv6Address.fromString("2001:db6::1");
+   * const ctx=ip.createContextWithSubmask("ffff:ffff:ffff:ffff::");
+   * console.log(ctx.size); // 18446744073709551616n
+   * ```
+   *
+   * @example Use with Cidr
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv6Address.fromString("2001:db6::1");
+   * const ctx=ip.createContextWithSubmask(64);
+   * console.log(ctx.size); // 18446744073709551616n
+   * ```
+   *
+   * @example Use with Uint16Array
+   *
+   * ```ts
+   * import { IPv6Address } from "@viviengraffin/ip-context";
+   *
+   * const ip=IPv6Address.fromString("2001:db6::1");
+   * const ctx=ip.createContextWithSubmask(new Uint16Array([0xFFFF,0xFFFF,0xFFFF,0xFFFF,0,0,0,0]));
+   * console.log(ctx.size); // 18446744073709551616n
+   * ```
    */
   override createContextWithSubmask(
     submask: string | number | Uint16Array,
@@ -746,6 +1072,16 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
       () => this._ip6ArpaString!,
     );
   }
+
+  /**
+   * Get the url from the protocol, address and port.
+   *
+   * @returns {string} URL
+   */
+  override toURL(): string {
+    return (this.protocol !== undefined ? this.protocol + "://" : "") + "[" +
+      this.toString() + "]" + (this.port !== undefined ? ":" + this.port : "");
+  }
 }
 
 /**
@@ -777,17 +1113,17 @@ export class IPv6Address extends IPAddress<6, IPv6AddressKnownProperties> {
  *
  * const ip6=ip("::ffff:192.168.1.1"); // Instance of IPv6Address
  * ```
- * 
+ *
  * @example Use with ip6.arpa string
- * 
- * ```ŧs
+ *
+ * ```ts
  * import { ip } from "@viviengraffin/ip-context";
- * 
+ *
  * const ip6=ip("b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4.ip6.arpa"); // Instance of IPv6Address
  * ```
  */
 export function ip(ip: string): IPv4Address | IPv6Address {
-  if (isIP6ArpaString(ip.toLowerCase())) {
+  if (getIP6ArpaStringParts(ip.toLowerCase()) !== null) {
     return IPv6Address.fromIP6ArpaString(ip);
   }
   if (Mapped.isValidString(ip)) {

@@ -3,6 +3,7 @@ import type {
   AddressVersions,
   ContextErrorDatas,
   IncorrectAddressErrorDatas,
+  URLErrorDatas,
 } from "./types.ts";
 
 export function stringifyIncorrectAddress(
@@ -35,7 +36,7 @@ function getStringOfAddressContainer(
  * Class representing an invalid error
  */
 export class IncorrectAddressError extends Error {
-  constructor(public datas: IncorrectAddressErrorDatas) {
+  constructor(public readonly datas: IncorrectAddressErrorDatas) {
     super(IncorrectAddressError.getErrorMessage(datas));
   }
 
@@ -61,6 +62,16 @@ export class IncorrectAddressError extends Error {
           " is not a IPv6 Tunneling";
       case "incorrect-zone-id":
         return "This zone id is not valid: " + datas.zoneId;
+      case "incorrect-binary-string":
+        return `"${datas.value}" is not a valid binary string in IPv${datas.version}`;
+      case "ipv6-tunneling-mode-not-defined":
+        return `${
+          getStringOfAddressContainer(6, datas.address)
+        } has not defined tunneling mode`;
+      case "teredo-incorrect-flags":
+        return `${datas.flags} is not a valid Teredo flag`;
+      case "teredo-incorrect-port":
+        return `${datas.port} is not a valid port`;
       default:
         return "Unknown error";
     }
@@ -70,7 +81,7 @@ export class IncorrectAddressError extends Error {
  * Class representating an error in a network context
  */
 export class ContextError extends Error {
-  constructor(public datas: ContextErrorDatas) {
+  constructor(public readonly datas: ContextErrorDatas) {
     super(ContextError.getErrorMessage(datas));
   }
 
@@ -93,6 +104,15 @@ export class ContextError extends Error {
       default:
         return "Unknown error";
     }
+  }
+}
+
+/**
+ * This error is throwed if an URL is not valid
+ */
+export class URLError extends Error {
+  constructor(public readonly datas: URLErrorDatas) {
+    super();
   }
 }
 
