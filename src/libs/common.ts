@@ -566,10 +566,6 @@ export function getIP6ArpaStringSuffix(string: string): string | null {
   {
     return ".ip6.arpa"
   }
-  if(string.endsWith(".ip6.arpa.") && string.length === 73)
-  {
-    return ".ip6.arpa."
-  }
 
   return null
 }
