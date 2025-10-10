@@ -629,3 +629,11 @@ export function parseIPv6Url(url: string): ParseUrlResult {
     }
   });
 }
+
+export function isCorrectInteger(
+  value: number,
+  min: number,
+  max: number,
+): boolean {
+  return Number.isInteger(value) && value >= min && value <= max;
+}

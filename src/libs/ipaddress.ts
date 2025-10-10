@@ -6,6 +6,7 @@ import {
   hasZoneId,
   hexStringToUint,
   isCorrectAddress,
+  isCorrectInteger,
   isCorrectPort,
   isIP6ArpaString,
   isIPv4StringAddress,
@@ -399,12 +400,12 @@ export class IPv4Address extends IPAddress<4> {
    *
    * @param hosts - Desired number of hosts in the subnet
    * @returns {IPv4Address} New network context instance
-   * 
+   *
    * @example
-   * 
+   *
    * ```ts
    * import { IPv4Address } from "@viviengraffin/ip-context";
-   * 
+   *
    * const ip=IPv4Address.fromString("192.168.1.1");
    * const ctx=ip.createContextWithHosts(10_000);
    * console.log(ctx.hosts); // 16_382
@@ -471,53 +472,53 @@ export class IPv4Address extends IPAddress<4> {
 
   /**
    * Creates a network context for this address with the class of this address.
-   * 
+   *
    * @example Use with a class A IPv4Address
-   * 
+   *
    * ```ts
    * import { IPv4Address } from "@viviengraffin/ip-context";
-   * 
+   *
    * const ip=IPv4Address.fromString("10.0.0.1");
    * const ctx=ip.createContextFromClass();
    * console.log(ctx.size); // 16777216
    * ```
-   * 
+   *
    * @example Use with a class B IPv4Address
-   * 
+   *
    * ```ts
    * import { IPv4Address } from "@viviengraffin/ip-context";
-   * 
+   *
    * const ip=IPv4Address.fromString("172.16.0.1");
    * const ctx=ip.createContextFromClass();
    * console.log(ctx.size); // 65536
    * ```
-   * 
+   *
    * @example Use with a class C IPv4Address
-   * 
+   *
    * ```ts
    * import { IPv4Address } from "@viviengraffin/ip-context";
-   * 
+   *
    * const ip=IPv4Address.fromString("192.168.1.1");
    * const ctx=ip.createContextFromClass();
    * console.log(ctx.size); // 256
    * ```
-   * 
+   *
    * @example Use with a class D or E IPv4Address
-   * 
+   *
    * ```ts
    * import { IPv4Address } from "@viviengraffin/ip-context";
-   * 
+   *
    * const ip=IPv4Address.fromString("224.0.0.1");
    * const ctx=ip.createContextFromClass(); // it returns null
    * ```
    */
   createContextFromClass(): IPv4Context | null {
-    const submask=IPv4Submask.fromClass(this.class)
-    if(submask===null) {
+    const submask = IPv4Submask.fromClass(this.class);
+    if (submask === null) {
       return null;
     }
 
-    return new IPv4Context(this,submask);
+    return new IPv4Context(this, submask);
   }
 
   /**
@@ -695,12 +696,57 @@ export class IPv6Address extends IPAddress<6> {
         address: string,
       });
     }
-    let uint = 0n;
-    for (let i = 31; i >= 0; i--) {
-      const n = BigInt("0x" + parts[i]);
-      uint = (uint << 4n) | n;
+
+    const addressArray = new Uint16Array(8);
+    let index = 0;
+
+    for (let i = parts.length - 1; i > 0; i -= 4) {
+      const a = Number("0x" + parts[i]);
+      const b = Number("0x" + parts[i - 1]);
+      const c = Number("0x" + parts[i - 2]);
+      const d = Number("0x" + parts[i - 3]);
+
+      if (!isCorrectInteger(a, 0, 15)) {
+        throw new IncorrectAddressError({
+          type: "incorrect-item",
+          version: 6,
+          address: string,
+          item: a,
+        });
+      }
+      if (!isCorrectInteger(b, 0, 15)) {
+        throw new IncorrectAddressError({
+          type: "incorrect-item",
+          version: 6,
+          address: string,
+          item: b,
+        });
+      }
+      if (!isCorrectInteger(c, 0, 15)) {
+        throw new IncorrectAddressError({
+          type: "incorrect-item",
+          version: 6,
+          address: string,
+          item: c,
+        });
+      }
+      if (!isCorrectInteger(a, 0, 15)) {
+        throw new IncorrectAddressError({
+          type: "incorrect-item",
+          version: 6,
+          address: string,
+          item: d,
+        });
+      }
+
+      addressArray[index++] = (((((a << 4) | b) << 4) | c) << 4) | d;
     }
-    return this.fromUint(uint, zoneId, string);
+
+    return new IPv6Address(addressArray, {
+      check: false,
+      zoneId,
+      knownProperties: { _ip6ArpaString: string },
+    });
   }
 
   /**
@@ -951,12 +997,12 @@ export class IPv6Address extends IPAddress<6> {
    *
    * @param hosts - Desired number of hosts in the subnet
    * @returns {IPv6Context} New network context instance
-   * 
+   *
    * @example
-   * 
+   *
    * ```ts
    * import { IPv6Address } from "@viviengraffin/ip-context";
-   * 
+   *
    * const ip=IPv6Address.fromString("2001:db6::1");
    * const ctx=ip.createContextWithHosts(100_000_000n);
    * console.log(ctx.hosts); // 134217727n
@@ -972,7 +1018,7 @@ export class IPv6Address extends IPAddress<6> {
    *
    * @param submask - Submask as array, string, or CIDR value
    * @returns {IPv6Context} New network context instance
-   * 
+   *
    * ```ts
    * import { IPv6Address } from "@viviengraffin/ip-context";
    *
