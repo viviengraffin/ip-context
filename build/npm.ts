@@ -16,6 +16,11 @@ build({
     name: PKGNAME,
     version: VERSION,
     licence: "MIT",
+    author: "viviengraffin",
+    repository:{
+      type:"git",
+      url:"git+https://github.com/viviengraffin/ip-context"
+    }
   },
   postBuild() {
     Deno.copyFileSync(
