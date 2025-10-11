@@ -27,6 +27,7 @@
       "LICENCE"
     ]
   },
+  "exclude": ["npm"],
   "license": "MIT",
   "version": "0.0.7",
   "name": "@viviengraffin/ip-context",
