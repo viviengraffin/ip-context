@@ -4,10 +4,13 @@
     "test:watch": "vitest watch",
     "bench": "deno bench benchmarks/*.ts",
     "bench:json": "deno bench --json benchmarks/*.ts",
-    "build": "deno --allow-env --allow-read --allow-write --allow-run build.ts",
+    "build:web": "deno --allow-env --allow-read --allow-write --allow-run build/web.ts",
+    "build:npm": "deno --allow-env --allow-read --allow-write --allow-run build/npm.ts",
+    "build": "deno --allow-env --allow-read --allow-write --allow-run build/web.ts && deno --allow-env --allow-read --allow-write --allow-run build/npm.ts",
     "doc": "deno doc --html src/main.ts"
   },
   "imports": {
+    "@deno/dnt": "jsr:@deno/dnt@^0.42.3",
     "@std/fs": "jsr:@std/fs@^1.0.19",
     "@std/path": "jsr:@std/path@^1.1.2",
     "esbuild": "npm:esbuild@^0.25.10",
