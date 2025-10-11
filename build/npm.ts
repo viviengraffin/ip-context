@@ -15,12 +15,18 @@ build({
   package: {
     name: PKGNAME,
     version: VERSION,
+    description:"TypeScript library to have datas for network context or an IPv4/IPv6 address",
     licence: "MIT",
     author: "viviengraffin",
     repository:{
       type:"git",
       url:"git+https://github.com/viviengraffin/ip-context"
-    }
+    },
+    keywords:[
+      "ipv4",
+      "ipv6",
+      "subnet"
+    ]
   },
   postBuild() {
     Deno.copyFileSync(
