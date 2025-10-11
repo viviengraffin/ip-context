@@ -7,7 +7,6 @@ import {
   hasZoneId,
   hexStringToUint,
   isCorrectAddress,
-  isCorrectPort,
   isIPv4StringAddress,
   memoize,
   parseIPv4Address,
@@ -24,7 +23,6 @@ import { Mapped, Teredo } from "./tunneling.ts";
 import {
   IncorrectAddressError,
   NonImplementedStaticMethodError,
-  URLError,
 } from "./error.ts";
 import { IPv4Submask, IPv6Submask } from "./submask.ts";
 import type {
@@ -44,6 +42,7 @@ import type {
   TunnelingModeWithParams4To6,
 } from "./types.ts";
 import { arrayToUint, UintToArray } from "./uint.ts";
+import { IPURL } from "./ipurl.ts";
 
 /**
  * Abstract class representing an IP address (IPv4 or IPv6).
@@ -55,42 +54,8 @@ import { arrayToUint, UintToArray } from "./uint.ts";
 export abstract class IPAddress<
   Version extends AddressVersions,
 > extends Address<Version> {
-  static fromURL(_url: string): IPAddress<AddressVersions> {
+  static fromURL(_url: string): IPURL<IPv4Address | IPv6Address> {
     throw new NonImplementedStaticMethodError();
-  }
-
-  /**
-   * Port
-   */
-  protected _port?: number;
-  /**
-   * Protocol (for example: http,https,ftp,...)
-   */
-  public protocol?: string;
-
-  /**
-   * Get port
-   *
-   * @returns {number | undefined} Port
-   */
-  get port(): number | undefined {
-    return this._port;
-  }
-
-  /**
-   * Set port
-   *
-   * @param value - Port to set
-   * @throws {URLError} when the port is invalid
-   */
-  set port(value: number | undefined) {
-    if (value !== undefined && !isCorrectPort(value)) {
-      throw new URLError({
-        type: "invalid-port",
-        port: value,
-      });
-    }
-    this._port = value;
   }
 
   /**
@@ -133,13 +98,6 @@ export abstract class IPAddress<
   abstract createContextWithHosts(
     hosts: NumberTypeForVersion<Version>,
   ): ContextTypeForVersion<Version>;
-
-  /**
-   * Get the url from the protocol, address and port.
-   *
-   * @returns {string} URL
-   */
-  abstract toURL(): string;
 }
 
 /**
@@ -258,18 +216,16 @@ export class IPv4Address extends IPAddress<4> {
    * ```ts
    * import { IPv4Address } from "@viviengraffin/ip-context";
    *
-   * const ip=IPv4Address.fromURL("http://192.168.1.1");
-   * console.log(ip.toString()); // "192.168.1.1"
-   * console.log(ip.port); // undefined
-   * console.log(ip.protocol); // "http"
+   * const url=IPv4Address.fromURL("http://192.168.1.1");
+   * console.log(url.address.toString()); // "192.168.1.1"
+   * console.log(url.port); // undefined
+   * console.log(url.protocol); // "http"
    * ```
    */
-  static override fromURL(url: string): IPv4Address {
-    const { protocol, address, port } = parseIPv4Url(url);
-    const res = this.fromString(address);
-    res.protocol = protocol;
-    res.port = port;
-    return res;
+  static override fromURL(url: string): IPURL<IPv4Address> {
+    const { protocol, address: addressString, port } = parseIPv4Url(url);
+    const address = this.fromString(addressString);
+    return new IPURL(address, protocol, port);
   }
 
   /**
@@ -528,16 +484,6 @@ export class IPv4Address extends IPAddress<4> {
   override toByteArray(): Uint8Array {
     return this.array;
   }
-
-  /**
-   * Get the url from the protocol, address and port.
-   *
-   * @returns {string} URL
-   */
-  override toURL(): string {
-    return (this.protocol !== undefined ? this.protocol + "://" : "") +
-      this.toString() + (this.port !== undefined ? ":" + this.port : "");
-  }
 }
 
 /**
@@ -760,12 +706,10 @@ export class IPv6Address extends IPAddress<6> {
    * console.log(ip.protocol); // "http"
    * ```
    */
-  static override fromURL(url: string): IPv6Address {
-    const { protocol, address, port } = parseIPv6Url(url);
-    const res = this.fromString(address);
-    res.port = port;
-    res.protocol = protocol;
-    return res;
+  static override fromURL(url: string): IPURL<IPv6Address> {
+    const { protocol, address: addressString, port } = parseIPv6Url(url);
+    const address = this.fromString(addressString);
+    return new IPURL(address, protocol, port);
   }
 
   /**
@@ -1071,16 +1015,6 @@ export class IPv6Address extends IPAddress<6> {
       },
       () => this._ip6ArpaString!,
     );
-  }
-
-  /**
-   * Get the url from the protocol, address and port.
-   *
-   * @returns {string} URL
-   */
-  override toURL(): string {
-    return (this.protocol !== undefined ? this.protocol + "://" : "") + "[" +
-      this.toString() + "]" + (this.port !== undefined ? ":" + this.port : "");
   }
 }
 

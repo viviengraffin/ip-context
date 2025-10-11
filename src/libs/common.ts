@@ -585,7 +585,9 @@ export function isCorrectPort(port: number): boolean {
 
 function parseUrl(
   url: string,
-  callback: (url: string) => Omit<ParseUrlResult, "protocol">,
+  callback: (
+    url: string,
+  ) => Pick<ParseUrlResult, "address" | "port"> & { after?: string },
 ): ParseUrlResult {
   let protocol: string | undefined = undefined;
   const protocolIndex = url.indexOf("://");
@@ -595,7 +597,7 @@ function parseUrl(
     url = url.substring(protocolIndex + 3);
   }
 
-  const { address, port } = callback(url);
+  const { address, port, after: _after } = callback(url);
 
   return {
     protocol,
