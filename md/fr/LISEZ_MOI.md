@@ -1,4 +1,4 @@
-# ip-context [![JSR](https://jsr.io/badges/@viviengraffin/ip-context)](https://jsr.io/@viviengraffin/ip-context)
+# ip-context [![JSR](https://jsr.io/badges/@viviengraffin/ip-context)](https://jsr.io/@viviengraffin/ip-context) [![JSR Score](https://jsr.io/badges/@viviengraffin/ip-context/score)](https://jsr.io/@viviengraffin/ip-context) [![NPM](https://img.shields.io/npm/v/%40viviengraffin%2Fip-context)](https://www.npmjs.com/package/@viviengraffin/ip-context)
 
 This is the french version of the presentation of this library, if you don't
 speak french, go [here](../../README.md)
