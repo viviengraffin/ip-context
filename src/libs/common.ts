@@ -580,7 +580,7 @@ export function getIP6ArpaStringParts(string: string): string[] | null {
 }
 
 export function isCorrectPort(port: number): boolean {
-  return port > 0 && port < 0xFFFF;
+  return Number.isInteger(port) && port >= 0 && port <= 0xFFFF;
 }
 
 function parseUrl(
