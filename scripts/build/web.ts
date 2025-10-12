@@ -2,10 +2,7 @@ import { emptyDirSync } from "@std/fs";
 import { join as pathJoin } from "@std/path";
 import { build } from "esbuild";
 import type { BuildOptions, SameShape } from "esbuild";
-
-const DIST = pathJoin(import.meta.dirname!, "dist") satisfies string;
-const IIFE_GLOBAL_NAME = "ip_context" as const satisfies string;
-const ENTRYPOINT = "src/main.ts" as const satisfies string;
+import { DIST, ENTRYPOINT, IIFE_GLOBAL_NAME } from "../common.ts";
 
 emptyDirSync(DIST);
 

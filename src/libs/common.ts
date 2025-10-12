@@ -1,5 +1,10 @@
-import { ADDRESS_VERSIONS, FORBIDDEN_CHARS } from "./const.ts";
-import { ContextError, IncorrectAddressError } from "./error.ts";
+import {
+  ADDRESS_VERSIONS,
+  FORBIDDEN_CHARS,
+  URL_IPv4_REGEXP,
+  URL_IPv6_REGEXP,
+} from "./const.ts";
+import { ContextError, IncorrectAddressError, URLError } from "./error.ts";
 import {
   ADDRESS_CONSTRUCTORS,
   type IPv4Address,
@@ -580,62 +585,36 @@ export function getIP6ArpaStringParts(string: string): string[] | null {
 }
 
 export function isCorrectPort(port: number): boolean {
-  return port > 0 && port < 0xFFFF;
+  return Number.isInteger(port) && port >= 0 && port <= 0xFFFF;
 }
 
-function parseUrl(
+export function parseUrl<Version extends AddressVersions>(
+  version: Version,
   url: string,
-  callback: (url: string) => Omit<ParseUrlResult, "protocol">,
 ): ParseUrlResult {
-  let protocol: string | undefined = undefined;
-  const protocolIndex = url.indexOf("://");
+  const regexp = version === 4 ? URL_IPv4_REGEXP : URL_IPv6_REGEXP;
 
-  if (protocolIndex !== -1) {
-    protocol = url.substring(0, protocolIndex);
-    url = url.substring(protocolIndex + 3);
+  const matched = url.match(regexp);
+
+  if (matched === null) {
+    throw new URLError({
+      type: "invalid-format",
+      url,
+    });
   }
 
-  const { address, port } = callback(url);
+  const address = matched[version === 4 ? 4 : 5];
+  const port = matched[version === 4 ? 5 : 6];
+  const pathname = matched[version === 4 ? 6 : 7]?.substring(1);
+  const search = matched[version === 4 ? 7 : 8]?.substring(1);
+  const hash = matched[version === 4 ? 8 : 9]?.substring(1);
 
   return {
-    protocol,
+    protocol: matched[3],
     address,
-    port,
+    port: port ? Number(port.substring(1)) : undefined,
+    pathname,
+    search,
+    hash,
   };
-}
-
-export function parseIPv4Url(url: string): ParseUrlResult {
-  return parseUrl(url, (url) => {
-    const separatorIndex = url.indexOf(":");
-
-    if (separatorIndex === -1) {
-      return {
-        address: url,
-        port: undefined,
-      };
-    } else {
-      return {
-        address: url.substring(0, separatorIndex),
-        port: Number(url.substring(separatorIndex + 1)),
-      };
-    }
-  });
-}
-
-export function parseIPv6Url(url: string): ParseUrlResult {
-  return parseUrl(url, (url) => {
-    const separatorIndex = url.indexOf("]:");
-
-    if (separatorIndex === -1) {
-      return {
-        address: url.replace("[", "").replace("]", ""),
-        port: undefined,
-      };
-    } else {
-      return {
-        address: url.substring(1, separatorIndex),
-        port: Number(url.substring(separatorIndex + 2)),
-      };
-    }
-  });
 }

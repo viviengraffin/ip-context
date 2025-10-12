@@ -15,6 +15,7 @@ import type {
   SubmaskForVersion,
 } from "../src/libs/types.ts";
 import { addressEquals } from "../src/libs/common.ts";
+import type { IPURL } from "../src/libs/ipurl.ts";
 
 export function addressTestEquality(
   name: string,
@@ -231,12 +232,12 @@ export function testSubmask<T extends AddressVersions>(
 
 export function testIPFromURL<T extends IPv4Address | IPv6Address>(
   name: string,
-  ip: T,
+  ip: IPURL<T>,
   expectedValues: IPFromURLExpectedValues,
 ) {
   describe(name, () => {
     test("has good address string", () => {
-      expect(ip.toString()).toBe(expectedValues.address);
+      expect(ip.address.toString()).toBe(expectedValues.address);
     });
 
     test("has good protocol", () => {
@@ -248,7 +249,7 @@ export function testIPFromURL<T extends IPv4Address | IPv6Address>(
     });
 
     test("Generate good URL", () => {
-      expect(ip.toURL()).toBe(expectedValues.url);
+      expect(ip.toString()).toBe(expectedValues.url);
     });
   });
 }

@@ -343,6 +343,9 @@ export type ParseUrlResult = {
   protocol: string | undefined;
   address: string;
   port: number | undefined;
+  pathname: string | undefined;
+  search: string | undefined;
+  hash: string | undefined;
 };
 
 /**
@@ -351,4 +354,7 @@ export type ParseUrlResult = {
 export type URLErrorDatas = {
   type: "invalid-port";
   port: number;
+} | {
+  type: "invalid-format";
+  url: string;
 };
