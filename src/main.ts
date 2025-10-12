@@ -28,6 +28,8 @@ export {
   type TunnelingMode,
 } from "./libs/tunneling.ts";
 
+export type { IPURL } from "./libs/ipurl.ts";
+
 export type {
   AddressArrayForVersion,
   AddressKnownProperties,
