@@ -2,7 +2,7 @@ import { emptyDirSync } from "@std/fs";
 import { join as pathJoin } from "@std/path";
 import { build } from "esbuild";
 import type { BuildOptions, SameShape } from "esbuild";
-import { DIST, ENTRYPOINT, IIFE_GLOBAL_NAME } from "./common.ts";
+import { DIST, ENTRYPOINT, IIFE_GLOBAL_NAME } from "../common.ts";
 
 emptyDirSync(DIST);
 

@@ -1,6 +1,6 @@
 import { join as pathJoin } from "@std/path";
 import { build } from "@deno/dnt";
-import { DIRNAME, ENTRYPOINT, NPM, PKGNAME, VERSION } from "./common.ts";
+import { DIRNAME, ENTRYPOINT, NPM, PKGNAME, VERSION } from "../common.ts";
 import { emptyDirSync } from "@std/fs";
 
 emptyDirSync(NPM);
