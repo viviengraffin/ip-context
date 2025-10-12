@@ -15,7 +15,7 @@ export const VERSION = denoJson.version;
 export const PKGNAME = denoJson.name;
 
 export function removeIfExists(path: string) {
-    if(existsSync(path)) {
-        Deno.removeSync(path,{ recursive: true })
-    }
+  if (existsSync(path)) {
+    Deno.removeSync(path, { recursive: true });
+  }
 }

@@ -63,7 +63,7 @@ export class IPURL<IPAddress extends IPv4Address | IPv6Address> {
    *
    * @returns {string} string URL
    */
-  toString() {
+  toString(): string {
     return (this.protocol && this.protocol + "://") + (
       this.address instanceof IPv4Address
         ? (

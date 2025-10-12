@@ -10,9 +10,8 @@ import {
   isIPv4StringAddress,
   memoize,
   parseIPv4Address,
-  parseIPv4Url,
   parseIPv6Address,
-  parseIPv6Url,
+  parseUrl,
   stringifyIPv4Address,
   stringifyIPv6Address,
   uint16ArrayToByteArray,
@@ -194,10 +193,10 @@ export class IPv4Address extends IPAddress<4> {
    * ```ts
    * import { IPv4Address } from "@viviengraffin/ip-context";
    *
-   * const ip=IPv4Address.fromURL("http://192.168.1.1:8080");
-   * console.log(ip.toString()); // "192.168.1.1"
-   * console.log(ip.port); // 8080
-   * console.log(ip.protocol); // "http"
+   * const url=IPv4Address.fromURL("http://192.168.1.1:8080");
+   * console.log(url.address.toString()); // "192.168.1.1"
+   * console.log(url.port); // 8080
+   * console.log(url.protocol); // "http"
    * ```
    *
    * @example Use without protocol
@@ -205,10 +204,10 @@ export class IPv4Address extends IPAddress<4> {
    * ```ts
    * import { IPv4Address } from "@viviengraffin/ip-context";
    *
-   * const ip=IPv4Address.fromURL("192.168.1.1:8080");
-   * console.log(ip.toString()); // "192.168.1.1"
-   * console.log(ip.port); // 8080
-   * console.log(ip.protocol); // undefined
+   * const url=IPv4Address.fromURL("192.168.1.1:8080");
+   * console.log(url.address.toString()); // "192.168.1.1"
+   * console.log(url.port); // 8080
+   * console.log(url.protocol); // undefined
    * ```
    *
    * @example Use without port
@@ -223,9 +222,10 @@ export class IPv4Address extends IPAddress<4> {
    * ```
    */
   static override fromURL(url: string): IPURL<IPv4Address> {
-    const { protocol, address: addressString, port } = parseIPv4Url(url);
+    const { protocol, address: addressString, port, pathname, search, hash } =
+      parseUrl(4, url);
     const address = this.fromString(addressString);
-    return new IPURL(address, protocol, port);
+    return new IPURL(address, protocol, port, pathname, search, hash);
   }
 
   /**
@@ -707,9 +707,10 @@ export class IPv6Address extends IPAddress<6> {
    * ```
    */
   static override fromURL(url: string): IPURL<IPv6Address> {
-    const { protocol, address: addressString, port } = parseIPv6Url(url);
+    const { protocol, address: addressString, port, pathname, search, hash } =
+      parseUrl(6, url);
     const address = this.fromString(addressString);
-    return new IPURL(address, protocol, port);
+    return new IPURL(address, protocol, port, pathname, search, hash);
   }
 
   /**

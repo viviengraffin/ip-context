@@ -145,3 +145,18 @@ export const IPv4_CLASS_TO_SUBMASK = {
   "B": CIDR_TO_MASK[4][16],
   "C": CIDR_TO_MASK[4][24],
 } as const satisfies Record<Exclude<IPv4AddressClasses, "D" | "E">, Uint8Array>;
+
+const URL_REGEXP_PROTOCOL_PART = "(([a-z]+):\\/\\/)?";
+const URL_REGEXP_IPv4_PART = "([0-9.]+)";
+const URL_REGEXP_IPv6_PART = "(\\[([0-9a-f:]+)\\])";
+const URL_REGEXP_PORT_PART = "(:[0-9]+)?";
+const URL_REGEXP_PATHNAME_PART = "(/[a-z0-9-./]+)?";
+const URL_REGEXP_QUERY_PART = "(\\?[a-z0-9-._~%!$&'()*+,;=:@\\?/]+)?";
+const URL_REGEXP_HASH_PART = "(\\#" + URL_REGEXP_QUERY_PART.substring(2);
+
+export const URL_IPv4_REGEXP = new RegExp(
+  `^(${URL_REGEXP_PROTOCOL_PART}${URL_REGEXP_IPv4_PART}${URL_REGEXP_PORT_PART}${URL_REGEXP_PATHNAME_PART}${URL_REGEXP_QUERY_PART}${URL_REGEXP_HASH_PART})$`,
+);
+export const URL_IPv6_REGEXP = new RegExp(
+  `^(${URL_REGEXP_PROTOCOL_PART}${URL_REGEXP_IPv6_PART}${URL_REGEXP_PORT_PART}${URL_REGEXP_PATHNAME_PART}${URL_REGEXP_QUERY_PART}${URL_REGEXP_HASH_PART})$`,
+);
