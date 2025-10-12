@@ -678,10 +678,10 @@ export class IPv6Address extends IPAddress<6> {
    * ```ts
    * import { IPv6Address } from "@viviengraffin/ip-context";
    *
-   * const ip=IPv6Address.fromURL("http://[2001:db6::1]:8080");
-   * console.log(ip.toString()); // "2001:db6::1"
-   * console.log(ip.port); // 8080
-   * console.log(ip.protocol); // "http"
+   * const url=IPv6Address.fromURL("http://[2001:db6::1]:8080");
+   * console.log(url.address.toString()); // "2001:db6::1"
+   * console.log(url.port); // 8080
+   * console.log(url.protocol); // "http"
    * ```
    *
    * @example Use without protocol
@@ -689,10 +689,10 @@ export class IPv6Address extends IPAddress<6> {
    * ```ts
    * import { IPv6Address } from "@viviengraffin/ip-context";
    *
-   * const ip=IPv6Address.fromURL("[2001:db6::1]:8080");
-   * console.log(ip.toString()); // "2001:db6::1"
-   * console.log(ip.port); // 8080
-   * console.log(ip.protocol); // undefined
+   * const url=IPv6Address.fromURL("[2001:db6::1]:8080");
+   * console.log(url.address.toString()); // "2001:db6::1"
+   * console.log(url.port); // 8080
+   * console.log(url.protocol); // undefined
    * ```
    *
    * @example Use without port
@@ -700,10 +700,10 @@ export class IPv6Address extends IPAddress<6> {
    * ```ts
    * import { IPv6Address } from "@viviengraffin/ip-context";
    *
-   * const ip=IPv6Address.fromURL("http://[2001:db6::1]");
-   * console.log(ip.toString()); // "2001:db6::1"
-   * console.log(ip.port); // undefined
-   * console.log(ip.protocol); // "http"
+   * const url=IPv6Address.fromURL("http://[2001:db6::1]");
+   * console.log(url.address.toString()); // "2001:db6::1"
+   * console.log(url.port); // undefined
+   * console.log(url.protocol); // "http"
    * ```
    */
   static override fromURL(url: string): IPURL<IPv6Address> {
