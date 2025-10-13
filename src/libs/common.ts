@@ -3,6 +3,7 @@ import {
   FORBIDDEN_CHARS,
   URL_IPv4_REGEXP,
   URL_IPv6_REGEXP,
+  URL_REGEXP_DELETE_HOOKS,
 } from "./const.ts";
 import { ContextError, IncorrectAddressError, URLError } from "./error.ts";
 import {
@@ -603,11 +604,13 @@ export function parseUrl<Version extends AddressVersions>(
     });
   }
 
-  const address = matched[version === 4 ? 4 : 5];
-  const port = matched[version === 4 ? 5 : 6];
-  const pathname = matched[version === 4 ? 6 : 7]?.substring(1);
-  const search = matched[version === 4 ? 7 : 8]?.substring(1);
-  const hash = matched[version === 4 ? 8 : 9]?.substring(1);
+  const address = version === 4
+    ? matched[4]
+    : matched[4].replace(URL_REGEXP_DELETE_HOOKS, "");
+  const port = matched[5];
+  const pathname = matched[6]?.substring(1);
+  const search = matched[7]?.substring(1);
+  const hash = matched[8]?.substring(1);
 
   return {
     protocol: matched[3],

@@ -78,5 +78,5 @@ test("IPv4Address fail waited (address: 256.192.0.1)", () => {
 test("IPv4Address fail waited (incorrect format)", () => {
   expect(
     () => IPv4Address.fromURL("http://192.168.1.1://8080"),
-  ).toThrowError();
+  ).toThrow(URLError);
 });

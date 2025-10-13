@@ -26,10 +26,16 @@ Deno.bench("IPv6Address.fromIP6ArpaString", () => {
   );
 });
 
-Deno.bench(`IPv4Address.fromURL "http://192.168.1.1:8080/demo?test=1#abcd"`,()=>{
-  IPv4Address.fromURL("http://192.168.1.1:8080/demo?test=1#abcd")
-})
+Deno.bench(
+  `IPv4Address.fromURL "http://192.168.1.1:8080/demo?test=1#abcd"`,
+  () => {
+    IPv4Address.fromURL("http://192.168.1.1:8080/demo?test=1#abcd");
+  },
+);
 
-Deno.bench(`IPv6Address.fromURL "http://[2001:db6::1]:8080/demo?test=1#abcd`,()=>{
-  IPv6Address.fromURL("http://[2001:db6::1]:8080/demo?test=1#abcd")
-})
+Deno.bench(
+  `IPv6Address.fromURL "http://[2001:db6::1]:8080/demo?test=1#abcd`,
+  () => {
+    IPv6Address.fromURL("http://[2001:db6::1]:8080/demo?test=1#abcd");
+  },
+);
