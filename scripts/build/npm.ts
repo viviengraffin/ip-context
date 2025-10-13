@@ -31,8 +31,8 @@ build({
   },
   postBuild() {
     Deno.copyFileSync(
-      pathJoin(DIRNAME, "LICENCE"),
-      pathJoin(NPM, "LICENCE"),
+      pathJoin(DIRNAME, "LICENSE"),
+      pathJoin(NPM, "LICENSE"),
     );
     Deno.copyFileSync(
       pathJoin(DIRNAME, "README.md"),
