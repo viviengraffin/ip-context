@@ -67,13 +67,15 @@ testIPFromURL(
 
 testIPFromURL(
   "IPv6Address with ip6.arpa address and protocol",
-  IPv6Address.fromURL("http://b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4.ip6.arpa"),
+  IPv6Address.fromURL(
+    "http://b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4.ip6.arpa",
+  ),
   {
-    address:"4321::1:2:3:4:567:89ab",
-    protocol:"http",
-    url: "http://[4321::1:2:3:4:567:89ab]"
-  }
-)
+    address: "4321::1:2:3:4:567:89ab",
+    protocol: "http",
+    url: "http://[4321::1:2:3:4:567:89ab]",
+  },
+);
 
 test("IPv4Address fail waited (port 65536)", () => {
   expect(() => IPv4Address.fromURL("192.168.0.1:65536")).toThrow(URLError);

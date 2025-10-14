@@ -623,15 +623,15 @@ export function parseUrl<Version extends AddressVersions>(
   };
 }
 
-export function getIPv6AddressStringType(address: string): "ip6.arpa" | "mapped" | "normal"
-{
-  if(getIP6ArpaStringParts(address)!==null) {
-    return "ip6.arpa"
+export function getIPv6AddressStringType(
+  address: string,
+): "ip6.arpa" | "mapped" | "normal" {
+  if (getIP6ArpaStringParts(address) !== null) {
+    return "ip6.arpa";
   }
-  if(Mapped.isValidString(address)) {
-    return "mapped"
-  }
-  else {
-    return "normal"
+  if (Mapped.isValidString(address)) {
+    return "mapped";
+  } else {
+    return "normal";
   }
 }

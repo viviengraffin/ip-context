@@ -710,14 +710,14 @@ export class IPv6Address extends IPAddress<6> {
   static override fromURL(url: string): IPURL<IPv6Address> {
     const { protocol, address: addressString, port, pathname, search, hash } =
       parseUrl(6, url);
-    const type=getIPv6AddressStringType(addressString)
-    let address: IPv6Address
-    switch(type) {
+    const type = getIPv6AddressStringType(addressString);
+    let address: IPv6Address;
+    switch (type) {
       case "ip6.arpa":
-        address=this.fromIP6ArpaString(addressString)
+        address = this.fromIP6ArpaString(addressString);
         break;
       case "mapped":
-        address=this.fromIPv4MappedString(addressString)
+        address = this.fromIPv4MappedString(addressString);
         break;
       case "normal":
         address = this.fromString(addressString);
