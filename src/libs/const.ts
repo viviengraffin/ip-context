@@ -146,15 +146,16 @@ export const IPv4_CLASS_TO_SUBMASK = {
   "C": CIDR_TO_MASK[4][24],
 } as const satisfies Record<Exclude<IPv4AddressClasses, "D" | "E">, Uint8Array>;
 
-const URL_REGEXP_QUERY_HASH_COMMON="[a-z0-9-._~%!$&'()*+,;=:@\\?/]+"
+const URL_REGEXP_QUERY_HASH_COMMON = "[a-z0-9-._~%!$&'()*+,;=:@\\?/]+";
 const URL_REGEXP_PROTOCOL_PART = "(([a-z]+):\\/\\/)?";
 const URL_REGEXP_IPv4_PART = "([0-9.]+)";
-const URL_REGEXP_IPv6_PART = "(\\[[0-9a-f:]+\\]|::ffff:[0-9.]+|[0-9a-f.]+.ip6.arpa)";
+const URL_REGEXP_IPv6_PART =
+  "(\\[[0-9a-f:]+\\]|::ffff:[0-9.]+|[0-9a-f.]+.ip6.arpa)";
 const URL_REGEXP_PORT_PART = "(:[0-9]+)?";
 const URL_REGEXP_PATHNAME_PART = "(/[a-z0-9-./]+)?";
 const URL_REGEXP_QUERY_PART = `(\\?${URL_REGEXP_QUERY_HASH_COMMON})?`;
 const URL_REGEXP_HASH_PART = `(\\#${URL_REGEXP_QUERY_HASH_COMMON})?`;
-export const URL_REGEXP_DELETE_HOOKS = /[\[\]]/g
+export const URL_REGEXP_DELETE_HOOKS = /[\[\]]/g;
 
 export const URL_IPv4_REGEXP = new RegExp(
   `^(${URL_REGEXP_PROTOCOL_PART}${URL_REGEXP_IPv4_PART}${URL_REGEXP_PORT_PART}${URL_REGEXP_PATHNAME_PART}${URL_REGEXP_QUERY_PART}${URL_REGEXP_HASH_PART})$`,

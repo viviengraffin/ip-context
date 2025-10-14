@@ -25,12 +25,12 @@
       "src/",
       "README.md",
       "deno.json",
-      "LICENCE"
+      "LICENSE"
     ]
   },
   "exclude": ["npm"],
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "name": "@viviengraffin/ip-context",
   "exports": "./src/main.ts"
 }

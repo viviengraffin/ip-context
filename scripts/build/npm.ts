@@ -17,7 +17,7 @@ build({
     version: VERSION,
     description:
       "TypeScript library to have datas for network context or an IPv4/IPv6 address",
-    licence: "MIT",
+    license: "MIT",
     author: "viviengraffin",
     repository: {
       type: "git",

@@ -4,6 +4,7 @@ import {
   binaryStringToUint,
   byteArrayToUint16Array,
   getIP6ArpaStringParts,
+  getIPv6AddressStringType,
   hasZoneId,
   hexStringToUint,
   isCorrectAddress,
@@ -709,7 +710,19 @@ export class IPv6Address extends IPAddress<6> {
   static override fromURL(url: string): IPURL<IPv6Address> {
     const { protocol, address: addressString, port, pathname, search, hash } =
       parseUrl(6, url);
-    const address = this.fromString(addressString);
+    const type = getIPv6AddressStringType(addressString);
+    let address: IPv6Address;
+    switch (type) {
+      case "ip6.arpa":
+        address = this.fromIP6ArpaString(addressString);
+        break;
+      case "mapped":
+        address = this.fromIPv4MappedString(addressString);
+        break;
+      case "normal":
+        address = this.fromString(addressString);
+        break;
+    }
     return new IPURL(address, protocol, port, pathname, search, hash);
   }
 
