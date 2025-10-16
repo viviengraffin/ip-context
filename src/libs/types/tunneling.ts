@@ -2,7 +2,6 @@ import type { SixToFour } from "../tunneling/6to4.ts";
 import type { Mapped } from "../tunneling/mapped.ts";
 import type { Teredo } from "../tunneling/teredo.ts";
 
-
 /**
  * All tunneling classes with params for IPv4 -> IPv6
  */
