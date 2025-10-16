@@ -1,5 +1,5 @@
 import { Address } from "./address.ts";
-import { addressEquals, isIPv4StringAddress, memoize } from "./common.ts";
+import { addressEquals, isIPv4StringAddress, memoize } from "./functions/common.ts";
 import { IPv4Context, IPv6Context } from "./context.ts";
 import { Mapped, Teredo } from "./tunneling.ts";
 import {
@@ -23,7 +23,7 @@ import type {
   TunnelingModeWithoutParams4To6,
   TunnelingModeWithParams4To6,
 } from "./types.ts";
-import { arrayToUint, UintToArray } from "./uint.ts";
+import { arrayToUint, UintToArray } from "./functions/uint.ts";
 import { IPURL } from "./ipurl.ts";
 import {
   createIPAddressFromString,

@@ -1,5 +1,5 @@
 import { Address } from "./address.ts";
-import { addressEquals, memoize } from "./common.ts";
+import { addressEquals, memoize } from "./functions/common.ts";
 import {
   ADDRESS_VERSIONS,
   CIDR_TO_MASK,
@@ -30,7 +30,7 @@ import type {
   NumberTypes,
   SubmaskKnownProperties,
 } from "./types.ts";
-import { arrayToUint, toUint, UintToArray } from "./uint.ts";
+import { arrayToUint, toUint, UintToArray } from "./functions/uint.ts";
 
 /**
  * Calculates the number of available hosts for a given CIDR and IP version.

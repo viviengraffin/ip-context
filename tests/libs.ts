@@ -14,7 +14,7 @@ import type {
   AddressVersions,
   SubmaskForVersion,
 } from "../src/libs/types.ts";
-import { addressEquals } from "../src/libs/common.ts";
+import { addressEquals } from "../src/libs/functions/common.ts";
 import type { IPURL } from "../src/libs/ipurl.ts";
 
 export function addressTestEquality(

@@ -1,14 +1,14 @@
-import { ADDRESS_VERSIONS } from "./const.ts";
-import { IPv4Address, IPv6Address } from "./ipaddress.ts";
+import { ADDRESS_VERSIONS } from "../const.ts";
+import { IPv4Address, IPv6Address } from "../ipaddress.ts";
 import type {
   AddressArrayForVersion,
   AddressArrays,
   AddressVersions,
   CheckAddressFunction,
   NumberTypes,
-} from "./types.ts";
-import { isCorrectAddress } from "./functions/check.ts";
-import type { Address } from "./address.ts";
+} from "../types.ts";
+import { isCorrectAddress } from "./check.ts";
+import type { Address } from "../address.ts";
 
 /**
  * Creates a typed array for an IP address.

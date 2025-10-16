@@ -1,4 +1,4 @@
-import { createAddressArray } from "./common.ts";
+import { createAddressArray } from "./functions/common.ts";
 import { ADDRESS_VERSIONS } from "./const.ts";
 import type { AddressArrays, AddressVersions } from "./types.ts";
 

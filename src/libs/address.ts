@@ -1,4 +1,4 @@
-import { addressEquals, createAddressArray } from "./common.ts";
+import { addressEquals, createAddressArray } from "./functions/common.ts";
 import { ADDRESS_VERSIONS } from "./const.ts";
 import { NonImplementedStaticMethodError } from "./error.ts";
 import type {

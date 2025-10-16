@@ -14,8 +14,8 @@ import {
   getAddressFromAddressContainers,
   hasCidrInString,
   memoize,
-} from "./common.ts";
-import { arrayToUint, toUint } from "./uint.ts";
+} from "./functions/common.ts";
+import { arrayToUint, toUint } from "./functions/uint.ts";
 import { IPv4Address, IPv6Address } from "./ipaddress.ts";
 import { ContextError, NonImplementedStaticMethodError } from "./error.ts";
 import {
