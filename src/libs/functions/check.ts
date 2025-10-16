@@ -3,10 +3,8 @@ import { IncorrectAddressError } from "../error.ts";
 import type {
   AddressArrayForVersion,
   AddressVersions,
-  GetIPAddressTypeResult,
   Valid,
 } from "../types.ts";
-import { IPv4Address, IPv6Address } from "../ipaddress.ts";
 
 /**
  * Verify if the address is correct
@@ -155,32 +153,4 @@ export function getIPv6AddressStringType(
     return "normal";
   }
   return null;
-}
-
-export function getIPAddressType(address: string): GetIPAddressTypeResult {
-  const ip6type = getIPv6AddressStringType(address);
-  if (ip6type !== null) {
-    switch (ip6type) {
-      case "ip6.arpa":
-        return {
-          class: IPv6Address,
-          method: "fromIP6ArpaString",
-        };
-      case "mapped":
-        return {
-          class: IPv6Address,
-          method: "fromIPv4MappedString",
-        };
-      case "normal":
-        return {
-          class: IPv6Address,
-          method: "fromString",
-        };
-    }
-  }
-
-  return {
-    class: IPv4Address,
-    method: "fromString",
-  };
 }

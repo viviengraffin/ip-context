@@ -351,14 +351,3 @@ export type URLErrorDatas = {
   type: "invalid-format";
   url: string;
 };
-
-export type GetIPAddressTypeResult<
-  IPAddress extends IPv4Address | IPv6Address = IPv4Address | IPv6Address,
-> = IPAddress extends IPv4Address ? {
-    class: typeof IPv4Address;
-    method: keyof typeof IPv4Address;
-  }
-  : {
-    class: typeof IPv6Address;
-    method: keyof typeof IPv6Address;
-  };

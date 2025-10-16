@@ -26,6 +26,7 @@ import type {
 import { arrayToUint, UintToArray } from "./uint.ts";
 import { IPURL } from "./ipurl.ts";
 import {
+  createIPAddressFromString,
   getIP6ArpaStringParts,
   hasZoneId,
   parseIPv4Address,
@@ -43,7 +44,6 @@ import {
   uint16ArrayToByteArray,
 } from "./functions/conversion.ts";
 import {
-  getIPAddressType,
   getIPv6AddressStringType,
   isCorrectAddress,
   verifyZoneId,
@@ -1080,23 +1080,7 @@ export class IPv6Address extends IPAddress<6> {
  * ```
  */
 export function ip(address: string): IPv4Address | IPv6Address {
-  /*
-  if (getIP6ArpaStringParts(ip.toLowerCase()) !== null) {
-    return IPv6Address.fromIP6ArpaString(ip);
-  }
-  if (Mapped.isValidString(ip)) {
-    return IPv6Address.fromIPv4MappedString(ip);
-  }
-  if (isIPv4StringAddress(ip)) {
-    return IPv4Address.fromString(ip);
-  } else {
-    return IPv6Address.fromString(ip);
-  }
-  */
-  const r = getIPAddressType(address);
-  // deno-lint-ignore ban-ts-comment
-  // @ts-expect-error
-  return r.class[r.method](address);
+  return createIPAddressFromString(address);
 }
 
 /**

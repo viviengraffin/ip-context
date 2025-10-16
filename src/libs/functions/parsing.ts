@@ -5,11 +5,13 @@ import {
   URL_REGEXP_DELETE_HOOKS,
 } from "../const.ts";
 import { ContextError, IncorrectAddressError, URLError } from "../error.ts";
+import { IPv4Address, IPv6Address } from "../ipaddress.ts";
 import type {
   AddressVersions,
   ExtractCidrFromStringResult,
   ParseUrlResult,
 } from "../types.ts";
+import { getIPv6AddressStringType } from "./check.ts";
 
 /**
  * Count the number of zero blocks to add in typed array representation
@@ -246,4 +248,22 @@ export function hasZoneId(
   const zonePart = address.substring(idx + 1);
 
   return [addressPart, zonePart];
+}
+
+export function createIPAddressFromString(
+  address: string,
+): IPv4Address | IPv6Address {
+  const ip6type = getIPv6AddressStringType(address);
+  if (ip6type !== null) {
+    switch (ip6type) {
+      case "ip6.arpa":
+        return IPv6Address.fromIP6ArpaString(address);
+      case "mapped":
+        return IPv6Address.fromIPv4MappedString(address);
+      case "normal":
+        return IPv6Address.fromString(address);
+    }
+  }
+
+  return IPv4Address.fromString(address);
 }

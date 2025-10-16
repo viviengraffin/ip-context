@@ -13,17 +13,16 @@ import {
   createAddressFromUint,
   getAddressFromAddressContainers,
   hasCidrInString,
-  isIPv4StringAddress,
   memoize,
 } from "./common.ts";
 import { arrayToUint, toUint } from "./uint.ts";
 import { IPv4Address, IPv6Address } from "./ipaddress.ts";
 import { ContextError, NonImplementedStaticMethodError } from "./error.ts";
 import {
+  createIPAddressFromString,
   extractCidrFromString,
   parseIPv4Address,
 } from "./functions/parsing.ts";
-import { getIPAddressType } from "./functions/check.ts";
 
 /**
  * Calculates the last address of a subnet given an address and a submask.
@@ -387,12 +386,7 @@ export function context(
     }
   }
 
-  const { class: addressClass, method: addressMethod } = getIPAddressType(
-    sAddress,
-  );
-  // deno-lint-ignore ban-ts-comment
-  // @ts-expect-error
-  const address = addressClass[addressMethod](sAddress);
+  const address = createIPAddressFromString(sAddress);
 
   if (address instanceof IPv4Address) {
     let submask: IPv4Submask;
@@ -435,19 +429,23 @@ export function contextWithHosts(
   ip: string,
   hosts: NumberTypes,
 ): IPv4Context | IPv6Context {
-  if (isIPv4StringAddress(ip)) {
-    if (typeof hosts === "bigint") {
-      hosts = Number(hosts);
+  const address = createIPAddressFromString(ip);
+
+  if (address instanceof IPv4Address) {
+    if (typeof hosts !== "number") {
+      throw new ContextError({
+        type: "invalid-hosts-number",
+        value: hosts,
+      });
     }
-    const submask = IPv4Submask.fromHosts(hosts);
-    const address = IPv4Address.fromString(ip);
-    return new IPv4Context(address, submask);
+    return new IPv4Context(address, IPv4Submask.fromHosts(hosts));
   } else {
-    if (typeof hosts === "number") {
-      hosts = BigInt(hosts);
+    if (typeof hosts !== "bigint") {
+      throw new ContextError({
+        type: "invalid-hosts-number",
+        value: hosts,
+      });
     }
-    const submask = IPv6Submask.fromHosts(hosts);
-    const address = IPv6Address.fromString(ip);
-    return new IPv6Context(address, submask);
+    return new IPv6Context(address, IPv6Submask.fromHosts(hosts));
   }
 }
