@@ -55,4 +55,4 @@ export type {
   TunnelingModeWithParams4To6,
   URLErrorDatas,
   Valid,
-} from "./libs/types.ts";
+} from "./libs/types/index.ts";

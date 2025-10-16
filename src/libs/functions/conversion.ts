@@ -1,6 +1,9 @@
 import { ADDRESS_VERSIONS } from "../const.ts";
 import { IncorrectAddressError } from "../error.ts";
-import type { AddressVersions, NumberTypeForVersion } from "../types.ts";
+import type {
+  AddressVersions,
+  NumberTypeForVersion,
+} from "../types/address.ts";
 
 export function hexStringToUint<T extends AddressVersions>(
   version: T,

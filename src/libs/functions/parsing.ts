@@ -9,8 +9,8 @@ import { IPv4Address, IPv6Address } from "../ipaddress.ts";
 import type {
   AddressVersions,
   ExtractCidrFromStringResult,
-  ParseUrlResult,
-} from "../types.ts";
+} from "../types/address.ts";
+import type { ParseUrlResult } from "../types/common.ts";
 import { getIPv6AddressStringType } from "./check.ts";
 
 /**

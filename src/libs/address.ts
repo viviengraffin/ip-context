@@ -3,13 +3,15 @@ import { ADDRESS_VERSIONS } from "./const.ts";
 import { NonImplementedStaticMethodError } from "./error.ts";
 import type {
   AddressArrayForVersion,
-  AddressOtherProperties,
   AddressVersions,
-  AllAddressKnownProperties,
   CheckAddressFunction,
   NumberTypeForVersion,
-  NumberTypes,
-} from "./types.ts";
+} from "./types/address.ts";
+import type { NumberTypes } from "./types/common.ts";
+import type {
+  AddressOtherProperties,
+  AllAddressKnownProperties,
+} from "./types/otherProperties.ts";
 
 /**
  * Abstract class representing an IP address (IPv4 or IPv6).

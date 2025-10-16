@@ -3,8 +3,8 @@ import { IncorrectAddressError } from "../error.ts";
 import type {
   AddressArrayForVersion,
   AddressVersions,
-  Valid,
-} from "../types.ts";
+} from "../types/address.ts";
+import type { Valid } from "../types/common.ts";
 
 /**
  * Verify if the address is correct

@@ -19,18 +19,22 @@ import {
   stringifyIPv4Address,
   stringifyIPv6Address,
 } from "./functions/stringify.ts";
+import { arrayToUint, toUint, UintToArray } from "./functions/uint.ts";
 import type {
   AddressArrayForVersion,
-  AddressOtherProperties,
   AddressVersions,
-  GenerateSubmaskFromHostsResult,
   IPv4AddressClasses,
-  IPv6SubmaskKnownProperties,
   NumberTypeForVersion,
+} from "./types/address.ts";
+import type {
+  GenerateSubmaskFromHostsResult,
   NumberTypes,
+} from "./types/common.ts";
+import type {
+  AddressOtherProperties,
+  IPv6SubmaskKnownProperties,
   SubmaskKnownProperties,
-} from "./types.ts";
-import { arrayToUint, toUint, UintToArray } from "./functions/uint.ts";
+} from "./types/otherProperties.ts";
 
 /**
  * Calculates the number of available hosts for a given CIDR and IP version.
@@ -143,7 +147,6 @@ function getHostsFromSizeAndCidr<T extends AddressVersions>(
  */
 export abstract class Submask<
   Version extends AddressVersions = AddressVersions,
-  KnownProperties extends SubmaskKnownProperties = SubmaskKnownProperties,
 > extends Address<Version> {
   static fromCidr(_cidr: number): Submask {
     throw new NonImplementedStaticMethodError();
@@ -233,7 +236,7 @@ export abstract class Submask<
  * Class representing an IPv4 submask.
  * Provides methods to create, validate, and manipulate IPv4 subnets.
  */
-export class IPv4Submask extends Submask<4, SubmaskKnownProperties<number>> {
+export class IPv4Submask extends Submask<4> {
   /**
    * Creates an IPv4Submask from a CIDR value.
    *
@@ -400,7 +403,7 @@ export class IPv4Submask extends Submask<4, SubmaskKnownProperties<number>> {
  * Class representing an IPv6 submask.
  * Provides methods to create, validate, and manipulate IPv6 subnets.
  */
-export class IPv6Submask extends Submask<6, IPv6SubmaskKnownProperties> {
+export class IPv6Submask extends Submask<6> {
   /**
    * Creates an IPv6Submask from a CIDR value.
    *

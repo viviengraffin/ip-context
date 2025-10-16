@@ -11,22 +11,6 @@ import {
   NonImplementedStaticMethodError,
 } from "./error.ts";
 import { IPv4Submask, IPv6Submask } from "./submask.ts";
-import type {
-  AddressArrayForVersion,
-  AddressOtherProperties,
-  AddressVersions,
-  AllAddressKnownProperties,
-  ContextTypeForVersion,
-  IPv4AddressClasses,
-  IPv4AddressOtherProperties,
-  IPv6AddressOtherProperties,
-  NumberTypeForVersion,
-  TeredoDatas,
-  TunnelingModeParams4To6,
-  TunnelingModes,
-  TunnelingModeWithoutParams4To6,
-  TunnelingModeWithParams4To6,
-} from "./types.ts";
 import { arrayToUint, UintToArray } from "./functions/uint.ts";
 import { IPURL } from "./ipurl.ts";
 import {
@@ -52,6 +36,26 @@ import {
   isCorrectAddress,
   verifyZoneId,
 } from "./functions/check.ts";
+import type {
+  AddressArrayForVersion,
+  AddressVersions,
+  ContextTypeForVersion,
+  IPv4AddressClasses,
+  NumberTypeForVersion,
+} from "./types/address.ts";
+import type {
+  AddressOtherProperties,
+  AllAddressKnownProperties,
+  IPv4AddressOtherProperties,
+  IPv6AddressOtherProperties,
+} from "./types/otherProperties.ts";
+import type {
+  TeredoDatas,
+  TunnelingModeParams4To6,
+  TunnelingModes,
+  TunnelingModeWithoutParams4To6,
+  TunnelingModeWithParams4To6,
+} from "./types/tunneling.ts";
 
 /**
  * Abstract class representing an IP address (IPv4 or IPv6).

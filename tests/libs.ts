@@ -9,13 +9,13 @@ import type {
   IPv6GetDatasFromResult,
   IPv6TestAddressDatas,
 } from "./types.ts";
+import { addressEquals } from "../src/libs/functions/common.ts";
+import type { IPURL } from "../src/libs/ipurl.ts";
 import type {
   AddressArrayForVersion,
   AddressVersions,
   SubmaskForVersion,
-} from "../src/libs/types.ts";
-import { addressEquals } from "../src/libs/functions/common.ts";
-import type { IPURL } from "../src/libs/ipurl.ts";
+} from "../src/libs/types/address.ts";
 
 export function addressTestEquality(
   name: string,

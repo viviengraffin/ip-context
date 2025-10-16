@@ -1,9 +1,10 @@
-import type { IPv4AddressClasses, NumberTypes } from "../src/libs/types.ts";
 import type {
   IPv4Address,
+  IPv4AddressClasses,
   IPv4Context,
   IPv6Address,
   IPv6Context,
+  NumberTypes,
 } from "../src/main.ts";
 
 type Includes = {

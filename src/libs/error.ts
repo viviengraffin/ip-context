@@ -1,10 +1,9 @@
+import type { AddressContainers, AddressVersions } from "./types/address.ts";
 import type {
-  AddressContainers,
-  AddressVersions,
   ContextErrorDatas,
   IncorrectAddressErrorDatas,
-  URLErrorDatas,
-} from "./types.ts";
+} from "./types/error.ts";
+import type { URLErrorDatas } from "./types/tunneling.ts";
 
 export function stringifyIncorrectAddress(
   version: AddressVersions,

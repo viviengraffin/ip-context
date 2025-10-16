@@ -1,13 +1,5 @@
 import { IPv4Submask, IPv6Submask } from "./submask.ts";
 import { and, not, or } from "./functions/operation.ts";
-import type {
-  AddressVersions,
-  IPAddressTypeForVersion,
-  IPv4AddressClasses,
-  NumberTypeForVersion,
-  NumberTypes,
-  SubmaskTypeForVersion,
-} from "./types.ts";
 import {
   createAddress,
   createAddressFromUint,
@@ -23,6 +15,14 @@ import {
   extractCidrFromString,
   parseIPv4Address,
 } from "./functions/parsing.ts";
+import type {
+  AddressVersions,
+  IPAddressTypeForVersion,
+  IPv4AddressClasses,
+  NumberTypeForVersion,
+  SubmaskTypeForVersion,
+} from "./types/address.ts";
+import type { NumberTypes } from "./types/common.ts";
 
 /**
  * Calculates the last address of a subnet given an address and a submask.
