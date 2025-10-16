@@ -1,13 +1,12 @@
-/**
- * Generic constructor type for classes.
- * @template T - The type of the instance to be constructed
- */
-
 import type { IPv4Context, IPv6Context } from "./context.ts";
 import type { IPv4Address, IPv6Address } from "./ipaddress.ts";
 import type { IPv4Submask, IPv6Submask } from "./submask.ts";
 import type { Mapped, SixToFour, Teredo } from "./tunneling.ts";
 
+/**
+ * Generic constructor type for classes.
+ * @template T - The type of the instance to be constructed
+ */
 export type Constructor<T> = { new (...args: unknown[]): T };
 
 /**
@@ -352,3 +351,14 @@ export type URLErrorDatas = {
   type: "invalid-format";
   url: string;
 };
+
+export type GetIPAddressTypeResult<
+  IPAddress extends IPv4Address | IPv6Address = IPv4Address | IPv6Address,
+> = IPAddress extends IPv4Address ? {
+    class: typeof IPv4Address;
+    method: keyof typeof IPv4Address;
+  }
+  : {
+    class: typeof IPv6Address;
+    method: keyof typeof IPv6Address;
+  };

@@ -1,4 +1,3 @@
-import { Mapped } from "./tunneling.ts";
 import { ADDRESS_VERSIONS } from "./const.ts";
 import { IPv4Address, IPv6Address } from "./ipaddress.ts";
 import type {
@@ -8,7 +7,6 @@ import type {
   CheckAddressFunction,
   NumberTypes,
 } from "./types.ts";
-import { getIP6ArpaStringParts } from "./functions/parsing.ts";
 import { isCorrectAddress } from "./functions/check.ts";
 import type { Address } from "./address.ts";
 
@@ -135,19 +133,6 @@ export function addressEquals<T extends AddressVersions>(
   }
 
   return true;
-}
-
-export function getIPv6AddressStringType(
-  address: string,
-): "ip6.arpa" | "mapped" | "normal" {
-  if (getIP6ArpaStringParts(address) !== null) {
-    return "ip6.arpa";
-  }
-  if (Mapped.isValidString(address)) {
-    return "mapped";
-  } else {
-    return "normal";
-  }
 }
 
 export function getAddressFromAddressContainers(

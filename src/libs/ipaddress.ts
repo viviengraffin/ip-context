@@ -1,10 +1,5 @@
 import { Address } from "./address.ts";
-import {
-  addressEquals,
-  getIPv6AddressStringType,
-  isIPv4StringAddress,
-  memoize,
-} from "./common.ts";
+import { addressEquals, isIPv4StringAddress, memoize } from "./common.ts";
 import { IPv4Context, IPv6Context } from "./context.ts";
 import { Mapped, Teredo } from "./tunneling.ts";
 import {
@@ -47,7 +42,12 @@ import {
   hexStringToUint,
   uint16ArrayToByteArray,
 } from "./functions/conversion.ts";
-import { isCorrectAddress, verifyZoneId } from "./functions/check.ts";
+import {
+  getIPAddressType,
+  getIPv6AddressStringType,
+  isCorrectAddress,
+  verifyZoneId,
+} from "./functions/check.ts";
 
 /**
  * Abstract class representing an IP address (IPv4 or IPv6).
@@ -725,6 +725,12 @@ export class IPv6Address extends IPAddress<6> {
       case "normal":
         address = this.fromString(addressString);
         break;
+      default:
+        throw new IncorrectAddressError({
+          type: "incorrect-format",
+          version: 6,
+          address: url,
+        });
     }
     return new IPURL(address, protocol, port, pathname, search, hash);
   }
@@ -1073,7 +1079,8 @@ export class IPv6Address extends IPAddress<6> {
  * const ip6=ip("b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4.ip6.arpa"); // Instance of IPv6Address
  * ```
  */
-export function ip(ip: string): IPv4Address | IPv6Address {
+export function ip(address: string): IPv4Address | IPv6Address {
+  /*
   if (getIP6ArpaStringParts(ip.toLowerCase()) !== null) {
     return IPv6Address.fromIP6ArpaString(ip);
   }
@@ -1085,6 +1092,11 @@ export function ip(ip: string): IPv4Address | IPv6Address {
   } else {
     return IPv6Address.fromString(ip);
   }
+  */
+  const r = getIPAddressType(address);
+  // deno-lint-ignore ban-ts-comment
+  // @ts-expect-error
+  return r.class[r.method](address);
 }
 
 /**

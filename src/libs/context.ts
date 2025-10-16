@@ -23,6 +23,7 @@ import {
   extractCidrFromString,
   parseIPv4Address,
 } from "./functions/parsing.ts";
+import { getIPAddressType } from "./functions/check.ts";
 
 /**
  * Calculates the last address of a subnet given an address and a submask.
@@ -373,7 +374,7 @@ export function context(
   let cidr: number | null = null;
   let sSubmask: string | null = null;
 
-  if (secondParam !== undefined) {
+  if (secondParam) {
     sSubmask = secondParam;
     sAddress = firstParam;
   } else {
@@ -386,8 +387,14 @@ export function context(
     }
   }
 
-  if (isIPv4StringAddress(sAddress)) {
-    const address = IPv4Address.fromString(sAddress);
+  const { class: addressClass, method: addressMethod } = getIPAddressType(
+    sAddress,
+  );
+  // deno-lint-ignore ban-ts-comment
+  // @ts-expect-error
+  const address = addressClass[addressMethod](sAddress);
+
+  if (address instanceof IPv4Address) {
     let submask: IPv4Submask;
     if (cidr !== null) {
       submask = IPv4Submask.fromCidr(cidr);
@@ -405,8 +412,7 @@ export function context(
     }
 
     return new IPv4Context(address, submask);
-  } else if (sSubmask !== null || cidr !== null) {
-    const address = IPv6Address.fromString(sAddress);
+  } else {
     let submask: IPv6Submask;
     if (cidr !== null) {
       submask = IPv6Submask.fromCidr(cidr);
@@ -416,11 +422,6 @@ export function context(
 
     return new IPv6Context(address, submask);
   }
-
-  throw new ContextError({
-    type: "unknown-ip-version",
-    params: [firstParam, secondParam],
-  });
 }
 
 /**
