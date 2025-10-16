@@ -1,4 +1,4 @@
-import { isCorrectPort } from "./common.ts";
+import { isCorrectPort } from "./functions/check.ts";
 import { URLError } from "./error.ts";
 import { IPv4Address, type IPv6Address } from "./ipaddress.ts";
 

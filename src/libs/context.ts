@@ -1,4 +1,3 @@
-import type { Address } from "./address.ts";
 import { IPv4Submask, IPv6Submask } from "./submask.ts";
 import { and, not, or } from "./operation.ts";
 import type {
@@ -11,15 +10,19 @@ import type {
 } from "./types.ts";
 import {
   createAddress,
-  extractCidrFromString,
+  createAddressFromUint,
+  getAddressFromAddressContainers,
   hasCidrInString,
   isIPv4StringAddress,
   memoize,
-  parseIPv4Address,
 } from "./common.ts";
 import { arrayToUint, toUint } from "./uint.ts";
-import { ADDRESS_CONSTRUCTORS, IPv4Address, IPv6Address } from "./ipaddress.ts";
+import { IPv4Address, IPv6Address } from "./ipaddress.ts";
 import { ContextError, NonImplementedStaticMethodError } from "./error.ts";
+import {
+  extractCidrFromString,
+  parseIPv4Address,
+} from "./functions/parsing.ts";
 
 /**
  * Calculates the last address of a subnet given an address and a submask.
@@ -105,14 +108,12 @@ export abstract class Context<Version extends AddressVersions> {
     return memoize(
       this._firstHost,
       () => {
-        const constructor = ADDRESS_CONSTRUCTORS[this.address.version];
-        // deno-lint-ignore ban-ts-comment
-        // @ts-expect-error
-        this._firstHost = constructor.fromUint(
+        this._firstHost = createAddressFromUint(
+          this.address.version,
           // deno-lint-ignore ban-ts-comment
           // @ts-expect-error
           this.network.toUint() + toUint(this.address.version, 1),
-        );
+        ) as IPAddressTypeForVersion<Version>;
       },
       () => this._firstHost!,
     );
@@ -448,14 +449,4 @@ export function contextWithHosts(
     const address = IPv6Address.fromString(ip);
     return new IPv6Context(address, submask);
   }
-}
-
-export function getAddressFromAddressContainers(
-  version: AddressVersions,
-  address: string | Address,
-): Address {
-  if (typeof address === "string") {
-    return ADDRESS_CONSTRUCTORS[version].fromString(address);
-  }
-  return address;
 }

@@ -1,27 +1,24 @@
 import { Address } from "./address.ts";
-import {
-  addressEquals,
-  binaryStringToUint,
-  byteArrayToUint16Array,
-  hexStringToUint,
-  memoize,
-  parseIPv4Address,
-  parseIPv6Address,
-  stringifyIPv4Address,
-  stringifyIPv6Address,
-  uint16ArrayToByteArray,
-} from "./common.ts";
+import { addressEquals, memoize } from "./common.ts";
 import {
   ADDRESS_VERSIONS,
   CIDR_TO_MASK,
   IPv4_CLASS_TO_SUBMASK,
   SUBMASK_POSSIBLE_BLOCKS,
 } from "./const.ts";
+import { ContextError, NonImplementedStaticMethodError } from "./error.ts";
+import { isCorrectSubmask } from "./functions/check.ts";
 import {
-  ContextError,
-  IncorrectAddressError,
-  NonImplementedStaticMethodError,
-} from "./error.ts";
+  binaryStringToUint,
+  byteArrayToUint16Array,
+  hexStringToUint,
+  uint16ArrayToByteArray,
+} from "./functions/conversion.ts";
+import { parseIPv4Address, parseIPv6Address } from "./functions/parsing.ts";
+import {
+  stringifyIPv4Address,
+  stringifyIPv6Address,
+} from "./functions/stringify.ts";
 import type {
   AddressArrayForVersion,
   AddressOtherProperties,
@@ -32,82 +29,8 @@ import type {
   NumberTypeForVersion,
   NumberTypes,
   SubmaskKnownProperties,
-  Valid,
 } from "./types.ts";
 import { arrayToUint, toUint, UintToArray } from "./uint.ts";
-
-/**
- * Checks if the given submask is valid for the specified IP version.
- * A valid submask must have all 1s before any 0, and no 1s after a 0.
- *
- * @param version - IP version (4 or 6)
- * @param items - Array of submask blocks (for example: [255, 255, 255, 0] for IPv4)
- * @returns {Valid<Error>} { valid: true } if valid, otherwise an error object
- */
-function isCorrectSubmask<T extends AddressVersions>(
-  version: T,
-  items: number[] | AddressArrayForVersion<T>,
-): Valid<Error> {
-  const { arrayLength, itemMax } = ADDRESS_VERSIONS[version];
-  let hasZero = false;
-
-  if (items.length !== arrayLength) {
-    return {
-      valid: false,
-      reason: new IncorrectAddressError({
-        type: "incorrect-format",
-        version,
-        address: items,
-      }),
-    };
-  }
-
-  for (const item of items) {
-    if (!Number.isInteger(item) || item < 0 || item > itemMax) {
-      return {
-        valid: false,
-        reason: new IncorrectAddressError({
-          type: "incorrect-item",
-          version,
-          item,
-          address: items,
-        }),
-      };
-    }
-
-    if (!hasZero) {
-      if (item === itemMax) {
-        continue;
-      }
-
-      if (SUBMASK_POSSIBLE_BLOCKS[version].includes(item)) {
-        hasZero = true;
-      } else {
-        return {
-          valid: false,
-          reason: new IncorrectAddressError({
-            type: "has-one-after-zero",
-            version,
-            address: items,
-          }),
-        };
-      }
-    } else if (item !== 0) {
-      return {
-        valid: false,
-        reason: new IncorrectAddressError({
-          type: "has-one-after-zero",
-          version,
-          address: items,
-        }),
-      };
-    }
-  }
-
-  return {
-    valid: true,
-  };
-}
 
 /**
  * Calculates the number of available hosts for a given CIDR and IP version.

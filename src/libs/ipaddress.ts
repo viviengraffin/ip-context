@@ -1,22 +1,9 @@
 import { Address } from "./address.ts";
 import {
   addressEquals,
-  binaryStringToUint,
-  byteArrayToUint16Array,
-  getIP6ArpaStringParts,
   getIPv6AddressStringType,
-  hasZoneId,
-  hexStringToUint,
-  isCorrectAddress,
   isIPv4StringAddress,
   memoize,
-  parseIPv4Address,
-  parseIPv6Address,
-  parseUrl,
-  stringifyIPv4Address,
-  stringifyIPv6Address,
-  uint16ArrayToByteArray,
-  verifyZoneId,
 } from "./common.ts";
 import { IPv4Context, IPv6Context } from "./context.ts";
 import { Mapped, Teredo } from "./tunneling.ts";
@@ -43,6 +30,24 @@ import type {
 } from "./types.ts";
 import { arrayToUint, UintToArray } from "./uint.ts";
 import { IPURL } from "./ipurl.ts";
+import {
+  getIP6ArpaStringParts,
+  hasZoneId,
+  parseIPv4Address,
+  parseIPv6Address,
+  parseUrl,
+} from "./functions/parsing.ts";
+import {
+  stringifyIPv4Address,
+  stringifyIPv6Address,
+} from "./functions/stringify.ts";
+import {
+  binaryStringToUint,
+  byteArrayToUint16Array,
+  hexStringToUint,
+  uint16ArrayToByteArray,
+} from "./functions/conversion.ts";
+import { isCorrectAddress, verifyZoneId } from "./functions/check.ts";
 
 /**
  * Abstract class representing an IP address (IPv4 or IPv6).
@@ -499,11 +504,11 @@ export class IPv6Address extends IPAddress<6> {
    * @returns {IPv6Address} New IPv6Address instance
    */
   static override fromString(string: string): IPv6Address {
-    const splittedIP = hasZoneId(string);
-    return splittedIP === null
-      ? new IPv6Address(parseIPv6Address(string))
-      : new IPv6Address(parseIPv6Address(splittedIP[0]), {
-        zoneId: splittedIP[1],
+    const [address, zoneId] = hasZoneId(string);
+    return zoneId === undefined
+      ? new IPv6Address(parseIPv6Address(address))
+      : new IPv6Address(parseIPv6Address(address), {
+        zoneId: zoneId,
       });
   }
 
@@ -516,10 +521,8 @@ export class IPv6Address extends IPAddress<6> {
    * @returns {IPv6Address} New IPv6Address instance
    */
   static fromIPv4MappedString(string: string): IPv6Address {
-    const splittedIP = hasZoneId(string);
-    return splittedIP === null
-      ? Mapped.fromString(string)
-      : Mapped.fromString(splittedIP[0], splittedIP[1]);
+    const [address, zoneId] = hasZoneId(string);
+    return Mapped.fromString(address, zoneId);
   }
 
   /**
@@ -1104,15 +1107,3 @@ export function isValidAddress(ip: string): boolean {
     return false;
   }
 }
-
-/**
- * Map of IP version to corresponding address constructor.
- * Useful for dynamically creating IP addresses based on version.
- */
-export const ADDRESS_CONSTRUCTORS = {
-  4: IPv4Address,
-  6: IPv6Address,
-} as const satisfies Record<
-  AddressVersions,
-  typeof IPv4Address | typeof IPv6Address
->;

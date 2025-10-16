@@ -166,12 +166,6 @@ export type ContextErrorDatas = {
 };
 
 /**
- * Represents a value that can be undefined.
- * @template T - The type of the value
- */
-export type Undefineded<T> = T | undefined;
-
-/**
  * Object to set the known properties in an address
  */
 export type AddressKnownProperties<
