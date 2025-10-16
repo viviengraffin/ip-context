@@ -1,6 +1,6 @@
-import { createAddressArray } from "./functions/common.ts";
-import { ADDRESS_VERSIONS } from "./const.ts";
-import type { AddressArrays, AddressVersions } from "./types.ts";
+import { createAddressArray } from "./common.ts";
+import { ADDRESS_VERSIONS } from "../const.ts";
+import type { AddressArrays, AddressVersions } from "../types.ts";
 
 /**
  * Applies a binary operation element-wise on two address arrays.

@@ -1,5 +1,5 @@
 import { IPv4Submask, IPv6Submask } from "./submask.ts";
-import { and, not, or } from "./operation.ts";
+import { and, not, or } from "./functions/operation.ts";
 import type {
   AddressVersions,
   IPAddressTypeForVersion,
