@@ -5,7 +5,6 @@ import {
   memoize,
 } from "./functions/common.ts";
 import { IPv4Context, IPv6Context } from "./context.ts";
-import { Mapped, Teredo } from "./tunneling.ts";
 import {
   IncorrectAddressError,
   NonImplementedStaticMethodError,
@@ -56,6 +55,8 @@ import type {
   TunnelingModeWithoutParams4To6,
   TunnelingModeWithParams4To6,
 } from "./types/tunneling.ts";
+import { Teredo } from "./tunneling/teredo.ts";
+import { Mapped } from "./tunneling/mapped.ts";
 
 /**
  * Abstract class representing an IP address (IPv4 or IPv6).

@@ -1,9 +1,5 @@
-import {
-  IncorrectAddressError,
-  NonImplementedStaticMethodError,
-} from "./error.ts";
-import { IPv4Address, IPv6Address } from "./ipaddress.ts";
-import type { TeredoDatas, TunnelingModesObject } from "./types/tunneling.ts";
+import { NonImplementedStaticMethodError } from "../error.ts";
+import { IPv4Address, IPv6Address } from "../ipaddress.ts";
 
 /**
  * Copies the IPv4 part from an IPv6 address (Uint16Array) to a new IPv4Address.
@@ -12,7 +8,7 @@ import type { TeredoDatas, TunnelingModesObject } from "./types/tunneling.ts";
  * @param index - Starting index in the Uint16Array where the IPv4 part begins
  * @returns {IPv4Address} New IPv4Address instance
  */
-function copyIPv6ToIPv4Address(
+export function copyIPv6ToIPv4Address(
   ipv6: Uint16Array,
   index: number,
   operation: (word: number) => number = (word) => word,
@@ -27,7 +23,10 @@ function copyIPv6ToIPv4Address(
   ]);
 }
 
-type CopyIPv4ToIPv6AddressOperationCallback = (a: number, b: number) => number;
+export type CopyIPv4ToIPv6AddressOperationCallback = (
+  a: number,
+  b: number,
+) => number;
 
 /**
  * Copies an IPv4 address (Uint8Array) into an IPv6 address (Uint16Array) at the specified index.
@@ -37,7 +36,7 @@ type CopyIPv4ToIPv6AddressOperationCallback = (a: number, b: number) => number;
  * @param index - Starting index in the Uint16Array where the IPv4 part should be copied
  * @returns {IPv6Address} New IPv6Address instance
  */
-function copyIPv4ToIPv6Address(
+export function copyIPv4ToIPv6Address(
   ipv4: Uint8Array,
   ipv6: Uint16Array,
   index: number,
@@ -51,7 +50,7 @@ function copyIPv4ToIPv6Address(
  * @param getUint16Array - Define this function returns an Uint16Array
  * @returns {Uint16Array} Modified IPv6 as Uint16Array
  */
-function copyIPv4ToIPv6Address(
+export function copyIPv4ToIPv6Address(
   ipv4: Uint8Array,
   ipv6: Uint16Array,
   index: number,
@@ -66,7 +65,7 @@ function copyIPv4ToIPv6Address(
  * @param operation - Callback to define the operation for define the word
  * @returns {IPv6Address} New IPv6Address instance
  */
-function copyIPv4ToIPv6Address(
+export function copyIPv4ToIPv6Address(
   ipv4: Uint8Array,
   ipv6: Uint16Array,
   index: number,
@@ -82,14 +81,14 @@ function copyIPv4ToIPv6Address(
  * @param getUint16Array - Define this function returns an Uint16Array
  * @returns {Uint16Array} Modified IPv6 as Uint16Array
  */
-function copyIPv4ToIPv6Address(
+export function copyIPv4ToIPv6Address(
   ipv4: Uint8Array,
   ipv6: Uint16Array,
   index: number,
   operation: CopyIPv4ToIPv6AddressOperationCallback,
   getUint16Array: true,
 ): Uint16Array;
-function copyIPv4ToIPv6Address(
+export function copyIPv4ToIPv6Address(
   ipv4: Uint8Array,
   ipv6: Uint16Array,
   index: number,
@@ -106,7 +105,7 @@ function copyIPv4ToIPv6Address(
   return getUint16Array ? ipv6 : new IPv6Address(ipv6);
 }
 
-function copyIPv4ToIPv6AddressOperation(a: number, b: number): number {
+export function copyIPv4ToIPv6AddressOperation(a: number, b: number): number {
   return (a << 8) | b;
 }
 
@@ -160,141 +159,3 @@ export abstract class TunnelingMode {
     throw new NonImplementedStaticMethodError();
   }
 }
-
-/**
- * IPv4-mapped IPv6 address conversion mode.
- * See [RFC 4291](https://tools.ietf.org/html/rfc4291#section-2.5.5.2)
- */
-export class Mapped extends TunnelingMode {
-  static override isValid(ipv6: IPv6Address): boolean {
-    return ipv6.array.slice(0, 5).every((v) => v === 0) &&
-      ipv6.array[5] === 0xffff;
-  }
-
-  static override toIPv4(ipv6: IPv6Address): IPv4Address {
-    if (!this.isValid(ipv6)) {
-      throw new IncorrectAddressError({
-        type: "invalid-ipv6-tunneling",
-        method: "IPv4-mapped",
-        address: ipv6.toString(),
-      });
-    }
-    return copyIPv6ToIPv4Address(ipv6.array, 6);
-  }
-
-  static override toIPv6(
-    ipv4: IPv4Address,
-    zoneId?: string,
-    string?: string,
-  ): IPv6Address {
-    const ipv6 = this.fillPrefix([0, 0, 0, 0, 0, 0xffff]);
-    return new IPv6Address(
-      copyIPv4ToIPv6Address(ipv4.array, ipv6, 6, true),
-      string
-        ? { zoneId, knownProperties: { _ipv4MappedString: string } }
-        : undefined,
-    );
-  }
-
-  static isValidString(string: string): boolean {
-    return string.startsWith("::ffff:");
-  }
-
-  static override toString(ipv6: IPv6Address): string {
-    return "::ffff:" + this.toIPv4(ipv6).toString();
-  }
-
-  static fromString(string: string, zoneId?: string): IPv6Address {
-    if (!this.isValidString(string)) {
-      throw new IncorrectAddressError({
-        type: "incorrect-format",
-        version: 6,
-        address: string,
-      });
-    }
-
-    const ipv4 = IPv4Address.fromString(string.substring(7));
-    return this.toIPv6(ipv4, zoneId, string);
-  }
-}
-
-/**
- * 6to4 IPv6 address conversion mode.
- * See [RFC 3056](https://tools.ietf.org/html/rfc3056)
- */
-export class SixToFour extends TunnelingMode {
-  static override isValid(ipv6: IPv6Address): boolean {
-    return ipv6.array[0] === 0x2002;
-  }
-
-  static override toIPv6(ipv4: IPv4Address): IPv6Address {
-    const ipv6 = this.fillPrefix([0x2002]);
-    return copyIPv4ToIPv6Address(ipv4.array, ipv6, 1);
-  }
-
-  static override toIPv4(ipv6: IPv6Address): IPv4Address {
-    if (!this.isValid(ipv6)) {
-      throw new IncorrectAddressError({
-        type: "invalid-ipv6-tunneling",
-        method: "6to4",
-        address: ipv6.toString(),
-      });
-    }
-    return copyIPv6ToIPv4Address(ipv6.array, 1);
-  }
-}
-
-/**
- * Teredo IPv6 address conversion mode.
- * See [RFC 4380](https://tools.ietf.org/html/rfc4380)
- */
-export class Teredo extends TunnelingMode {
-  static override isValid(ipv6: IPv6Address): boolean {
-    return ipv6.array[0] === 0x2001 && ipv6.array[1] === 0;
-  }
-
-  static override toIPv4(ipv6: IPv6Address): IPv4Address {
-    if (!this.isValid(ipv6)) {
-      throw new IncorrectAddressError({
-        type: "invalid-ipv6-tunneling",
-        method: "Teredo",
-        address: ipv6.toString(),
-      });
-    }
-    return copyIPv6ToIPv4Address(ipv6.array, 6, (word) => word ^ 0xFFFF);
-  }
-
-  static override toIPv6(ipv4: IPv4Address, params: TeredoDatas): IPv6Address {
-    if (params.flags < 0 || params.flags > 65536) {
-      throw new IncorrectAddressError({
-        type: "teredo-incorrect-flags",
-        flags: params.flags,
-      });
-    }
-    if (params.port < 0 || params.port > 65536) {
-      throw new IncorrectAddressError({
-        type: "teredo-incorrect-port",
-        port: params.port,
-      });
-    }
-    let ipv6 = this.fillPrefix([0x2001, 0]);
-    ipv6 = copyIPv4ToIPv6Address(params.ipv4, ipv6, 2, true);
-    ipv6[4] = params.flags;
-    ipv6[5] = params.port ^ 0xFFFF;
-    return copyIPv4ToIPv6Address(
-      ipv4.array,
-      ipv6,
-      6,
-      (a, b) => copyIPv4ToIPv6AddressOperation(a, b) ^ 0xFFFF,
-    );
-  }
-}
-
-/**
- * An object contains all tunneling methods for convert an IPv6 address to an IPv4 address or vice versa
- */
-export const TUNNELING_MODES: TunnelingModesObject = {
-  MAPPED: Mapped,
-  SIX_TO_FOUR: SixToFour,
-  TEREDO: Teredo,
-} as const;
