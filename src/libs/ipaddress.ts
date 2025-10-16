@@ -1,5 +1,9 @@
 import { Address } from "./address.ts";
-import { addressEquals, isIPv4StringAddress, memoize } from "./functions/common.ts";
+import {
+  addressEquals,
+  isIPv4StringAddress,
+  memoize,
+} from "./functions/common.ts";
 import { IPv4Context, IPv6Context } from "./context.ts";
 import { Mapped, Teredo } from "./tunneling.ts";
 import {
