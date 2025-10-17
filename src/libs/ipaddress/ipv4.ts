@@ -11,7 +11,7 @@ import { parseIPv4Address, parseUrl } from "../functions/parsing.ts";
 import { stringifyIPv4Address } from "../functions/stringify.ts";
 import { arrayToUint, UintToArray } from "../functions/uint.ts";
 import { IPURL } from "../ipurl.ts";
-import { IPv4Submask } from "../submask.ts";
+import { IPv4Submask } from "../submask/index.ts";
 import { Teredo } from "../tunneling/teredo.ts";
 import type {
   AddressArrayForVersion,

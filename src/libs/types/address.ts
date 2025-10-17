@@ -1,6 +1,6 @@
 import type { IPv4Context, IPv6Context } from "../context.ts";
 import type { IPv4Address, IPv6Address } from "../ipaddress/index.ts";
-import type { IPv4Submask, IPv6Submask } from "../submask.ts";
+import type { IPv4Submask, IPv6Submask } from "../submask/index.ts";
 import type { Constructor, Valid } from "./common.ts";
 
 /**

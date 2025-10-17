@@ -1,4 +1,4 @@
-import { IPv4Submask, IPv6Submask } from "./submask.ts";
+import { IPv4Submask, IPv6Submask } from "./submask/index.ts";
 import { and, not, or } from "./functions/operation.ts";
 import {
   createAddress,

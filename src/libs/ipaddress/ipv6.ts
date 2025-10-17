@@ -22,7 +22,7 @@ import {
 import { stringifyIPv6Address } from "../functions/stringify.ts";
 import { arrayToUint, UintToArray } from "../functions/uint.ts";
 import { IPURL } from "../ipurl.ts";
-import { IPv6Submask } from "../submask.ts";
+import { IPv6Submask } from "../submask/index.ts";
 import { Mapped } from "../tunneling/mapped.ts";
 import type { AddressArrayForVersion } from "../types/address.ts";
 import type { IPv6AddressOtherProperties } from "../types/otherProperties.ts";
