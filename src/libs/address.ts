@@ -180,6 +180,25 @@ export abstract class Address<
   abstract toUint(): NumberTypeForVersion<Version>;
 
   /**
+   * Returns the binary separated string representation of this address
+   * 
+   * @returns {string} binary separated string representation
+   */
+  toBinarySeparatedString(): string {
+    const { bitsByItem,arrayLength } = ADDRESS_VERSIONS[this.version]
+    let res=""
+    const sep=this.version===4 ? "." : ":"
+
+    for(let i=0;i<arrayLength-1;i++)
+    {
+      res+=this.array[i].toString(2).padStart(bitsByItem,"0")+sep
+    }
+    res+=this.array[arrayLength-1].toString(2).padStart(bitsByItem,"0")
+
+    return res
+  }
+
+  /**
    * Returns the binary string representation of this address
    *
    * @returns {string} binary string representation
