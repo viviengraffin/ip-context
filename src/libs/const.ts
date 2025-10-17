@@ -4,7 +4,7 @@ import type {
   AddressVersionDefinition,
   AddressVersions,
   IPv4AddressClasses,
-} from "./types.ts";
+} from "./types/address.ts";
 
 /**
  * Definition of IP address versions and their properties.

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { IPv4Address, IPv6Address } from "../src/libs/ipaddress.ts";
-import { IPv4Submask, IPv6Submask } from "../src/libs/submask.ts";
+import { IPv4Address, IPv6Address } from "../src/libs/ipaddress/index.ts";
+import { IPv4Submask, IPv6Submask } from "../src/libs/submask/index.ts";
 import { IPv4Context, IPv6Context } from "../src/libs/context.ts";
 import type {
   IPFromURLExpectedValues,
@@ -9,13 +9,13 @@ import type {
   IPv6GetDatasFromResult,
   IPv6TestAddressDatas,
 } from "./types.ts";
+import { addressEquals } from "../src/libs/functions/common.ts";
+import type { IPURL } from "../src/libs/ipurl.ts";
 import type {
   AddressArrayForVersion,
   AddressVersions,
   SubmaskForVersion,
-} from "../src/libs/types.ts";
-import { addressEquals } from "../src/libs/common.ts";
-import type { IPURL } from "../src/libs/ipurl.ts";
+} from "../src/libs/types/address.ts";
 
 export function addressTestEquality(
   name: string,

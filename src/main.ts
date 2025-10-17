@@ -5,8 +5,12 @@ export {
   IPv4Address,
   IPv6Address,
   isValidAddress,
-} from "./libs/ipaddress.ts";
-export { IPv4Submask, IPv6Submask, type Submask } from "./libs/submask.ts";
+} from "./libs/ipaddress/index.ts";
+export {
+  IPv4Submask,
+  IPv6Submask,
+  type Submask,
+} from "./libs/submask/index.ts";
 export {
   type Context,
   context,
@@ -20,16 +24,12 @@ export {
   NonImplementedStaticMethodError,
   URLError,
 } from "./libs/error.ts";
-export {
-  type Mapped,
-  type SixToFour,
-  type Teredo,
-  TUNNELING_MODES,
-  type TunnelingMode,
-} from "./libs/tunneling.ts";
-
+export type { TunnelingMode } from "./libs/tunneling/index.ts";
+export type { Mapped } from "./libs/tunneling/mapped.ts";
+export type { SixToFour } from "./libs/tunneling/6to4.ts";
+export type { Teredo } from "./libs/tunneling/teredo.ts";
+export { TUNNELING_MODES } from "./libs/tunneling/object.ts";
 export type { IPURL } from "./libs/ipurl.ts";
-
 export type {
   AddressArrayForVersion,
   AddressKnownProperties,
@@ -55,4 +55,4 @@ export type {
   TunnelingModeWithParams4To6,
   URLErrorDatas,
   Valid,
-} from "./libs/types.ts";
+} from "./libs/types/index.ts";

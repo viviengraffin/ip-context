@@ -30,7 +30,7 @@
   },
   "exclude": ["npm"],
   "license": "MIT",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "name": "@viviengraffin/ip-context",
   "exports": "./src/main.ts"
 }

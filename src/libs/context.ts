@@ -1,25 +1,28 @@
-import type { Address } from "./address.ts";
-import { IPv4Submask, IPv6Submask } from "./submask.ts";
-import { and, not, or } from "./operation.ts";
+import { IPv4Submask, IPv6Submask } from "./submask/index.ts";
+import { and, not, or } from "./functions/operation.ts";
+import {
+  createAddress,
+  createAddressFromUint,
+  getAddressFromAddressContainers,
+  hasCidrInString,
+  memoize,
+} from "./functions/common.ts";
+import { arrayToUint, toUint } from "./functions/uint.ts";
+import { IPv4Address, IPv6Address } from "./ipaddress/index.ts";
+import { ContextError, NonImplementedStaticMethodError } from "./error.ts";
+import {
+  createIPAddressFromString,
+  extractCidrFromString,
+  parseIPv4Address,
+} from "./functions/parsing.ts";
 import type {
   AddressVersions,
   IPAddressTypeForVersion,
   IPv4AddressClasses,
   NumberTypeForVersion,
-  NumberTypes,
   SubmaskTypeForVersion,
-} from "./types.ts";
-import {
-  createAddress,
-  extractCidrFromString,
-  hasCidrInString,
-  isIPv4StringAddress,
-  memoize,
-  parseIPv4Address,
-} from "./common.ts";
-import { arrayToUint, toUint } from "./uint.ts";
-import { ADDRESS_CONSTRUCTORS, IPv4Address, IPv6Address } from "./ipaddress.ts";
-import { ContextError, NonImplementedStaticMethodError } from "./error.ts";
+} from "./types/address.ts";
+import type { NumberTypes } from "./types/common.ts";
 
 /**
  * Calculates the last address of a subnet given an address and a submask.
@@ -105,14 +108,12 @@ export abstract class Context<Version extends AddressVersions> {
     return memoize(
       this._firstHost,
       () => {
-        const constructor = ADDRESS_CONSTRUCTORS[this.address.version];
-        // deno-lint-ignore ban-ts-comment
-        // @ts-expect-error
-        this._firstHost = constructor.fromUint(
+        this._firstHost = createAddressFromUint(
+          this.address.version,
           // deno-lint-ignore ban-ts-comment
           // @ts-expect-error
           this.network.toUint() + toUint(this.address.version, 1),
-        );
+        ) as IPAddressTypeForVersion<Version>;
       },
       () => this._firstHost!,
     );
@@ -372,7 +373,7 @@ export function context(
   let cidr: number | null = null;
   let sSubmask: string | null = null;
 
-  if (secondParam !== undefined) {
+  if (secondParam) {
     sSubmask = secondParam;
     sAddress = firstParam;
   } else {
@@ -385,8 +386,9 @@ export function context(
     }
   }
 
-  if (isIPv4StringAddress(sAddress)) {
-    const address = IPv4Address.fromString(sAddress);
+  const address = createIPAddressFromString(sAddress);
+
+  if (address instanceof IPv4Address) {
     let submask: IPv4Submask;
     if (cidr !== null) {
       submask = IPv4Submask.fromCidr(cidr);
@@ -404,8 +406,7 @@ export function context(
     }
 
     return new IPv4Context(address, submask);
-  } else if (sSubmask !== null || cidr !== null) {
-    const address = IPv6Address.fromString(sAddress);
+  } else {
     let submask: IPv6Submask;
     if (cidr !== null) {
       submask = IPv6Submask.fromCidr(cidr);
@@ -415,11 +416,6 @@ export function context(
 
     return new IPv6Context(address, submask);
   }
-
-  throw new ContextError({
-    type: "unknown-ip-version",
-    params: [firstParam, secondParam],
-  });
 }
 
 /**
@@ -433,29 +429,23 @@ export function contextWithHosts(
   ip: string,
   hosts: NumberTypes,
 ): IPv4Context | IPv6Context {
-  if (isIPv4StringAddress(ip)) {
-    if (typeof hosts === "bigint") {
-      hosts = Number(hosts);
-    }
-    const submask = IPv4Submask.fromHosts(hosts);
-    const address = IPv4Address.fromString(ip);
-    return new IPv4Context(address, submask);
-  } else {
-    if (typeof hosts === "number") {
-      hosts = BigInt(hosts);
-    }
-    const submask = IPv6Submask.fromHosts(hosts);
-    const address = IPv6Address.fromString(ip);
-    return new IPv6Context(address, submask);
-  }
-}
+  const address = createIPAddressFromString(ip);
 
-export function getAddressFromAddressContainers(
-  version: AddressVersions,
-  address: string | Address,
-): Address {
-  if (typeof address === "string") {
-    return ADDRESS_CONSTRUCTORS[version].fromString(address);
+  if (address instanceof IPv4Address) {
+    if (typeof hosts !== "number") {
+      throw new ContextError({
+        type: "invalid-hosts-number",
+        value: hosts,
+      });
+    }
+    return new IPv4Context(address, IPv4Submask.fromHosts(hosts));
+  } else {
+    if (typeof hosts !== "bigint") {
+      throw new ContextError({
+        type: "invalid-hosts-number",
+        value: hosts,
+      });
+    }
+    return new IPv6Context(address, IPv6Submask.fromHosts(hosts));
   }
-  return address;
 }

@@ -2,7 +2,7 @@ import type {
   AddressArrayForVersion,
   AddressVersions,
   NumberTypeForVersion,
-} from "./types.ts";
+} from "../types/address.ts";
 
 /**
  * Convertit une adresse IP stockée sous forme de tableau de blocs en un nombre entier

@@ -34,7 +34,7 @@ Deno.bench(
 );
 
 Deno.bench(
-  `IPv6Address.fromURL "http://[2001:db6::1]:8080/demo?test=1#abcd`,
+  `IPv6Address.fromURL "http://[2001:db6::1]:8080/demo?test=1#abcd"`,
   () => {
     IPv6Address.fromURL("http://[2001:db6::1]:8080/demo?test=1#abcd");
   },

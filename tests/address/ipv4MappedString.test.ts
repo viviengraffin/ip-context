@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { IPv6Address } from "../../src/libs/ipaddress.ts";
+import { IPv6Address } from "../../src/libs/ipaddress/index.ts";
 import { IncorrectAddressError } from "../../src/libs/error.ts";
 
 describe("Create an IPv6 address from IPv4-mapped string", () => {

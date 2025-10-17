@@ -1,4 +1,4 @@
-import { IPv4Address, IPv6Address } from "../../src/libs/ipaddress.ts";
+import { IPv4Address, IPv6Address } from "../../src/libs/ipaddress/index.ts";
 import { testIPFromURL } from "../libs.ts";
 import { expect, test } from "vitest";
 import { IncorrectAddressError, URLError } from "../../src/libs/error.ts";

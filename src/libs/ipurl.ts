@@ -1,6 +1,6 @@
-import { isCorrectPort } from "./common.ts";
+import { isCorrectPort } from "./functions/check.ts";
 import { URLError } from "./error.ts";
-import { IPv4Address, type IPv6Address } from "./ipaddress.ts";
+import { IPv4Address, type IPv6Address } from "./ipaddress/index.ts";
 
 /**
  * Class representing an url with an [IPv4Address](https://jsr.io/@viviengraffin/ip-context/doc/~/IPv4Address) or [IPv6Address](https://jsr.io/@viviengraffin/ip-context/doc/~/IPv6Address)
