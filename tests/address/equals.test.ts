@@ -1,4 +1,4 @@
-import { IPv4Address, IPv6Address } from "../../src/libs/ipaddress.ts";
+import { IPv4Address, IPv6Address } from "../../src/libs/ipaddress/index.ts";
 import { IPv4Submask, IPv6Submask } from "../../src/libs/submask.ts";
 import { addressTestEquality } from "../libs.ts";
 

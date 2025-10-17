@@ -1,5 +1,5 @@
 import { IncorrectAddressError } from "../error.ts";
-import { IPv4Address, IPv6Address } from "../ipaddress.ts";
+import { IPv4Address, IPv6Address } from "../ipaddress/index.ts";
 import {
   copyIPv4ToIPv6Address,
   copyIPv6ToIPv4Address,

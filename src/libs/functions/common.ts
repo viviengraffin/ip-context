@@ -1,5 +1,5 @@
 import { ADDRESS_VERSIONS } from "../const.ts";
-import { IPv4Address, IPv6Address } from "../ipaddress.ts";
+import { IPv4Address, IPv6Address } from "../ipaddress/index.ts";
 import { isCorrectAddress } from "./check.ts";
 import type { Address } from "../address.ts";
 import type {

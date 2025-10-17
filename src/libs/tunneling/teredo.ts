@@ -1,5 +1,5 @@
 import { IncorrectAddressError } from "../error.ts";
-import type { IPv4Address, IPv6Address } from "../ipaddress.ts";
+import type { IPv4Address, IPv6Address } from "../ipaddress/index.ts";
 import type { TeredoDatas } from "../types/tunneling.ts";
 import {
   copyIPv4ToIPv6Address,

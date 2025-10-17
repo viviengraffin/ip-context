@@ -5,7 +5,7 @@ import {
   URL_REGEXP_DELETE_HOOKS,
 } from "../const.ts";
 import { ContextError, IncorrectAddressError, URLError } from "../error.ts";
-import { IPv4Address, IPv6Address } from "../ipaddress.ts";
+import { IPv4Address, IPv6Address } from "../ipaddress/index.ts";
 import type {
   AddressVersions,
   ExtractCidrFromStringResult,

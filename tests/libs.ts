@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { IPv4Address, IPv6Address } from "../src/libs/ipaddress.ts";
+import { IPv4Address, IPv6Address } from "../src/libs/ipaddress/index.ts";
 import { IPv4Submask, IPv6Submask } from "../src/libs/submask.ts";
 import { IPv4Context, IPv6Context } from "../src/libs/context.ts";
 import type {

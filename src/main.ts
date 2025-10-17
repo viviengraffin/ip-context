@@ -5,7 +5,7 @@ export {
   IPv4Address,
   IPv6Address,
   isValidAddress,
-} from "./libs/ipaddress.ts";
+} from "./libs/ipaddress/index.ts";
 export { IPv4Submask, IPv6Submask, type Submask } from "./libs/submask.ts";
 export {
   type Context,

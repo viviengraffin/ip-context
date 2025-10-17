@@ -1,5 +1,5 @@
 import { NonImplementedStaticMethodError } from "../error.ts";
-import { IPv4Address, IPv6Address } from "../ipaddress.ts";
+import { IPv4Address, IPv6Address } from "../ipaddress/index.ts";
 
 /**
  * Copies the IPv4 part from an IPv6 address (Uint16Array) to a new IPv4Address.

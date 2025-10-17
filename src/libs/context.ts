@@ -8,7 +8,7 @@ import {
   memoize,
 } from "./functions/common.ts";
 import { arrayToUint, toUint } from "./functions/uint.ts";
-import { IPv4Address, IPv6Address } from "./ipaddress.ts";
+import { IPv4Address, IPv6Address } from "./ipaddress/index.ts";
 import { ContextError, NonImplementedStaticMethodError } from "./error.ts";
 import {
   createIPAddressFromString,

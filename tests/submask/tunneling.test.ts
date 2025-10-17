@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { IPv4Address, IPv6Address } from "../../src/libs/ipaddress.ts";
+import { IPv4Address, IPv6Address } from "../../src/libs/ipaddress/index.ts";
 import { TUNNELING_MODES } from "../../src/libs/tunneling/object.ts";
 
 describe("Mapped", () => {
