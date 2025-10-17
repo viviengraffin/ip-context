@@ -5,19 +5,20 @@ import {
   copyIPv4ToIPv6Address,
   copyIPv4ToIPv6AddressOperation,
   copyIPv6ToIPv4Address,
-  TunnelingMode,
+  fillPrefix,
+  type TunnelingMode,
 } from "./index.ts";
 
 /**
  * Teredo IPv6 address conversion mode.
  * See [RFC 4380](https://tools.ietf.org/html/rfc4380)
  */
-export class Teredo extends TunnelingMode {
-  static override isValid(ipv6: IPv6Address): boolean {
+export class Teredo implements TunnelingMode {
+  static isValid(ipv6: IPv6Address): boolean {
     return ipv6.array[0] === 0x2001 && ipv6.array[1] === 0;
   }
 
-  static override toIPv4(ipv6: IPv6Address): IPv4Address {
+  static toIPv4(ipv6: IPv6Address): IPv4Address {
     if (!this.isValid(ipv6)) {
       throw new IncorrectAddressError({
         type: "invalid-ipv6-tunneling",
@@ -28,7 +29,7 @@ export class Teredo extends TunnelingMode {
     return copyIPv6ToIPv4Address(ipv6.array, 6, (word) => word ^ 0xFFFF);
   }
 
-  static override toIPv6(ipv4: IPv4Address, params: TeredoDatas): IPv6Address {
+  static toIPv6(ipv4: IPv4Address, params: TeredoDatas): IPv6Address {
     if (params.flags < 0 || params.flags > 65536) {
       throw new IncorrectAddressError({
         type: "teredo-incorrect-flags",
@@ -41,7 +42,7 @@ export class Teredo extends TunnelingMode {
         port: params.port,
       });
     }
-    let ipv6 = this.fillPrefix([0x2001, 0]);
+    let ipv6 = fillPrefix([0x2001, 0]);
     ipv6 = copyIPv4ToIPv6Address(params.ipv4, ipv6, 2, true);
     ipv6[4] = params.flags;
     ipv6[5] = params.port ^ 0xFFFF;

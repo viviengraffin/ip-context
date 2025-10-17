@@ -110,22 +110,22 @@ export function copyIPv4ToIPv6AddressOperation(a: number, b: number): number {
 }
 
 /**
+ * Fills the given prefix into a full 8-element Uint16Array.
+ *
+ * @param prefix - The prefix to fill
+ * @returns {Uint16Array} The filled prefix
+ */
+export function fillPrefix(prefix: Uint16Array | number[]): Uint16Array {
+  const ipv6 = new Uint16Array(8);
+  ipv6.set(prefix, 0);
+  return ipv6;
+}
+
+/**
  * Abstract base class for IPv4/IPv6 conversion modes.
  * Provides static methods to check validity and perform conversions.
  */
 export abstract class TunnelingMode {
-  /**
-   * Fills the given prefix into a full 8-element Uint16Array.
-   *
-   * @param prefix - The prefix to fill
-   * @returns {Uint16Array} The filled prefix
-   */
-  static fillPrefix(prefix: Uint16Array | number[]): Uint16Array {
-    const ipv6 = new Uint16Array(8);
-    ipv6.set(prefix, 0);
-    return ipv6;
-  }
-
   /**
    * Checks if the given IPv6 address is valid for this conversion mode.
    *
