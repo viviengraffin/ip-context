@@ -23,6 +23,7 @@ import type {
   SubmaskTypeForVersion,
 } from "./types/address.ts";
 import type { NumberTypes } from "./types/common.ts";
+import { ADDRESS_VERSIONS } from "./const.ts";
 
 /**
  * Calculates the last address of a subnet given an address and a submask.
@@ -108,12 +109,18 @@ export abstract class Context<Version extends AddressVersions> {
     return memoize(
       this._firstHost,
       () => {
-        this._firstHost = createAddressFromUint(
-          this.address.version,
-          // deno-lint-ignore ban-ts-comment
-          // @ts-expect-error
-          this.network.toUint() + toUint(this.address.version, 1),
-        ) as IPAddressTypeForVersion<Version>;
+        const { totalBits } = ADDRESS_VERSIONS[this.address.version];
+
+        if (this.cidr === totalBits) {
+          this._firstHost = this.address;
+        } else {
+          this._firstHost = createAddressFromUint(
+            this.address.version,
+            // deno-lint-ignore ban-ts-comment
+            // @ts-expect-error
+            this.network.toUint() + toUint(this.address.version, 1),
+          ) as IPAddressTypeForVersion<Version>;
+        }
       },
       () => this._firstHost!,
     );
@@ -274,7 +281,15 @@ export class IPv4Context extends Context<4> {
   override get lastHost(): IPv4Address {
     return memoize(
       this._lastHost,
-      () => this._lastHost = IPv4Address.fromUint(this.broadcast.toUint() - 1),
+      () => {
+        const { totalBits } = ADDRESS_VERSIONS[this.address.version];
+
+        if (this.cidr === totalBits) {
+          this._lastHost = this.address;
+        } else {
+          this._lastHost = IPv4Address.fromUint(this.broadcast.toUint() - 1);
+        }
+      },
       () => this._lastHost as IPv4Address,
     );
   }
