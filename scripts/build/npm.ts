@@ -24,6 +24,7 @@ build({
       url: "git+https://github.com/viviengraffin/ip-context",
     },
     keywords: [
+      "ip",
       "ipv4",
       "ipv6",
       "subnet",
