@@ -278,6 +278,10 @@ export class IPv4Address extends IPAddress<4> {
     return (this.array[0] & 0b11110000) === 224;
   }
 
+  isReserved(): boolean {
+    return (this.array[0] & 0b11110000) === 240;
+  }
+
   /**
    * Creates a network context for this address with the given number of hosts.
    *
@@ -411,5 +415,21 @@ export class IPv4Address extends IPAddress<4> {
    */
   override toByteArray(): Uint8Array {
     return this.array;
+  }
+
+  override getType(): "Loopback" | "Multicast" | "Private" | "Reserved" | null {
+    if (this.isLoopback()) {
+      return "Loopback";
+    }
+    if (this.isMulticast()) {
+      return "Multicast";
+    }
+    if (this.isPrivate()) {
+      return "Private";
+    }
+    if (this.isReserved()) {
+      return "Reserved";
+    }
+    return null;
   }
 }

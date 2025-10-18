@@ -68,4 +68,11 @@ export abstract class IPAddress<
   abstract createContextWithHosts(
     hosts: NumberTypeForVersion<Version>,
   ): ContextTypeForVersion<Version>;
+
+  /**
+   * Get type of this address
+   *
+   * @returns {string} string type representation
+   */
+  abstract getType(): string | null;
 }
