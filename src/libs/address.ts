@@ -181,21 +181,20 @@ export abstract class Address<
 
   /**
    * Returns the binary separated string representation of this address
-   * 
+   *
    * @returns {string} binary separated string representation
    */
   toBinarySeparatedString(): string {
-    const { bitsByItem,arrayLength } = ADDRESS_VERSIONS[this.version]
-    let res=""
-    const sep=this.version===4 ? "." : ":"
+    const { bitsByItem, arrayLength } = ADDRESS_VERSIONS[this.version];
+    let res = "";
+    const sep = this.version === 4 ? "." : ":";
 
-    for(let i=0;i<arrayLength-1;i++)
-    {
-      res+=this.array[i].toString(2).padStart(bitsByItem,"0")+sep
+    for (let i = 0; i < arrayLength - 1; i++) {
+      res += this.array[i].toString(2).padStart(bitsByItem, "0") + sep;
     }
-    res+=this.array[arrayLength-1].toString(2).padStart(bitsByItem,"0")
+    res += this.array[arrayLength - 1].toString(2).padStart(bitsByItem, "0");
 
-    return res
+    return res;
   }
 
   /**
@@ -204,18 +203,18 @@ export abstract class Address<
    * @returns {string} binary string representation
    */
   toBinaryString(): string {
-    if(this.version===6) {
+    if (this.version === 6) {
       const { totalBits } = ADDRESS_VERSIONS[this.version];
       return this.toUint().toString(2).padStart(totalBits, "0");
     } else {
-      const { arrayLength,bitsByItem } = ADDRESS_VERSIONS[this.version]
-      let res=""
+      const { arrayLength, bitsByItem } = ADDRESS_VERSIONS[this.version];
+      let res = "";
 
-      for(let i=0;i<arrayLength;i++) {
-        res+=this.array[i].toString(2).padStart(bitsByItem,"0")
+      for (let i = 0; i < arrayLength; i++) {
+        res += this.array[i].toString(2).padStart(bitsByItem, "0");
       }
 
-      return res
+      return res;
     }
   }
 
@@ -225,19 +224,19 @@ export abstract class Address<
    * @returns {string} hex string representation
    */
   toHexString(): string {
-    if(this.version===6) {
+    if (this.version === 6) {
       const { totalBits } = ADDRESS_VERSIONS[this.version];
       return this.toUint().toString(16).padStart(totalBits / 4, "0");
     } else {
-      const { arrayLength,bitsByItem } = ADDRESS_VERSIONS[this.version]
-      const pad=bitsByItem/4
-      let res=""
+      const { arrayLength, bitsByItem } = ADDRESS_VERSIONS[this.version];
+      const pad = bitsByItem / 4;
+      let res = "";
 
-      for(let i=0;i<arrayLength;i++) {
-        res+=this.array[i].toString(16).padStart(pad,"0")
+      for (let i = 0; i < arrayLength; i++) {
+        res += this.array[i].toString(16).padStart(pad, "0");
       }
 
-      return res
+      return res;
     }
   }
 
