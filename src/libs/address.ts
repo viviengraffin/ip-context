@@ -204,8 +204,19 @@ export abstract class Address<
    * @returns {string} binary string representation
    */
   toBinaryString(): string {
-    const { totalBits } = ADDRESS_VERSIONS[this.version];
-    return this.toUint().toString(2).padStart(totalBits, "0");
+    if(this.version===6) {
+      const { totalBits } = ADDRESS_VERSIONS[this.version];
+      return this.toUint().toString(2).padStart(totalBits, "0");
+    } else {
+      const { arrayLength,bitsByItem } = ADDRESS_VERSIONS[this.version]
+      let res=""
+
+      for(let i=0;i<arrayLength;i++) {
+        res+=this.array[i].toString(2).padStart(bitsByItem,"0")
+      }
+
+      return res
+    }
   }
 
   /**
@@ -214,8 +225,20 @@ export abstract class Address<
    * @returns {string} hex string representation
    */
   toHexString(): string {
-    const { totalBits } = ADDRESS_VERSIONS[this.version];
-    return this.toUint().toString(16).padStart(totalBits / 4, "0");
+    if(this.version===6) {
+      const { totalBits } = ADDRESS_VERSIONS[this.version];
+      return this.toUint().toString(16).padStart(totalBits / 4, "0");
+    } else {
+      const { arrayLength,bitsByItem } = ADDRESS_VERSIONS[this.version]
+      const pad=bitsByItem/4
+      let res=""
+
+      for(let i=0;i<arrayLength;i++) {
+        res+=this.array[i].toString(16).padStart(pad,"0")
+      }
+
+      return res
+    }
   }
 
   /**
