@@ -278,6 +278,11 @@ export class IPv4Address extends IPAddress<4> {
     return (this.array[0] & 0b11110000) === 224;
   }
 
+  /**
+   * Checks if this address is a reserved address
+   *
+   * @returns {boolean} True if the address is reserved, false otherwise
+   */
   isReserved(): boolean {
     return (this.array[0] & 0b11110000) === 240;
   }
@@ -417,6 +422,11 @@ export class IPv4Address extends IPAddress<4> {
     return this.array;
   }
 
+  /**
+   * Get type of this address
+   *
+   * @returns {string} string type representation
+   */
   override getType(): "Loopback" | "Multicast" | "Private" | "Reserved" | null {
     if (this.isLoopback()) {
       return "Loopback";

@@ -577,6 +577,11 @@ export class IPv6Address extends IPAddress<6> {
     );
   }
 
+  /**
+   * Get type of this address
+   *
+   * @returns {string} string type representation
+   */
   override getType():
     | "Link-local"
     | "Unicast"
