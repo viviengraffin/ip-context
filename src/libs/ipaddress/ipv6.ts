@@ -576,4 +576,38 @@ export class IPv6Address extends IPAddress<6> {
       () => this._ip6ArpaString!,
     );
   }
+
+  /**
+   * Get type of this address
+   *
+   * @returns {string} string type representation
+   */
+  override getType():
+    | "Link-local"
+    | "Unicast"
+    | "Reserved"
+    | "Loopback"
+    | "Unique Local"
+    | "Multicast"
+    | null {
+    if (this.isLocalLink()) {
+      return "Link-local";
+    }
+    if (this.isUnicast()) {
+      return "Unicast";
+    }
+    if (this.isReserved()) {
+      return "Reserved";
+    }
+    if (this.isLoopback()) {
+      return "Loopback";
+    }
+    if (this.isUniqueLocal()) {
+      return "Unique Local";
+    }
+    if (this.isMulticast()) {
+      return "Multicast";
+    }
+    return null;
+  }
 }
