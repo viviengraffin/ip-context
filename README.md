@@ -1,4 +1,4 @@
-# ip-context [![JSR](https://jsr.io/badges/@viviengraffin/ip-context)](https://jsr.io/@viviengraffin/ip-context) [![JSR Score](https://jsr.io/badges/@viviengraffin/ip-context/score)](https://jsr.io/@viviengraffin/ip-context) [![NPM](https://img.shields.io/npm/v/%40viviengraffin%2Fip-context)](https://www.npmjs.com/package/@viviengraffin/ip-context)
+# ip-context [![JSR](https://jsr.io/badges/@viviengraffin/ip-context)](https://jsr.io/@viviengraffin/ip-context) [![JSR Score](https://jsr.io/badges/@viviengraffin/ip-context/score)](https://jsr.io/@viviengraffin/ip-context/score) [![NPM](https://img.shields.io/npm/v/%40viviengraffin%2Fip-context)](https://www.npmjs.com/package/@viviengraffin/ip-context)
 
 Si vous êtes francophone, vous pouvez aller [ici](./md/fr/LISEZ_MOI.md)
 
