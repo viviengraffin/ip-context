@@ -1,6 +1,5 @@
 import { ADDRESS_VERSIONS, CIDR_TO_MASK } from "../const.ts";
 import { ContextError } from "../error.ts";
-import { toUint } from "../functions/uint.ts";
 import type {
   AddressArrayForVersion,
   AddressVersions,
@@ -44,10 +43,11 @@ export function getSizeFromCidr<T extends AddressVersions>(
   cidr: number,
 ): NumberTypeForVersion<T> {
   const { totalBits } = ADDRESS_VERSIONS[version];
-  const uIntTotalBits = toUint(version, totalBits);
-  const uIntCidr = toUint(version, cidr);
-  return toUint(version, 1) <<
-    (uIntTotalBits - uIntCidr) as NumberTypeForVersion<T>;
+  const uIntTotalBits = BigInt(totalBits);
+  const uIntCidr = BigInt(cidr);
+  const res=1n <<
+    (uIntTotalBits - uIntCidr);
+  return version===4 ? Number(res) as NumberTypeForVersion<T> : res as NumberTypeForVersion<T>;
 }
 
 /**
