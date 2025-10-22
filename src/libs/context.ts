@@ -256,7 +256,7 @@ export class IPv4Context extends Context<4> {
    * @returns {IPv4AddressClasses} The address class
    */
   get class(): IPv4AddressClasses {
-    return this.address.class;
+    return this.network.class;
   }
 
   /**
