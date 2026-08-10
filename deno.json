@@ -2,8 +2,8 @@
   "tasks": {
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "bench": "deno bench benchmarks/*.ts",
-    "bench:json": "deno bench --json benchmarks/*.ts",
+    "bench": "deno bench benchmarks/*.ts benchmarks/ip/*.ts benchmarks/subnet/*.ts",
+    "bench:json": "deno bench --json benchmarks/*.ts benchmarks/ip/*.ts benchmarks/subnet/*.ts",
     "build:web": "deno --allow-env --allow-read --allow-write --allow-run scripts/build/web.ts",
     "build:npm": "deno --allow-env --allow-read --allow-write --allow-run scripts/build/npm.ts",
     "build": "deno --allow-env --allow-read --allow-write --allow-run scripts/build/web.ts && deno --allow-env --allow-read --allow-write --allow-run scripts/build/npm.ts",
@@ -28,8 +28,11 @@
       "LICENSE"
     ]
   },
-  "nodeModulesDir":"auto",
+  "nodeModulesDir": "auto",
   "exclude": ["npm"],
+  "compilerOptions": {
+    "experimentalDecorators": false
+  },
   "license": "MIT",
   "version": "0.1.6",
   "name": "@viviengraffin/ip-context",

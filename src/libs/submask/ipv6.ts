@@ -1,5 +1,5 @@
 import { isCorrectSubmask } from "../functions/check.ts";
-import { addressEquals, memoize } from "../functions/common.ts";
+import { addressEquals } from "../functions/common.ts";
 import {
   binaryStringToUint,
   byteArrayToUint16Array,
@@ -18,6 +18,7 @@ import {
   generateSubmaskFromHosts,
 } from "./functions.ts";
 import { Submask } from "./submask.ts";
+import { memoize } from "../decorators/memoize.ts";
 
 /**
  * Class representing an IPv6 submask.
@@ -184,11 +185,8 @@ export class IPv6Submask extends Submask<6> {
    *
    * @returns {Uint8Array} Byte array representation
    */
+  @memoize("_byteArray")
   override toByteArray(): Uint8Array {
-    return memoize(
-      this._byteArray,
-      () => this._byteArray = uint16ArrayToByteArray(this.array),
-      () => this._byteArray!,
-    );
+    return uint16ArrayToByteArray(this.array);
   }
 }

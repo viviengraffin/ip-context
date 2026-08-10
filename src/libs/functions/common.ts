@@ -106,12 +106,14 @@ export function isIPv4StringAddress(address: string): boolean {
 
 /**
  * Create a memoized method
+ * 
+ * @deprecated
  * @param value value to check
  * @param assignCallback callback to define the value
  * @param returnCallback callback to return the value
  * @returns the returnCallback result
  */
-export function memoize<T>(
+function memoize<T>(
   value: T | undefined,
   assignCallback: () => void,
   returnCallback: () => T,

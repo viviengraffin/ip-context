@@ -5,7 +5,6 @@ import {
   createAddressFromUint,
   getAddressFromAddressContainers,
   hasCidrInString,
-  memoize,
 } from "./functions/common.ts";
 import { arrayToUint, toUint } from "./functions/uint.ts";
 import { IPv4Address, IPv6Address } from "./ipaddress/index.ts";
@@ -24,6 +23,7 @@ import type {
 } from "./types/address.ts";
 import type { NumberTypes } from "./types/common.ts";
 import { ADDRESS_VERSIONS } from "./const.ts";
+import { memoize } from "./decorators/memoize.ts";
 
 /**
  * Calculates the last address of a subnet given an address and a submask.
@@ -88,16 +88,12 @@ export abstract class Context<Version extends AddressVersions> {
    *
    * @returns {AddressType} The network address
    */
+  @memoize()
   get network(): IPAddressTypeForVersion<Version> {
-    return memoize(
-      this._network,
-      () =>
-        this._network = createAddress(
-          this.address.version,
-          and(this.address.version, this.address.array, this.submask.array),
-        ) as IPAddressTypeForVersion<Version>,
-      () => this._network!,
-    );
+    return createAddress(
+      this.address.version,
+      and(this.address.version, this.address.array, this.submask.array),
+    ) as IPAddressTypeForVersion<Version>;
   }
 
   /**
@@ -105,25 +101,20 @@ export abstract class Context<Version extends AddressVersions> {
    *
    * @returns {AddressType} The first host address
    */
+  @memoize()
   get firstHost(): IPAddressTypeForVersion<Version> {
-    return memoize(
-      this._firstHost,
-      () => {
-        const { totalBits } = ADDRESS_VERSIONS[this.address.version];
+    const { totalBits } = ADDRESS_VERSIONS[this.address.version];
 
-        if (this.cidr === totalBits) {
-          this._firstHost = this.address;
-        } else {
-          this._firstHost = createAddressFromUint(
-            this.address.version,
-            // deno-lint-ignore ban-ts-comment
-            // @ts-expect-error
-            this.network.toUint() + toUint(this.address.version, 1),
-          ) as IPAddressTypeForVersion<Version>;
-        }
-      },
-      () => this._firstHost!,
-    );
+    if (this.cidr === totalBits) {
+      return this.address;
+    } else {
+      return createAddressFromUint(
+        this.address.version,
+        // deno-lint-ignore ban-ts-comment
+        // @ts-expect-error
+        this.network.toUint() + toUint(this.address.version, 1),
+      ) as IPAddressTypeForVersion<Version>;
+    }
   }
 
   /**
@@ -264,13 +255,9 @@ export class IPv4Context extends Context<4> {
    *
    * @returns {IPv4Address} The broadcast address
    */
+  @memoize()
   get broadcast(): IPv4Address {
-    return memoize(
-      this._broadcast,
-      () =>
-        this._broadcast = calculateLastAddress(4, this.address, this.submask),
-      () => this._broadcast as IPv4Address,
-    );
+    return calculateLastAddress(4, this.address, this.submask);
   }
 
   /**
@@ -278,20 +265,15 @@ export class IPv4Context extends Context<4> {
    *
    * @returns {IPv4Address} The last host address
    */
+  @memoize()
   override get lastHost(): IPv4Address {
-    return memoize(
-      this._lastHost,
-      () => {
-        const { totalBits } = ADDRESS_VERSIONS[this.address.version];
+    const { totalBits } = ADDRESS_VERSIONS[this.address.version];
 
-        if (this.cidr === totalBits) {
-          this._lastHost = this.address;
-        } else {
-          this._lastHost = IPv4Address.fromUint(this.broadcast.toUint() - 1);
-        }
-      },
-      () => this._lastHost as IPv4Address,
-    );
+    if (this.cidr === totalBits) {
+      return this.address;
+    } else {
+      return IPv4Address.fromUint(this.broadcast.toUint() - 1);
+    }
   }
 }
 
@@ -312,13 +294,9 @@ export class IPv6Context extends Context<6> {
    *
    * @returns {IPv6Address} The last host address
    */
+  @memoize()
   override get lastHost(): IPv6Address {
-    return memoize(
-      this._lastHost,
-      () =>
-        this._lastHost = calculateLastAddress(6, this.address, this.submask),
-      () => this._lastHost as IPv6Address,
-    );
+    return calculateLastAddress(6, this.address, this.submask);
   }
 }
 
