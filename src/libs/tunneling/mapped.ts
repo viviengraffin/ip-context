@@ -43,7 +43,7 @@ export class Mapped implements TunnelingMode {
   }
 
   static isValidString(string: string): boolean {
-    return string.startsWith("::ffff:");
+    return string.toLowerCase().startsWith("::ffff:");
   }
 
   static toString(ipv6: IPv6Address): string {
