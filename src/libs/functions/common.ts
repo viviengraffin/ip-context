@@ -104,26 +104,6 @@ export function isIPv4StringAddress(address: string): boolean {
   return address.includes(".");
 }
 
-/**
- * Create a memoized method
- * 
- * @deprecated
- * @param value value to check
- * @param assignCallback callback to define the value
- * @param returnCallback callback to return the value
- * @returns the returnCallback result
- */
-function memoize<T>(
-  value: T | undefined,
-  assignCallback: () => void,
-  returnCallback: () => T,
-): T {
-  if (value === undefined) {
-    assignCallback();
-  }
-  return returnCallback();
-}
-
 export function addressEquals<T extends AddressVersions>(
   a: AddressArrayForVersion<T>,
   b: AddressArrayForVersion<T>,
