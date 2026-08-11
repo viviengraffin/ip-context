@@ -2,7 +2,7 @@ import { IPAddress } from "./ipaddress.ts";
 import { IPv4Context } from "../context.ts";
 import { IncorrectAddressError } from "../error.ts";
 import { isCorrectAddress } from "../functions/check.ts";
-import { addressEquals, memoize } from "../functions/common.ts";
+import { addressEquals } from "../functions/common.ts";
 import {
   binaryStringToUint,
   hexStringToUint,
@@ -26,6 +26,7 @@ import type {
   TunnelingModeWithParams4To6,
 } from "../types/tunneling.ts";
 import type { IPv6Address } from "./ipv6.ts";
+import { memoize } from "../decorators/memoize.ts";
 
 /**
  * Class representing an IPv4 address.
@@ -167,6 +168,8 @@ export class IPv4Address extends IPAddress<4> {
     return addressEquals<4>(a.array, b.array);
   }
 
+  _ipv4MappedString?: string;
+
   /**
    * Creates a new IPv4Address instance.
    *
@@ -200,12 +203,9 @@ export class IPv4Address extends IPAddress<4> {
    *
    * @returns {string} String representation (for example: "192.168.1.1")
    */
+  @memoize("_string")
   override toString(): string {
-    return memoize(
-      this._string,
-      () => this._string = stringifyIPv4Address(this.array),
-      () => this._string as string,
-    );
+    return stringifyIPv4Address(this.array);
   }
 
   /**
@@ -420,6 +420,11 @@ export class IPv4Address extends IPAddress<4> {
    */
   override toByteArray(): Uint8Array {
     return this.array;
+  }
+
+  @memoize("_ipv4MappedString")
+  toIPv4MappedString(): string {
+    return "::ffff:" + this.toString();
   }
 
   /**

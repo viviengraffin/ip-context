@@ -3,7 +3,7 @@ import {
   contextWithHosts,
   IPv4Context,
   type IPv6Context,
-} from "../src/main.ts";
+} from "../../src/main.ts";
 
 function readContextDatas(ctx: IPv4Context | IPv6Context, includes: string) {
   ctx.address.toString();

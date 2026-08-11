@@ -1,6 +1,6 @@
 import { IPv4_CLASS_TO_SUBMASK } from "../const.ts";
 import { isCorrectSubmask } from "../functions/check.ts";
-import { addressEquals, memoize } from "../functions/common.ts";
+import { addressEquals } from "../functions/common.ts";
 import {
   binaryStringToUint,
   hexStringToUint,
@@ -18,6 +18,7 @@ import {
   generateSubmaskFromHosts,
 } from "./functions.ts";
 import { Submask } from "./submask.ts";
+import { memoize } from "../decorators/memoize.ts";
 
 /**
  * Class representing an IPv4 submask.
@@ -156,12 +157,9 @@ export class IPv4Submask extends Submask<4> {
    *
    * @returns {string} String representation (for example: "255.255.255.0")
    */
+  @memoize("_string")
   override toString(): string {
-    return memoize(
-      this._string,
-      () => this._string = stringifyIPv4Address(this.array),
-      () => this._string!,
-    );
+    return stringifyIPv4Address(this.array);
   }
 
   /**

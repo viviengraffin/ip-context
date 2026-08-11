@@ -2,7 +2,7 @@ import { Address } from "../address.ts";
 import { SUBMASK_POSSIBLE_BLOCKS } from "../const.ts";
 import { NonImplementedStaticMethodError } from "../error.ts";
 import { isCorrectSubmask } from "../functions/check.ts";
-import { memoize } from "../functions/common.ts";
+import { memoize } from "../decorators/memoize.ts";
 import type {
   AddressArrayForVersion,
   AddressVersions,
@@ -59,46 +59,44 @@ export abstract class Submask<
     }
   }
 
+  /**
+   * Get the cidr of this submask
+   */
+  @memoize("_cidr")
   get cidr(): number {
-    return memoize(this._cidr, () => {
-      const possibleBlocks = SUBMASK_POSSIBLE_BLOCKS[this.version];
-      let value = 0;
+    const possibleBlocks = SUBMASK_POSSIBLE_BLOCKS[this.version];
+    let value = 0;
 
-      for (let i = 0; i < this.array.length; i++) {
-        const bitsToAdd = possibleBlocks.indexOf(this.array[i]);
-        if (bitsToAdd === 0) {
-          break;
-        }
-        value += bitsToAdd;
+    for (let i = 0; i < this.array.length; i++) {
+      const bitsToAdd = possibleBlocks.indexOf(this.array[i]);
+      if (bitsToAdd === 0) {
+        break;
       }
+      value += bitsToAdd;
+    }
 
-      this._cidr = value;
-    }, () => this._cidr!);
+    return value;
   }
 
   /**
    * Get the network size with this submask
    *
-   * @returns {HostNumberType}
+   * @returns {NumberTypeForVersion<Version>}
    */
+  @memoize("_size")
   get size(): NumberTypeForVersion<Version> {
-    return memoize(
-      this._size,
-      () => this._size = getSizeFromCidr(this.version, this.cidr),
-      () => this._size!,
-    );
+    return getSizeFromCidr(this.version, this.cidr);
   }
 
+  /**
+   * Get the network hosts number with this submask
+   */
+  @memoize("_hosts")
   get hosts(): NumberTypeForVersion<Version> {
-    return memoize(
-      this._hosts,
-      () =>
-        this._hosts = getHostsFromSizeAndCidr(
-          this.version,
-          this.size,
-          this.cidr,
-        ),
-      () => this._hosts!,
+    return getHostsFromSizeAndCidr(
+      this.version,
+      this.size,
+      this.cidr,
     );
   }
 

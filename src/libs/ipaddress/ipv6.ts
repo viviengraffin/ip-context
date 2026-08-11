@@ -6,7 +6,7 @@ import {
   isCorrectAddress,
   verifyZoneId,
 } from "../functions/check.ts";
-import { addressEquals, memoize } from "../functions/common.ts";
+import { addressEquals } from "../functions/common.ts";
 import {
   binaryStringToUint,
   byteArrayToUint16Array,
@@ -28,6 +28,7 @@ import type { AddressArrayForVersion } from "../types/address.ts";
 import type { IPv6AddressOtherProperties } from "../types/otherProperties.ts";
 import type { TunnelingModes } from "../types/tunneling.ts";
 import type { IPv4Address } from "./ipv4.ts";
+import { memoize } from "../decorators/memoize.ts";
 
 /**
  * Class representing an IPv6 address.
@@ -337,13 +338,12 @@ export class IPv6Address extends IPAddress<6> {
    * @returns {string} String representation (for example: "2001:db8::1" or "2001:db8::1%eth0")
    */
   override toString(displayZoneId: boolean = this.isLocalLink()): string {
-    return memoize(
-      this._string,
-      () => this._string = stringifyIPv6Address(this.array),
-      () =>
-        (this._string as string) +
-        (displayZoneId && this.zoneId !== null ? "%" + this.zoneId : ""),
-    );
+    if (this._string === undefined) {
+      this._string = stringifyIPv6Address(this.array);
+    }
+
+    return this._string +
+      (displayZoneId && this.zoneId !== null ? `%${this.zoneId}` : "");
   }
 
   /**
@@ -351,12 +351,9 @@ export class IPv6Address extends IPAddress<6> {
    *
    * @returns {string} IPv4-mapped string representation (for example: "::ffff:192.168.1.1")
    */
+  @memoize("_ipv4MappedString")
   toIPv4MappedString(): string {
-    return memoize(
-      this._ipv4MappedString,
-      () => this._ipv4MappedString = Mapped.toString(this),
-      () => this._ipv4MappedString!,
-    );
+    return Mapped.toString(this);
   }
 
   /**
@@ -364,12 +361,9 @@ export class IPv6Address extends IPAddress<6> {
    *
    * @returns {bigint} 128-bit unsigned integer
    */
+  @memoize("_uint")
   override toUint(): bigint {
-    return memoize(
-      this._uint,
-      () => this._uint = arrayToUint(6, this.array),
-      () => this._uint!,
-    );
+    return arrayToUint(6, this.array);
   }
 
   /**
@@ -546,12 +540,9 @@ export class IPv6Address extends IPAddress<6> {
    *
    * @returns {Uint8Array} Byte array representation of the address
    */
+  @memoize("_byteArray")
   override toByteArray(): Uint8Array {
-    return memoize(
-      this._byteArray,
-      () => this._byteArray = uint16ArrayToByteArray(this.array),
-      () => this._byteArray!,
-    );
+    return uint16ArrayToByteArray(this.array);
   }
 
   /**
@@ -560,21 +551,16 @@ export class IPv6Address extends IPAddress<6> {
    *
    * @returns {string} ip6.arpa representation of this address
    */
+  @memoize("_ip6ArpaString")
   toIP6ArpaString(): string {
-    return memoize(
-      this._ip6ArpaString,
-      () => {
-        const hexString = this.toHexString();
-        const chars: string[] = new Array(32);
-        let index = 0;
-        for (let i = 31; i >= 0; i--) {
-          chars[index++] = hexString[i];
-        }
+    const hexString = this.toHexString();
+    const chars: string[] = new Array(32);
+    let index = 0;
+    for (let i = 31; i >= 0; i--) {
+      chars[index++] = hexString[i];
+    }
 
-        this._ip6ArpaString = chars.join(".") + ".ip6.arpa";
-      },
-      () => this._ip6ArpaString!,
-    );
+    return chars.join(".") + ".ip6.arpa";
   }
 
   /**
