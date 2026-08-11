@@ -1,8 +1,9 @@
+// deno-lint-ignore-file no-explicit-any
 type MemoizeContext = ClassGetterDecoratorContext | ClassMethodDecoratorContext;
 
-export function memoize(cacheName?: string) {
+export function memoize(cacheName?: string | symbol) {
   return function <T>(getter: () => T, context: MemoizeContext) {
-    const key = cacheName ?? `_${String(context.name)}`;
+    const key = cacheName ?? Symbol(`memoize:${String(context.name)}`);
 
     return function (this: any): T {
       if (this[key] === undefined) {

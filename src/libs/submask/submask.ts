@@ -59,7 +59,10 @@ export abstract class Submask<
     }
   }
 
-  @memoize()
+  /**
+   * Get the cidr of this submask
+   */
+  @memoize("_cidr")
   get cidr(): number {
     const possibleBlocks = SUBMASK_POSSIBLE_BLOCKS[this.version];
     let value = 0;
@@ -78,14 +81,17 @@ export abstract class Submask<
   /**
    * Get the network size with this submask
    *
-   * @returns {HostNumberType}
+   * @returns {NumberTypeForVersion<Version>}
    */
-  @memoize()
+  @memoize("_size")
   get size(): NumberTypeForVersion<Version> {
     return getSizeFromCidr(this.version, this.cidr);
   }
 
-  @memoize()
+  /**
+   * Get the network hosts number with this submask
+   */
+  @memoize("_hosts")
   get hosts(): NumberTypeForVersion<Version> {
     return getHostsFromSizeAndCidr(
       this.version,

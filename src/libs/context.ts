@@ -88,7 +88,7 @@ export abstract class Context<Version extends AddressVersions> {
    *
    * @returns {AddressType} The network address
    */
-  @memoize()
+  @memoize("_network")
   get network(): IPAddressTypeForVersion<Version> {
     return createAddress(
       this.address.version,
@@ -101,7 +101,7 @@ export abstract class Context<Version extends AddressVersions> {
    *
    * @returns {AddressType} The first host address
    */
-  @memoize()
+  @memoize("_firstHost")
   get firstHost(): IPAddressTypeForVersion<Version> {
     const { totalBits } = ADDRESS_VERSIONS[this.address.version];
 
@@ -255,7 +255,7 @@ export class IPv4Context extends Context<4> {
    *
    * @returns {IPv4Address} The broadcast address
    */
-  @memoize()
+  @memoize("_broadcast")
   get broadcast(): IPv4Address {
     return calculateLastAddress(4, this.address, this.submask);
   }
@@ -265,7 +265,7 @@ export class IPv4Context extends Context<4> {
    *
    * @returns {IPv4Address} The last host address
    */
-  @memoize()
+  @memoize("_lastHost")
   override get lastHost(): IPv4Address {
     const { totalBits } = ADDRESS_VERSIONS[this.address.version];
 
@@ -294,7 +294,7 @@ export class IPv6Context extends Context<6> {
    *
    * @returns {IPv6Address} The last host address
    */
-  @memoize()
+  @memoize("_lastHost")
   override get lastHost(): IPv6Address {
     return calculateLastAddress(6, this.address, this.submask);
   }
