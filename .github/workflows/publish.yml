@@ -1,20 +1,27 @@
 name: Publish
+
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "v*.*.*"
 
 jobs:
   publish:
+    name: Publish package
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
       id-token: write
+    
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+      
       - name: Install Deno
         uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
+      
       - name: Publish package
         run: deno publish
