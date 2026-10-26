@@ -28,6 +28,13 @@
       "LICENSE"
     ]
   },
+  "lint": {
+    "rules": {
+      "exclude": [
+        "ban-ts-comment"
+      ]
+    }
+  },
   "nodeModulesDir": "auto",
   "exclude": ["npm"],
   "compilerOptions": {

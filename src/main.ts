@@ -56,3 +56,5 @@ export type {
   URLErrorDatas,
   Valid,
 } from "./libs/types/index.ts";
+
+export { isIPv4, isIPv6 } from "./libs/functions/checkVersion.ts";
