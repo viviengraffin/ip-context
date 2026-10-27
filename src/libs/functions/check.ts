@@ -144,12 +144,14 @@ export function isCorrectPort(port: number): boolean {
 export function getIPv6AddressStringType(
   address: string,
 ): "ip6.arpa" | "mapped" | "normal" | null {
-  if (address.endsWith(".ip6.arpa")) {
+  const lc = address.toLowerCase();
+
+  if (lc.endsWith(".ip6.arpa")) {
     return "ip6.arpa";
   }
-  if (address.startsWith("::ffff:")) {
+  if (lc.startsWith("::ffff:")) {
     return "mapped";
-  } else if (address.includes(":")) {
+  } if (address.includes(":")) {
     return "normal";
   }
   return null;
