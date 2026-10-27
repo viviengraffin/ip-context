@@ -110,7 +110,6 @@ export abstract class Context<Version extends AddressVersions> {
     } else {
       return createAddressFromUint(
         this.address.version,
-        // deno-lint-ignore ban-ts-comment
         // @ts-expect-error
         this.network.toUint() + toUint(this.address.version, 1),
       ) as IPAddressTypeForVersion<Version>;

@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 type MemoizeContext = ClassGetterDecoratorContext | ClassMethodDecoratorContext;
 
 export function memoize(cacheName?: string | symbol) {

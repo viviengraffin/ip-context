@@ -77,7 +77,6 @@ export function copyAddress<T extends AddressVersions>(
   address: number[] | AddressArrayForVersion<T>,
 ): AddressArrayForVersion<T> {
   if (Array.isArray(address)) {
-    // deno-lint-ignore ban-ts-comment
     // @ts-ignore
     return createAddress(version, address, (_address) => ({ valid: true }));
   }

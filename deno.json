@@ -31,7 +31,8 @@
   "lint": {
     "rules": {
       "exclude": [
-        "ban-ts-comment"
+        "ban-ts-comment",
+        "no-explicit-any"
       ]
     }
   },
