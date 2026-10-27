@@ -3,7 +3,7 @@
 This is the french version of the presentation of this library, if you don't
 speak french, go [here](../../README.md)
 
-ip-context est une librairie Deno.js pour faire des calculs à partir d'adresses
+ip-context est une librairie TypeScript pour faire des calculs à partir d'adresses
 IPv4/IPv6 ou de contexte réseau.
 
 ## Comment contribuer ?
