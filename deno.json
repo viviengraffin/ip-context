@@ -42,7 +42,7 @@
     "experimentalDecorators": false
   },
   "license": "MIT",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "name": "@viviengraffin/ip-context",
   "exports": "./src/main.ts"
 }
