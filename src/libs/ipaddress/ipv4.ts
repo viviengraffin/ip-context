@@ -255,7 +255,7 @@ export class IPv4Address extends IPAddress<4> {
    * @returns {boolean} True if the address is loopback, false otherwise
    */
   override isLoopback(): boolean {
-    return this.toUint() === 2130706433;
+    return this.array[0]===127;
   }
 
   /**
