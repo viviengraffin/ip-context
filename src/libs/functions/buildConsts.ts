@@ -1,5 +1,8 @@
 import { ADDRESS_VERSIONS, SUBMASK_POSSIBLE_BLOCKS } from "../const.ts";
-import type { AddressArrayForVersion, AddressVersions } from "../types/address.ts";
+import type {
+  AddressArrayForVersion,
+  AddressVersions,
+} from "../types/address.ts";
 
 /**
  * Create the submask typed array for the IP version and the cidr

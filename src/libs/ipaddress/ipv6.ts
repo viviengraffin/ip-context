@@ -408,10 +408,9 @@ export class IPv6Address extends IPAddress<6> {
     return tunnelingMode.toIPv4(this);
   }
 
-
   /**
    * Checks if this address is the unspecified address.
-   * 
+   *
    * @returns {boolean} True if the address is the unspecified address
    */
   isUnspecified(): boolean {

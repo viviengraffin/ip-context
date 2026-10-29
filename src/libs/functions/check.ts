@@ -151,7 +151,8 @@ export function getIPv6AddressStringType(
   }
   if (lc.startsWith("::ffff:")) {
     return "mapped";
-  } if (address.includes(":")) {
+  }
+  if (address.includes(":")) {
     return "normal";
   }
   return null;
