@@ -408,6 +408,16 @@ export class IPv6Address extends IPAddress<6> {
     return tunnelingMode.toIPv4(this);
   }
 
+
+  /**
+   * Checks if this address is the unspecified address.
+   * 
+   * @returns {boolean} True if the address is the unspecified address
+   */
+  isUnspecified(): boolean {
+    return this.toUint() === 0n;
+  }
+
   /**
    * Checks if this address is a loopback address.
    *
@@ -570,6 +580,7 @@ export class IPv6Address extends IPAddress<6> {
    */
   override getType():
     | "Link-local"
+    | "Unspecified"
     | "Unicast"
     | "Reserved"
     | "Loopback"
@@ -578,6 +589,9 @@ export class IPv6Address extends IPAddress<6> {
     | null {
     if (this.isLocalLink()) {
       return "Link-local";
+    }
+    if (this.isUnspecified()) {
+      return "Unspecified";
     }
     if (this.isUnicast()) {
       return "Unicast";
