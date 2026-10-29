@@ -441,7 +441,7 @@ export class IPv6Address extends IPAddress<6> {
    * @returns {boolean} True if the address is unique local, false otherwise
    */
   isUniqueLocal(): boolean {
-    return (this.array[0] >> 8) === 0xFD;
+    return (this.array[0] & 0xFC00) === 0xFC00;
   }
 
   /**
