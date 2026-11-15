@@ -114,3 +114,6 @@ export const URL_IPv4_REGEXP = new RegExp(
 export const URL_IPv6_REGEXP = new RegExp(
   `^(${URL_REGEXP_PROTOCOL_PART}${URL_REGEXP_IPv6_PART}${URL_REGEXP_PORT_PART}${URL_REGEXP_PATHNAME_PART}${URL_REGEXP_QUERY_PART}${URL_REGEXP_HASH_PART})$`,
 );
+
+export const IPv4_ITEM_REGEX = /[0-9]+/;
+export const IPv6_ITEM_REGEX = /[0-9a-fA-F]+/;

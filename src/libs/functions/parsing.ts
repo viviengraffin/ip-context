@@ -1,5 +1,7 @@
 import {
   FORBIDDEN_CHARS,
+  IPv4_ITEM_REGEX,
+  IPv6_ITEM_REGEX,
   URL_IPv4_REGEXP,
   URL_IPv6_REGEXP,
   URL_REGEXP_DELETE_HOOKS,
@@ -61,7 +63,12 @@ export function parseIPv6Address(
   address: string,
   getArray: boolean = false,
 ): Uint16Array | number[] {
-  if (FORBIDDEN_CHARS[6].test(address)) {
+  if (
+    ((address.match(/::/g) ?? []).length > 1) ||
+    (address.includes("::") &&
+      address.replaceAll("::", "").split(":").length >= 8) ||
+    (!address.includes("::") && address.split(":").length !== 8)
+  ) {
     throw new IncorrectAddressError({
       type: "incorrect-format",
       version: 6,
@@ -89,7 +96,10 @@ export function parseIPv6Address(
       }
     } else {
       const parsed = parseInt(part, 16);
-      if (isNaN(parsed) || parsed < 0 || parsed > 65535) {
+      if (
+        !IPv6_ITEM_REGEX.test(part) || isNaN(parsed) || parsed < 0 ||
+        parsed > 65535
+      ) {
         throw new IncorrectAddressError({
           type: "incorrect-item",
           version: 6,
@@ -116,14 +126,6 @@ export function parseIPv4Address(
   address: string,
   getArray: boolean = false,
 ): Uint8Array | number[] {
-  if (FORBIDDEN_CHARS[4].test(address)) {
-    throw new IncorrectAddressError({
-      type: "incorrect-format",
-      version: 4,
-      address,
-    });
-  }
-
   const splittedAddress = address.split(".");
   if (splittedAddress.length != 4) {
     throw new IncorrectAddressError({
@@ -136,7 +138,10 @@ export function parseIPv4Address(
   const res = new Uint8Array(4);
   for (let i = 0; i < splittedAddress.length; i++) {
     const nItem = Number(splittedAddress[i]);
-    if (!Number.isInteger(nItem) || nItem < 0 || nItem > 255) {
+    if (
+      !IPv4_ITEM_REGEX.test(splittedAddress[i]) || !Number.isInteger(nItem) ||
+      nItem < 0 || nItem > 255
+    ) {
       throw new IncorrectAddressError({
         type: "incorrect-item",
         version: 4,

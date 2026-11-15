@@ -105,7 +105,7 @@ export abstract class Context<Version extends AddressVersions> {
   get firstHost(): IPAddressTypeForVersion<Version> {
     const { totalBits } = ADDRESS_VERSIONS[this.address.version];
 
-    if (this.cidr === totalBits) {
+    if (this.cidr === totalBits || this.cidr === totalBits - 1) {
       return this.address;
     } else {
       return createAddressFromUint(
@@ -162,23 +162,8 @@ export abstract class Context<Version extends AddressVersions> {
       address,
     ) as IPAddressTypeForVersion<Version>;
 
-    const firstHost = this.firstHost;
-    const lastHost = this.lastHost;
-
-    for (let i = 0; i < address.array.length; i++) {
-      if (
-        address.array[i] > lastHost.array[i] ||
-        address.array[i] < firstHost.array[i]
-      ) {
-        return false;
-      }
-    }
-
-    return true;
-
-    //    return address.toUint()>=this.firstHost.toUint() && address.toUint()<=this.lastHost.toUint()
-
-    //    return this.includes(address) && address.toUint()!==this.network.toUint() && address.toUint()!==this.broadcast.toUint()
+    return address.toUint() >= this.firstHost.toUint() &&
+      address.toUint() <= this.lastHost.toUint();
   }
 
   /**
@@ -270,6 +255,8 @@ export class IPv4Context extends Context<4> {
 
     if (this.cidr === totalBits) {
       return this.address;
+    } else if (this.cidr === totalBits - 1) {
+      return this.broadcast;
     } else {
       return IPv4Address.fromUint(this.broadcast.toUint() - 1);
     }

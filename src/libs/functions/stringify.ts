@@ -43,6 +43,10 @@ function searchMaxZeroSuite(address: Uint16Array): [number, number] | null {
     res = currentSuite;
   }
 
+  if (res === null || res[1] === res[0]) {
+    return null;
+  }
+
   return res;
 }
 
