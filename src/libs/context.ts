@@ -265,10 +265,42 @@ export class IPv4Context extends Context<4> {
     }
   }
 
+  /**
+   * Returns the next IPv4 subnet in sequence.
+   *
+   * The next subnet is calculated using the current subnet mask unless
+   * a different subnet mask is provided.
+   *
+   * @returns The next IPv4 context using the current subnet mask.
+   */
   next(): IPv4Context;
+  /**
+   * Returns the next IPv4 subnet in sequence using the specified CIDR prefix length.
+   *
+   * @param cidr - The CIDR prefix length to use.
+   * @returns The next IPv4 context.
+   */
   next(cidr: number): IPv4Context;
+  /**
+   * Returns the next IPv4 subnet in sequence using the specified subnet mask.
+   *
+   * @param submask - The IPv4 subnet mask.
+   * @returns The next IPv4 context.
+   */
   next(submask: IPv4Submask): IPv4Context;
+  /**
+   * Returns the next IPv4 subnet in sequence using the specified subnet mask.
+   *
+   * @param submask - The subnet mask represented as an array of 8-bit values.
+   * @returns The next IPv4 context.
+   */
   next(submask: number[] | Uint8Array): IPv4Context;
+  /**
+   * Returns the next IPv4 subnet in sequence using the specified subnet mask.
+   *
+   * @param submask - The subnet mask in string notation.
+   * @returns The next IPv4 context.
+   */
   next(submask: string): IPv4Context;
   next(
     arg?: IPv4Submask | Uint8Array | number[] | string | number,
@@ -278,10 +310,17 @@ export class IPv4Context extends Context<4> {
       IPv4Context,
       this,
       this.broadcast,
-      arg ? getIPv4Submask(arg) : this.submask,
+      arg !== undefined ? getIPv4Submask(arg) : this.submask,
     );
   }
 
+  /**
+   * Returns the next IPv4 subnet in sequence, using a subnet mask calculated
+   * to accommodate the specified number of hosts.
+   *
+   * @param hosts - The minimum number of hosts the subnet must support.
+   * @returns The next IPv4 context with a subnet mask sized for the specified number of hosts.
+   */
   nextWithHosts(hosts: number): IPv4Context {
     const { submask } = generateSubmaskFromHosts(4, hosts);
     return next(
@@ -293,10 +332,47 @@ export class IPv4Context extends Context<4> {
     );
   }
 
+  /**
+   * Returns the previous IPv4 subnet in sequence.
+   *
+   * The previous subnet is calculated using the current subnet mask unless
+   * a different subnet mask is provided.
+   *
+   * @overload
+   * @returns The previous IPv4 context using the current subnet mask.
+   */
   prev(): IPv4Context;
+  /**
+   * Returns the previous IPv4 subnet in sequence using the specified CIDR prefix length.
+   *
+   * @overload
+   * @param cidr - The CIDR prefix length to use.
+   * @returns The previous IPv4 context.
+   */
   prev(cidr: number): IPv4Context;
+  /**
+   * Returns the previous IPv4 subnet in sequence using the specified subnet mask.
+   *
+   * @overload
+   * @param submask - The IPv4 subnet mask.
+   * @returns The previous IPv4 context.
+   */
   prev(submask: IPv4Submask): IPv4Context;
+  /**
+   * Returns the previous IPv4 subnet in sequence using the specified subnet mask.
+   *
+   * @overload
+   * @param submask - The subnet mask in string notation.
+   * @returns The previous IPv4 context.
+   */
   prev(submask: string): IPv4Context;
+  /**
+   * Returns the previous IPv4 subnet in sequence using the specified subnet mask.
+   *
+   * @overload
+   * @param submask - The subnet mask represented as an array of 8-bit values.
+   * @returns The previous IPv4 context.
+   */
   prev(submask: number[] | Uint8Array): IPv4Context;
   prev(
     arg?: IPv4Submask | Uint8Array | number[] | string | number,
@@ -306,19 +382,26 @@ export class IPv4Context extends Context<4> {
       IPv4Context,
       this,
       this.network,
-      arg ? getIPv4Submask(arg) : this.submask,
+      arg !== undefined ? getIPv4Submask(arg) : this.submask,
     );
   }
 
+  /**
+   * Returns the previous IPv4 subnet in sequence, using a subnet mask calculated
+   * to accommodate the specified number of hosts.
+   *
+   * @param hosts - The minimum number of hosts the subnet must support.
+   * @returns The previous IPv4 context with a subnet mask sized for the specified number of hosts.
+   */
   prevWithHosts(hosts: number): IPv4Context {
     const { submask } = generateSubmaskFromHosts(4, hosts);
-    
+
     return prev(
       4,
       IPv4Context,
       this,
       this.network,
-      new IPv4Submask(submask)
+      new IPv4Submask(submask),
     );
   }
 }
@@ -345,20 +428,59 @@ export class IPv6Context extends Context<6> {
     return calculateLastAddress(6, this.address, this.submask);
   }
 
+  /**
+   * Returns the next IPv6 subnet in sequence.
+   *
+   * The next subnet is calculated using the current subnet mask unless
+   * a different subnet mask is provided.
+   *
+   * @overload
+   * @returns The next IPv6 context using the current subnet mask.
+   */
   next(): IPv6Context;
+  /**
+   * Returns the next IPv6 subnet in sequence using the specified CIDR prefix length.
+   *
+   * @overload
+   * @param cidr - The CIDR prefix length to use.
+   * @returns The next IPv6 context.
+   */
   next(cidr: number): IPv6Context;
+  /**
+   * Returns the next IPv6 subnet in sequence using the specified subnet mask.
+   *
+   * @overload
+   * @param submask - The subnet mask in string notation.
+   * @returns The next IPv6 context.
+   */
   next(submask: string): IPv6Context;
-  next(submask: number[] | Uint16Array): IPv6Context
-  next(arg?: string | number | number[] | Uint16Array | IPv6Submask): IPv6Context {
+  /**
+   * Returns the next IPv6 subnet in sequence using the specified subnet mask.
+   *
+   * @overload
+   * @param submask - The subnet mask represented as an array of 16-bit values.
+   * @returns The next IPv6 context.
+   */
+  next(submask: number[] | Uint16Array): IPv6Context;
+  next(
+    arg?: string | number | number[] | Uint16Array | IPv6Submask,
+  ): IPv6Context {
     return next(
       6,
       IPv6Context,
       this,
       this.lastHost,
-      arg ? getIPv6Submask(arg) : this.submask
+      arg !== undefined ? getIPv6Submask(arg) : this.submask,
     );
   }
 
+  /**
+   * Returns the next IPv6 subnet in sequence, using a subnet mask calculated
+   * to accommodate the specified number of hosts.
+   *
+   * @param hosts - The minimum number of hosts the subnet must support.
+   * @returns The next IPv6 context with a subnet mask sized for the specified number of hosts.
+   */
   nextWithHosts(hosts: bigint): IPv6Context {
     const { submask } = generateSubmaskFromHosts(6, hosts);
     return next(
@@ -366,24 +488,63 @@ export class IPv6Context extends Context<6> {
       IPv6Context,
       this,
       this.lastHost,
-      new IPv6Submask(submask)
+      new IPv6Submask(submask),
     );
   }
 
+  /**
+   * Returns the previous IPv6 subnet in sequence.
+   *
+   * The previous subnet is calculated using the current subnet mask unless
+   * a different subnet mask is provided.
+   *
+   * @overload
+   * @returns The previous IPv6 context using the current subnet mask.
+   */
   prev(): IPv6Context;
+  /**
+   * Returns the previous IPv6 subnet in sequence using the specified CIDR prefix length.
+   *
+   * @overload
+   * @param cidr - The CIDR prefix length to use.
+   * @returns The previous IPv6 context.
+   */
   prev(cidr: number): IPv6Context;
+  /**
+   * Returns the previous IPv6 subnet in sequence using the specified subnet mask.
+   *
+   * @overload
+   * @param submask - The subnet mask in string notation.
+   * @returns The previous IPv6 context.
+   */
   prev(submask: string): IPv6Context;
+  /**
+   * Returns the previous IPv6 subnet in sequence using the specified subnet mask.
+   *
+   * @overload
+   * @param submask - The subnet mask represented as an array of 16-bit values.
+   * @returns The previous IPv6 context.
+   */
   prev(submask: number[] | Uint16Array): IPv6Context;
-  prev(arg?: string | number | number[] | Uint16Array | IPv6Submask): IPv6Context {
+  prev(
+    arg?: string | number | number[] | Uint16Array | IPv6Submask,
+  ): IPv6Context {
     return prev(
       6,
       IPv6Context,
       this,
       this.network,
-      arg ? getIPv6Submask(arg) : this.submask
+      arg !== undefined ? getIPv6Submask(arg) : this.submask,
     );
   }
 
+  /**
+   * Returns the previous IPv6 subnet in sequence, using a subnet mask calculated
+   * to accommodate the specified number of hosts.
+   *
+   * @param hosts - The minimum number of hosts the subnet must support.
+   * @returns The previous IPv6 context with a subnet mask sized for the specified number of hosts.
+   */
   prevWithHosts(hosts: bigint): IPv6Context {
     const { submask } = generateSubmaskFromHosts(6, hosts);
     return prev(
@@ -391,7 +552,7 @@ export class IPv6Context extends Context<6> {
       IPv6Context,
       this,
       this.network,
-      new IPv6Submask(submask)
+      new IPv6Submask(submask),
     );
   }
 }
