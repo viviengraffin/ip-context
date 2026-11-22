@@ -23,6 +23,14 @@ export function next<Version extends AddressVersions>(
     .toUint() as NumberTypeForVersion<Version>;
 
   const addressClass = version === 4 ? IPv4Address : IPv6Address;
+  const { uintLimit } = ADDRESS_VERSIONS[version];
+
+  if (lastAddressUint >= uintLimit) {
+    throw new ContextError({
+      type: "invalid-cidr",
+      cidr: submask.cidr,
+    });
+  }
 
   while (true) {
     const next = new contextClass(
@@ -30,8 +38,6 @@ export function next<Version extends AddressVersions>(
       addressClass.fromUint(lastAddressUint + toUint(version, 1)),
       submask,
     );
-
-    const { uintLimit } = ADDRESS_VERSIONS[version];
 
     if (
       // @ts-expect-error
@@ -76,6 +82,13 @@ export function prev<Version extends AddressVersions>(
 
   const addressClass = version === 4 ? IPv4Address : IPv6Address;
 
+  if (firstAddressUint <= toUint(version, 0)) {
+    throw new ContextError({
+      type: "invalid-cidr",
+      cidr: submask.cidr,
+    });
+  }
+
   while (true) {
     const prev = new contextClass(
       // @ts-expect-error
@@ -99,7 +112,7 @@ export function prev<Version extends AddressVersions>(
       Version
     >;
 
-    if (firstAddressUint <= 0) {
+    if (firstAddressUint <= toUint(version, 0)) {
       throw new ContextError({
         type: "invalid-cidr",
         cidr: submask.cidr,
