@@ -24,6 +24,7 @@ export function next<Version extends AddressVersions>(
 
   const addressClass = version === 4 ? IPv4Address : IPv6Address;
   const { uintLimit } = ADDRESS_VERSIONS[version];
+  const currentLastAddress = lastAddress;
 
   if (lastAddressUint >= uintLimit) {
     throw new ContextError({
@@ -45,8 +46,8 @@ export function next<Version extends AddressVersions>(
       // @ts-expect-error
       !next.includes(current.address) &&
       // @ts-expect-error
-      !next.includes(version === 4 ? current.broadcast : current.lastHost) &&
-      next.network.toUint() > current.network.toUint()
+      !next.includes(currentLastAddress) &&
+      next.network.toUint() > currentLastAddress.toUint()
     ) {
       return next as ContextTypeForVersion<Version>;
     }
