@@ -68,4 +68,7 @@ export type ContextErrorDatas = {
 } | {
   type: "invalid-hosts-number";
   value: NumberTypes;
+} | {
+  type: "unexpected-arg";
+  arg: any;
 };

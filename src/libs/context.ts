@@ -24,6 +24,9 @@ import type {
 import type { NumberTypes } from "./types/common.ts";
 import { ADDRESS_VERSIONS } from "./const.ts";
 import { memoize } from "./decorators/memoize.ts";
+import { next, prev } from "./functions/buildContexts.ts";
+import { getIPv4Submask, getIPv6Submask } from "./functions/containers.ts";
+import { generateSubmaskFromHosts } from "./submask/functions.ts";
 
 /**
  * Calculates the last address of a subnet given an address and a submask.
@@ -261,6 +264,63 @@ export class IPv4Context extends Context<4> {
       return IPv4Address.fromUint(this.broadcast.toUint() - 1);
     }
   }
+
+  next(): IPv4Context;
+  next(cidr: number): IPv4Context;
+  next(submask: IPv4Submask): IPv4Context;
+  next(submask: number[] | Uint8Array): IPv4Context;
+  next(submask: string): IPv4Context;
+  next(
+    arg?: IPv4Submask | Uint8Array | number[] | string | number,
+  ): IPv4Context {
+    return next(
+      4,
+      IPv4Context,
+      this,
+      this.broadcast,
+      arg ? getIPv4Submask(arg) : this.submask,
+    );
+  }
+
+  nextWithHosts(hosts: number): IPv4Context {
+    const { submask } = generateSubmaskFromHosts(4, hosts);
+    return next(
+      4,
+      IPv4Context,
+      this,
+      this.broadcast,
+      new IPv4Submask(submask),
+    );
+  }
+
+  prev(): IPv4Context;
+  prev(cidr: number): IPv4Context;
+  prev(submask: IPv4Submask): IPv4Context;
+  prev(submask: string): IPv4Context;
+  prev(submask: number[] | Uint8Array): IPv4Context;
+  prev(
+    arg?: IPv4Submask | Uint8Array | number[] | string | number,
+  ): IPv4Context {
+    return prev(
+      4,
+      IPv4Context,
+      this,
+      this.network,
+      arg ? getIPv4Submask(arg) : this.submask,
+    );
+  }
+
+  prevWithHosts(hosts: number): IPv4Context {
+    const { submask } = generateSubmaskFromHosts(4, hosts);
+    
+    return prev(
+      4,
+      IPv4Context,
+      this,
+      this.network,
+      new IPv4Submask(submask)
+    );
+  }
 }
 
 /**
@@ -283,6 +343,56 @@ export class IPv6Context extends Context<6> {
   @memoize("_lastHost")
   override get lastHost(): IPv6Address {
     return calculateLastAddress(6, this.address, this.submask);
+  }
+
+  next(): IPv6Context;
+  next(cidr: number): IPv6Context;
+  next(submask: string): IPv6Context;
+  next(submask: number[] | Uint16Array): IPv6Context
+  next(arg?: string | number | number[] | Uint16Array | IPv6Submask): IPv6Context {
+    return next(
+      6,
+      IPv6Context,
+      this,
+      this.lastHost,
+      arg ? getIPv6Submask(arg) : this.submask
+    );
+  }
+
+  nextWithHosts(hosts: bigint): IPv6Context {
+    const { submask } = generateSubmaskFromHosts(6, hosts);
+    return next(
+      6,
+      IPv6Context,
+      this,
+      this.lastHost,
+      new IPv6Submask(submask)
+    );
+  }
+
+  prev(): IPv6Context;
+  prev(cidr: number): IPv6Context;
+  prev(submask: string): IPv6Context;
+  prev(submask: number[] | Uint16Array): IPv6Context;
+  prev(arg?: string | number | number[] | Uint16Array | IPv6Submask): IPv6Context {
+    return prev(
+      6,
+      IPv6Context,
+      this,
+      this.network,
+      arg ? getIPv6Submask(arg) : this.submask
+    );
+  }
+
+  prevWithHosts(hosts: bigint): IPv6Context {
+    const { submask } = generateSubmaskFromHosts(6, hosts);
+    return prev(
+      6,
+      IPv6Context,
+      this,
+      this.network,
+      new IPv6Submask(submask)
+    );
   }
 }
 

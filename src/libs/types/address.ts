@@ -41,6 +41,8 @@ export type AddressVersionDefinition = {
   readonly arrayConstructor: Constructor<AddressArrays>;
   /** Constructor for the number */
   readonly numberConstructor: typeof Number | typeof BigInt;
+  /** Uint limit */
+  readonly uintLimit: number | bigint;
 };
 
 /**
