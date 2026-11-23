@@ -45,9 +45,9 @@ export type IncorrectAddressErrorDatas = {
   version: AddressVersions;
   value: string;
 } | {
-  type: "invalid-uint",
-  version: AddressVersions,
-  value: bigint | number
+  type: "invalid-uint";
+  version: AddressVersions;
+  value: bigint | number;
 };
 
 /**

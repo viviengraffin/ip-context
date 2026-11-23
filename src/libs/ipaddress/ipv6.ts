@@ -618,7 +618,7 @@ export class IPv6Address extends IPAddress<6> {
     return next(
       6,
       IPv6Address,
-      this
+      this,
     );
   }
 
@@ -629,7 +629,7 @@ export class IPv6Address extends IPAddress<6> {
     return prev(
       6,
       IPv6Address,
-      this
+      this,
     );
   }
 }

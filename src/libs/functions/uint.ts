@@ -60,7 +60,7 @@ export function UintToArray<T extends AddressVersions>(
       throw new IncorrectAddressError({
         type: "invalid-uint",
         version: 4,
-        value: uint
+        value: uint,
       });
     }
 
@@ -78,7 +78,7 @@ export function UintToArray<T extends AddressVersions>(
       throw new IncorrectAddressError({
         type: "invalid-uint",
         version: 6,
-        value: bigInt
+        value: bigInt,
       });
     }
 

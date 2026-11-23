@@ -456,7 +456,7 @@ export class IPv4Address extends IPAddress<4> {
     return next(
       4,
       IPv4Address,
-      this
+      this,
     );
   }
 
@@ -467,7 +467,7 @@ export class IPv4Address extends IPAddress<4> {
     return prev(
       4,
       IPv4Address,
-      this
+      this,
     );
   }
 }
