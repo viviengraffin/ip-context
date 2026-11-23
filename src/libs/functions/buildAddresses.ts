@@ -5,6 +5,7 @@ import type {
   IPAddressTypeForVersion,
   NumberTypeForVersion,
 } from "../types/address.ts";
+import { isIPv6 } from "./checkVersion.ts";
 import { toUint } from "./uint.ts";
 
 export function next<Version extends AddressVersions>(
@@ -18,7 +19,7 @@ export function next<Version extends AddressVersions>(
   const uintNext: NumberTypeForVersion<Version> = current.toUint() +
     toUint(version, 1);
 
-  return ipConstructor.fromUint(uintNext as never) as IPAddressTypeForVersion<
+  return ipConstructor.fromUint(uintNext as never, isIPv6(current) ? (current.zoneId ?? undefined) : undefined) as IPAddressTypeForVersion<
     Version
   >;
 }
@@ -32,7 +33,7 @@ export function prev<Version extends AddressVersions>(
   const uintPrev: NumberTypeForVersion<Version> =
     (current.toUint() as NumberTypeForVersion<Version>) - toUint(version, 1);
 
-  return ipConstructor.fromUint(uintPrev as never) as IPAddressTypeForVersion<
+  return ipConstructor.fromUint(uintPrev as never, isIPv6(current) ? (current.zoneId ?? undefined) : undefined) as IPAddressTypeForVersion<
     Version
   >;
 }
