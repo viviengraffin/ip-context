@@ -27,6 +27,7 @@ import type {
 } from "../types/tunneling.ts";
 import type { IPv6Address } from "./ipv6.ts";
 import { memoize } from "../decorators/memoize.ts";
+import { next, prev } from "../functions/buildAddresses.ts";
 
 /**
  * Class representing an IPv4 address.
@@ -446,5 +447,27 @@ export class IPv4Address extends IPAddress<4> {
       return "Reserved";
     }
     return null;
+  }
+
+  /**
+   * Get the next IPv4 Address
+   */
+  next(): IPv4Address {
+    return next(
+      4,
+      IPv4Address,
+      this
+    );
+  }
+
+  /**
+   * Get the previous IPv4 Address
+   */
+  prev(): IPv4Address {
+    return prev(
+      4,
+      IPv4Address,
+      this
+    );
   }
 }

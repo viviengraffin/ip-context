@@ -1,3 +1,5 @@
+import { ADDRESS_VERSIONS } from "../const.ts";
+import { IncorrectAddressError } from "../error.ts";
 import type {
   AddressArrayForVersion,
   AddressVersions,
@@ -53,6 +55,15 @@ export function UintToArray<T extends AddressVersions>(
 ): AddressArrayForVersion<T> {
   if (version === 4) {
     const uint = value as number;
+
+    if (uint > ADDRESS_VERSIONS[4].uintLimit || uint < 0) {
+      throw new IncorrectAddressError({
+        type: "invalid-uint",
+        version: 4,
+        value: uint
+      });
+    }
+
     return new Uint8Array([
       (uint >>> 24) & 0xFF,
       (uint >>> 16) & 0xFF,
@@ -62,6 +73,15 @@ export function UintToArray<T extends AddressVersions>(
   } else {
     const result = new Uint16Array(8);
     let bigInt = value as bigint;
+
+    if (bigInt > ADDRESS_VERSIONS[6].uintLimit || bigInt < 0n) {
+      throw new IncorrectAddressError({
+        type: "invalid-uint",
+        version: 6,
+        value: bigInt
+      });
+    }
+
     for (let i = 7; i >= 0; i--) {
       result[i] = Number(bigInt & 0xFFFFn);
       bigInt >>= 16n;

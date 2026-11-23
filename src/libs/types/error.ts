@@ -44,6 +44,10 @@ export type IncorrectAddressErrorDatas = {
   type: "incorrect-binary-string";
   version: AddressVersions;
   value: string;
+} | {
+  type: "invalid-uint",
+  version: AddressVersions,
+  value: bigint | number
 };
 
 /**

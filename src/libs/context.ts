@@ -338,14 +338,12 @@ export class IPv4Context extends Context<4> {
    * The previous subnet is calculated using the current subnet mask unless
    * a different subnet mask is provided.
    *
-   * @overload
    * @returns The previous IPv4 context using the current subnet mask.
    */
   prev(): IPv4Context;
   /**
    * Returns the previous IPv4 subnet in sequence using the specified CIDR prefix length.
    *
-   * @overload
    * @param cidr - The CIDR prefix length to use.
    * @returns The previous IPv4 context.
    */
@@ -353,7 +351,6 @@ export class IPv4Context extends Context<4> {
   /**
    * Returns the previous IPv4 subnet in sequence using the specified subnet mask.
    *
-   * @overload
    * @param submask - The IPv4 subnet mask.
    * @returns The previous IPv4 context.
    */
@@ -361,7 +358,6 @@ export class IPv4Context extends Context<4> {
   /**
    * Returns the previous IPv4 subnet in sequence using the specified subnet mask.
    *
-   * @overload
    * @param submask - The subnet mask in string notation.
    * @returns The previous IPv4 context.
    */
@@ -369,7 +365,6 @@ export class IPv4Context extends Context<4> {
   /**
    * Returns the previous IPv4 subnet in sequence using the specified subnet mask.
    *
-   * @overload
    * @param submask - The subnet mask represented as an array of 8-bit values.
    * @returns The previous IPv4 context.
    */
@@ -434,14 +429,12 @@ export class IPv6Context extends Context<6> {
    * The next subnet is calculated using the current subnet mask unless
    * a different subnet mask is provided.
    *
-   * @overload
    * @returns The next IPv6 context using the current subnet mask.
    */
   next(): IPv6Context;
   /**
    * Returns the next IPv6 subnet in sequence using the specified CIDR prefix length.
    *
-   * @overload
    * @param cidr - The CIDR prefix length to use.
    * @returns The next IPv6 context.
    */
@@ -449,7 +442,6 @@ export class IPv6Context extends Context<6> {
   /**
    * Returns the next IPv6 subnet in sequence using the specified subnet mask.
    *
-   * @overload
    * @param submask - The subnet mask in string notation.
    * @returns The next IPv6 context.
    */
@@ -457,7 +449,6 @@ export class IPv6Context extends Context<6> {
   /**
    * Returns the next IPv6 subnet in sequence using the specified subnet mask.
    *
-   * @overload
    * @param submask - The subnet mask represented as an array of 16-bit values.
    * @returns The next IPv6 context.
    */
@@ -498,14 +489,12 @@ export class IPv6Context extends Context<6> {
    * The previous subnet is calculated using the current subnet mask unless
    * a different subnet mask is provided.
    *
-   * @overload
    * @returns The previous IPv6 context using the current subnet mask.
    */
   prev(): IPv6Context;
   /**
    * Returns the previous IPv6 subnet in sequence using the specified CIDR prefix length.
    *
-   * @overload
    * @param cidr - The CIDR prefix length to use.
    * @returns The previous IPv6 context.
    */
@@ -513,7 +502,6 @@ export class IPv6Context extends Context<6> {
   /**
    * Returns the previous IPv6 subnet in sequence using the specified subnet mask.
    *
-   * @overload
    * @param submask - The subnet mask in string notation.
    * @returns The previous IPv6 context.
    */
@@ -521,7 +509,6 @@ export class IPv6Context extends Context<6> {
   /**
    * Returns the previous IPv6 subnet in sequence using the specified subnet mask.
    *
-   * @overload
    * @param submask - The subnet mask represented as an array of 16-bit values.
    * @returns The previous IPv6 context.
    */

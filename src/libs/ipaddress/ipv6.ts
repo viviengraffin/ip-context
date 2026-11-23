@@ -29,6 +29,7 @@ import type { IPv6AddressOtherProperties } from "../types/otherProperties.ts";
 import type { TunnelingModes } from "../types/tunneling.ts";
 import type { IPv4Address } from "./ipv4.ts";
 import { memoize } from "../decorators/memoize.ts";
+import { next, prev } from "../functions/buildAddresses.ts";
 
 /**
  * Class representing an IPv6 address.
@@ -608,5 +609,27 @@ export class IPv6Address extends IPAddress<6> {
       return "Multicast";
     }
     return null;
+  }
+
+  /**
+   * Get the next IPv6 Address
+   */
+  next(): IPv6Address {
+    return next(
+      6,
+      IPv6Address,
+      this
+    );
+  }
+
+  /**
+   * Get the previous IPv6 Address
+   */
+  prev(): IPv6Address {
+    return prev(
+      6,
+      IPv6Address,
+      this
+    );
   }
 }
