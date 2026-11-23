@@ -75,4 +75,9 @@ export type ContextErrorDatas = {
 } | {
   type: "unexpected-arg";
   arg: any;
+} | {
+  type: "impossible-next-or-prev",
+  version: AddressVersions,
+  limit: AddressContainers,
+  value: AddressContainers
 };

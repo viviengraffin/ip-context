@@ -100,6 +100,10 @@ export class ContextError extends Error {
         return "The string with cidr is not valid: " + datas.value;
       case "invalid-hosts-number":
         return "The hosts number is not valid: " + datas.value;
+      case "unexpected-arg":
+        return `Unexpected arg : ${datas.arg.toString()}`;
+      case "impossible-next-or-prev":
+        return `Impossible to move address \nLimit: ${getStringOfAddressContainer(datas.version, datas.limit)}\nValue: ${getStringOfAddressContainer(datas.version, datas.value)}`;
       default:
         return "Unknown error";
     }
