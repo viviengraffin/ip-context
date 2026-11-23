@@ -19,7 +19,10 @@ export function next<Version extends AddressVersions>(
   const uintNext: NumberTypeForVersion<Version> = current.toUint() +
     toUint(version, 1);
 
-  return ipConstructor.fromUint(uintNext as never, isIPv6(current) ? (current.zoneId ?? undefined) : undefined) as IPAddressTypeForVersion<
+  return ipConstructor.fromUint(
+    uintNext as never,
+    isIPv6(current) ? (current.zoneId ?? undefined) : undefined,
+  ) as IPAddressTypeForVersion<
     Version
   >;
 }
@@ -33,7 +36,10 @@ export function prev<Version extends AddressVersions>(
   const uintPrev: NumberTypeForVersion<Version> =
     (current.toUint() as NumberTypeForVersion<Version>) - toUint(version, 1);
 
-  return ipConstructor.fromUint(uintPrev as never, isIPv6(current) ? (current.zoneId ?? undefined) : undefined) as IPAddressTypeForVersion<
+  return ipConstructor.fromUint(
+    uintPrev as never,
+    isIPv6(current) ? (current.zoneId ?? undefined) : undefined,
+  ) as IPAddressTypeForVersion<
     Version
   >;
 }

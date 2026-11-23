@@ -340,10 +340,10 @@ export class IPv4Context extends Context<4> {
 
     if (nextAddress.toUint() > this.broadcast.toUint()) {
       throw new ContextError({
-        type:"impossible-next-or-prev",
+        type: "impossible-next-or-prev",
         version: 4,
         limit: this.broadcast.array,
-        value: nextAddress.array
+        value: nextAddress.array,
       });
     }
 
@@ -426,12 +426,12 @@ export class IPv4Context extends Context<4> {
   prevAddress(): this {
     const prevAddress = this.address.prev();
 
-    if (prevAddress.toUint()<this.network.toUint()) {
+    if (prevAddress.toUint() < this.network.toUint()) {
       throw new ContextError({
         type: "impossible-next-or-prev",
         version: 4,
         limit: this.network.array,
-        value: prevAddress.array
+        value: prevAddress.array,
       });
     }
 
@@ -529,12 +529,12 @@ export class IPv6Context extends Context<6> {
   nextAddress(): this {
     const nextAddress = this.address.next();
 
-    if (nextAddress.toUint()>this.lastHost.toUint()) {
+    if (nextAddress.toUint() > this.lastHost.toUint()) {
       throw new ContextError({
         type: "impossible-next-or-prev",
         version: 6,
         limit: this.lastHost.array,
-        value: nextAddress.array
+        value: nextAddress.array,
       });
     }
 
@@ -609,12 +609,12 @@ export class IPv6Context extends Context<6> {
   prevAddress(): this {
     const prevAddress = this.address.prev();
 
-    if (prevAddress.toUint()<this.network.toUint()) {
+    if (prevAddress.toUint() < this.network.toUint()) {
       throw new ContextError({
         type: "impossible-next-or-prev",
         version: 6,
         limit: this.network.array,
-        value: prevAddress.array
+        value: prevAddress.array,
       });
     }
 
@@ -727,11 +727,9 @@ export function context(
     let submask: IPv6Submask;
     if (cidr !== null) {
       submask = IPv6Submask.fromCidr(cidr);
-    } 
-    else if (sSubmask === null) {
+    } else if (sSubmask === null) {
       throw new Error();
-    }
-    else {
+    } else {
       submask = IPv6Submask.fromString(sSubmask);
     }
 

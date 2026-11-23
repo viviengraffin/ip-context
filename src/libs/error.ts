@@ -103,7 +103,9 @@ export class ContextError extends Error {
       case "unexpected-arg":
         return `Unexpected arg : ${datas.arg.toString()}`;
       case "impossible-next-or-prev":
-        return `Impossible to move address \nLimit: ${getStringOfAddressContainer(datas.version, datas.limit)}\nValue: ${getStringOfAddressContainer(datas.version, datas.value)}`;
+        return `Impossible to move address \nLimit: ${
+          getStringOfAddressContainer(datas.version, datas.limit)
+        }\nValue: ${getStringOfAddressContainer(datas.version, datas.value)}`;
       default:
         return "Unknown error";
     }
