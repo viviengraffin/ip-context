@@ -27,6 +27,10 @@ import { memoize } from "./decorators/memoize.ts";
 import { next, prev } from "./functions/buildContexts.ts";
 import { getIPv4Submask, getIPv6Submask } from "./functions/containers.ts";
 import { generateSubmaskFromHosts } from "./submask/functions.ts";
+import {
+  nextAddressInContext,
+  prevAddressInContext,
+} from "./functions/buildAddresses.ts";
 
 /**
  * Calculates the last address of a subnet given an address and a submask.
@@ -187,6 +191,23 @@ export abstract class Context<Version extends AddressVersions> {
 
     return addressAndSubmask === this.network.toUint();
   }
+
+  /**
+   * Get the previous address in this context
+   *
+   * @param host - The previous address must be an addressable address
+   * @returns this
+   */
+  prevAddress(host: boolean = false): this {
+    // @ts-expect-error
+    this.address = prevAddressInContext(
+      this.address.version,
+      this.address,
+      host ? this.firstHost : this.network,
+    );
+
+    return this;
+  }
 }
 
 /**
@@ -334,20 +355,16 @@ export class IPv4Context extends Context<4> {
 
   /**
    * Get the next address in this context
+   *
+   * @param host - The target address must be an addressable address
+   * @returns this
    */
-  nextAddress(): this {
-    const nextAddress = this.address.next();
-
-    if (nextAddress.toUint() > this.broadcast.toUint()) {
-      throw new ContextError({
-        type: "impossible-next-or-prev",
-        version: 4,
-        limit: this.broadcast.array,
-        value: nextAddress.array,
-      });
-    }
-
-    this.address = nextAddress;
+  nextAddress(host: boolean = false): this {
+    this.address = nextAddressInContext(
+      4,
+      this.address,
+      host ? this.lastHost : this.broadcast,
+    );
 
     return this;
   }
@@ -418,26 +435,6 @@ export class IPv4Context extends Context<4> {
       this.network,
       new IPv4Submask(submask),
     );
-  }
-
-  /**
-   * Get the previous address in this context
-   */
-  prevAddress(): this {
-    const prevAddress = this.address.prev();
-
-    if (prevAddress.toUint() < this.network.toUint()) {
-      throw new ContextError({
-        type: "impossible-next-or-prev",
-        version: 4,
-        limit: this.network.array,
-        value: prevAddress.array,
-      });
-    }
-
-    this.address = prevAddress;
-
-    return this;
   }
 }
 
@@ -525,20 +522,15 @@ export class IPv6Context extends Context<6> {
 
   /**
    * Get the next address in this context
+   *
+   * @returns this
    */
   nextAddress(): this {
-    const nextAddress = this.address.next();
-
-    if (nextAddress.toUint() > this.lastHost.toUint()) {
-      throw new ContextError({
-        type: "impossible-next-or-prev",
-        version: 6,
-        limit: this.lastHost.array,
-        value: nextAddress.array,
-      });
-    }
-
-    this.address = nextAddress;
+    this.address = nextAddressInContext(
+      6,
+      this.address,
+      this.lastHost,
+    );
 
     return this;
   }
@@ -601,26 +593,6 @@ export class IPv6Context extends Context<6> {
       this.network,
       new IPv6Submask(submask),
     );
-  }
-
-  /**
-   * Get the previous address in this context
-   */
-  prevAddress(): this {
-    const prevAddress = this.address.prev();
-
-    if (prevAddress.toUint() < this.network.toUint()) {
-      throw new ContextError({
-        type: "impossible-next-or-prev",
-        version: 6,
-        limit: this.network.array,
-        value: prevAddress.array,
-      });
-    }
-
-    this.address = prevAddress;
-
-    return this;
   }
 }
 

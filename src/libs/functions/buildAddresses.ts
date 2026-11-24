@@ -1,4 +1,5 @@
 //import { ADDRESS_VERSIONS } from "../const.ts";
+import { ContextError } from "../error.ts";
 import type { IPv4Address, IPv6Address } from "../ipaddress/index.ts";
 import type {
   AddressVersions,
@@ -42,4 +43,42 @@ export function prev<Version extends AddressVersions>(
   ) as IPAddressTypeForVersion<
     Version
   >;
+}
+
+export function nextAddressInContext<Version extends AddressVersions>(
+  version: Version,
+  address: IPAddressTypeForVersion<Version>,
+  limit: IPAddressTypeForVersion<Version>,
+): IPAddressTypeForVersion<Version> {
+  const nextAddress = address.next();
+
+  if (nextAddress.toUint() > limit.toUint()) {
+    throw new ContextError({
+      type: "impossible-next-or-prev",
+      version,
+      limit: limit.array,
+      value: nextAddress.array,
+    });
+  }
+
+  return nextAddress as IPAddressTypeForVersion<Version>;
+}
+
+export function prevAddressInContext<Version extends AddressVersions>(
+  version: Version,
+  address: IPAddressTypeForVersion<Version>,
+  limit: IPAddressTypeForVersion<Version>,
+): IPAddressTypeForVersion<Version> {
+  const prevAddress = address.prev();
+
+  if (prevAddress.toUint() < limit.toUint()) {
+    throw new ContextError({
+      type: "impossible-next-or-prev",
+      version,
+      limit: limit.array,
+      value: prevAddress.array,
+    });
+  }
+
+  return prevAddress as IPAddressTypeForVersion<Version>;
 }
