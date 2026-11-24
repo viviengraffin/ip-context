@@ -50,3 +50,32 @@ testAddressDatas("IPv6Address instance", ip("2001:db6::1") as IPv6Address, {
   hexString: "20010db6000000000000000000000001",
   unsignedInteger: 42540766252826267828375309764565925889n,
 });
+
+
+describe("2001:db8:0:1:1:1:1:1", ()=>{
+  const address = ip("2001:db8:0:1:1:1:1:1");
+
+  test("toString", ()=>{
+    expect(address.toString()).toBe("2001:db8:0:1:1:1:1:1");
+  });
+});
+
+describe("1:2:3:4:5:6:7:0", ()=>{
+  const address = ip("1:2:3:4:5:6:7:0");
+
+  test("toString", ()=>{
+    expect(address.toString()).toBe("1:2:3:4:5:6:7:0");
+  });
+});
+
+test("1:2:3:4:5:6:7:8:9", ()=>{
+  expect(()=>ip("1:2:3:4:5:6:7:8:9")).toThrow();
+});
+
+test("1:2:3", ()=>{
+  expect(()=>ip("1:2:3")).toThrow();
+});
+
+test("1..3.4", ()=>{
+  expect(()=>ip("1..3.4")).toThrow();
+});

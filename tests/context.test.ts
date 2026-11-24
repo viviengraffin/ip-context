@@ -110,3 +110,43 @@ testDatasFromContext(
     ],
   },
 );
+
+describe("192.168.0.0/16", ()=> {
+  const ctx = context("192.168.0.0/16")
+
+  test("isHost", ()=>{
+    expect(ctx.isHost("192.168.1.0")).toBe(true);
+    expect(ctx.isHost("192.168.0.255")).toBe(true);
+    expect(ctx.isHost("192.168.1.1")).toBe(true);
+  });
+});
+
+describe("2001:db8::/32", ()=> {
+  const ctx = context("2001:db8::/32");
+
+  test("isHost", ()=>{
+    expect(ctx.isHost("2001:db8:0:1::")).toBe(true);
+    expect(ctx.isHost("2001:db8:0:1::1")).toBe(true);
+  });
+});
+
+describe("10.0.0.0/31", ()=>{
+  const ctx = context("10.0.0.0/31");
+
+  test("hosts", ()=>{
+    expect(ctx.hosts).toBe(2);
+  });
+
+  test("firstHost", ()=>{
+    expect(ctx.firstHost.toString()).toBe("10.0.0.0");
+  });
+
+  test("lastHost", ()=>{
+    expect(ctx.lastHost.toString()).toBe("10.0.0.1");
+  });
+
+  test("isHost", ()=>{
+    expect(ctx.isHost("10.0.0.0")).toBe(true);
+    expect(ctx.isHost("10.0.0.1")).toBe(true);
+  });
+})
