@@ -29,7 +29,7 @@
     "build:npm": "zshy --project tsconfig.build.json",
     "clean": "bun scripts/clean.ts",
     "typecheck": "bun check",
-    "bench": "bun scripts/bench.ts"
+    "bench": "bun scripts/bench/bench.ts"
   },
   "module": "./dist/main.js",
   "type": "module",

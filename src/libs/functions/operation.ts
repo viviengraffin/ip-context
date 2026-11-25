@@ -1,6 +1,7 @@
 import { createAddressArray } from "./common.ts";
 import { ADDRESS_VERSIONS } from "../const.ts";
 import type { AddressArrays, AddressVersions } from "../types/address.ts";
+import type { NumberTypes } from "../types/common.ts";
 
 /**
  * Applies a binary operation element-wise on two address arrays.
@@ -51,4 +52,31 @@ export function not(version: AddressVersions, a: AddressArrays): AddressArrays {
   }
 
   return res;
+}
+
+export function andUint<T extends NumberTypes>(a: T, b: T): T {
+  switch (typeof a) {
+    case "number":
+      return ((a & (b as number)) >>> 0) as T;
+    case "bigint":
+      return (a & (b as bigint)) as T;
+  }
+}
+
+export function orUint<T extends NumberTypes>(a: T, b: T): T {
+  switch (typeof a) {
+    case "number":
+      return ((a | (b as number)) >>> 0) as T;
+    case "bigint":
+      return (a | (b as bigint)) as T;
+  }
+}
+
+export function notUint<T extends NumberTypes>(a: T): T {
+  switch (typeof a) {
+    case "number":
+      return (~a >>> 0) as T;
+    case "bigint":
+      return (~a & ADDRESS_VERSIONS[6].uintLimit) as T;
+  }
 }

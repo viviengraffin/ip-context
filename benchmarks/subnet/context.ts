@@ -3,7 +3,7 @@ import {
   contextWithHosts,
   IPv4Context,
   type IPv6Context,
-} from "@viviengraffin/ip-context";
+} from "../../src/main.ts";
 import { bench, run } from "mitata";
 
 function readContextDatas(ctx: IPv4Context | IPv6Context, includes: string) {

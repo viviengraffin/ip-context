@@ -1,11 +1,12 @@
 import { Address } from "../address.ts";
-import { SUBMASK_POSSIBLE_BLOCKS } from "../const.ts";
+import { ADDRESS_VERSIONS, SUBMASK_POSSIBLE_BLOCKS } from "../const.ts";
 import { NonImplementedStaticMethodError } from "../error.ts";
 import { isCorrectSubmask } from "../functions/check.ts";
 import { memoize } from "../decorators/memoize.ts";
 import type {
   AddressArrayForVersion,
   AddressVersions,
+  IPAddressTypeForVersion,
   NumberTypeForVersion,
 } from "../types/address.ts";
 import type { NumberTypes } from "../types/common.ts";
@@ -15,6 +16,8 @@ import type {
   SubmaskKnownProperties,
 } from "../types/otherProperties.ts";
 import { getHostsFromSizeAndCidr, getSizeFromCidr } from "./functions.ts";
+import { notUint } from "../functions/operation.ts";
+import { IPv4Address, IPv6Address } from "../ipaddress/index.ts";
 
 /**
  * Abstract class representing an IP submask.
@@ -98,5 +101,24 @@ export abstract class Submask<
 
   override toString(): string {
     throw new NonImplementedStaticMethodError();
+  }
+
+  @memoize()
+  toWildcard(): IPAddressTypeForVersion<Version> {
+    const { arrayConstructor, arrayLength } = ADDRESS_VERSIONS[this.version];
+
+    const wildcardArray = new arrayConstructor(arrayLength);
+
+    for (let i = 0; i < arrayLength; i++) {
+      wildcardArray[i] = notUint(this.array[i]);
+    }
+
+    return this.version === 4
+      ? (new IPv4Address(
+          wildcardArray as Uint8Array,
+        ) as IPAddressTypeForVersion<Version>)
+      : (new IPv6Address(
+          wildcardArray as Uint16Array,
+        ) as IPAddressTypeForVersion<Version>);
   }
 }

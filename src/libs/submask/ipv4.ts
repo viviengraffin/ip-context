@@ -19,6 +19,7 @@ import {
 } from "./functions.ts";
 import { Submask } from "./submask.ts";
 import { memoize } from "../decorators/memoize.ts";
+import { buildFromWildcard } from "../functions/buildAddresses.ts";
 
 /**
  * Class representing an IPv4 submask.
@@ -117,6 +118,10 @@ export class IPv4Submask extends Submask<4> {
 
   static override fromHexString(hexString: string): IPv4Submask {
     return this.fromUint(hexStringToUint(4, hexString));
+  }
+
+  static fromWildcard(wildcard: string): IPv4Submask {
+    return buildFromWildcard(4,wildcard);
   }
 
   /**

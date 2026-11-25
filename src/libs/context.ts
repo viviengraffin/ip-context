@@ -1,12 +1,17 @@
 import { IPv4Submask, IPv6Submask } from "./submask/index.ts";
-import { and, not, or } from "./functions/operation.ts";
+import {
+  and,
+  andUint,
+  notUint,
+  orUint,
+} from "./functions/operation.ts";
 import {
   createAddress,
   createAddressFromUint,
   getAddressFromAddressContainers,
   hasCidrInString,
 } from "./functions/common.ts";
-import { arrayToUint, toUint } from "./functions/uint.ts";
+import { toUint } from "./functions/uint.ts";
 import { IPv4Address, IPv6Address } from "./ipaddress/index.ts";
 import { ContextError, NonImplementedStaticMethodError } from "./error.ts";
 import {
@@ -45,10 +50,29 @@ function calculateLastAddress<T extends AddressVersions>(
   address: IPAddressTypeForVersion<T>,
   submask: SubmaskTypeForVersion<T>,
 ): IPAddressTypeForVersion<T> {
+  /*
   return createAddress(
     version,
     or(version, address.array, not(version, submask.array)),
   ) as IPAddressTypeForVersion<T>;
+  */
+
+  switch (version) {
+    case 4:
+      return IPv4Address.fromUint(
+        orUint<number>(
+          address.toUint() as number,
+          notUint<number>(submask.toUint() as number),
+        ),
+      ) as IPAddressTypeForVersion<T>;
+    case 6:
+      return IPv6Address.fromUint(
+        orUint<bigint>(
+          address.toUint() as bigint,
+          notUint<bigint>(submask.toUint() as bigint),
+        ),
+      ) as IPAddressTypeForVersion<T>;
+  }
 }
 
 /**
@@ -181,17 +205,21 @@ export abstract class Context<Version extends AddressVersions> {
    * @returns {boolean} True if the address is included in this subnet, false otherwise
    */
   includes(address: IPAddressTypeForVersion<Version> | string): boolean {
+    const { arrayLength } = ADDRESS_VERSIONS[this.address.version];
     address = getAddressFromAddressContainers(
       this.address.version,
       address,
     ) as IPAddressTypeForVersion<Version>;
+    for (let i = 0; i < arrayLength; i++) {
+      if (
+        andUint(address.array[i], this.submask.array[i]) !==
+        this.network.array[i]
+      ) {
+        return false;
+      }
+    }
 
-    const addressAndSubmask = arrayToUint(
-      this.address.version,
-      and(this.address.version, address.array, this.submask.array),
-    );
-
-    return addressAndSubmask === this.network.toUint();
+    return true;
   }
 
   /**
