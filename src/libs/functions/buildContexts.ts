@@ -19,8 +19,8 @@ export function next<Version extends AddressVersions>(
   lastAddress: IPAddressTypeForVersion<Version>,
   submask: SubmaskForVersion<Version>,
 ): ContextTypeForVersion<Version> {
-  let lastAddressUint: NumberTypeForVersion<Version> = lastAddress
-    .toUint() as NumberTypeForVersion<Version>;
+  let lastAddressUint: NumberTypeForVersion<Version> =
+    lastAddress.toUint() as NumberTypeForVersion<Version>;
 
   const addressClass = version === 4 ? IPv4Address : IPv6Address;
   const { uintLimit } = ADDRESS_VERSIONS[version];
@@ -53,13 +53,10 @@ export function next<Version extends AddressVersions>(
     }
 
     if (isIPv4(next)) {
-      lastAddressUint = (next.broadcast.toUint()) as NumberTypeForVersion<
-        Version
-      >;
+      lastAddressUint =
+        next.broadcast.toUint() as NumberTypeForVersion<Version>;
     } else {
-      lastAddressUint = (next.lastHost.toUint()) as NumberTypeForVersion<
-        Version
-      >;
+      lastAddressUint = next.lastHost.toUint() as NumberTypeForVersion<Version>;
     }
 
     if (lastAddressUint >= uintLimit) {
@@ -78,8 +75,8 @@ export function prev<Version extends AddressVersions>(
   firstAddress: IPAddressTypeForVersion<Version>,
   submask: SubmaskForVersion<Version>,
 ): ContextTypeForVersion<Version> {
-  let firstAddressUint: NumberTypeForVersion<Version> = firstAddress
-    .toUint() as NumberTypeForVersion<Version>;
+  let firstAddressUint: NumberTypeForVersion<Version> =
+    firstAddress.toUint() as NumberTypeForVersion<Version>;
 
   const addressClass = version === 4 ? IPv4Address : IPv6Address;
 
@@ -109,9 +106,7 @@ export function prev<Version extends AddressVersions>(
       return prev as ContextTypeForVersion<Version>;
     }
 
-    firstAddressUint = (prev.network.toUint()) as NumberTypeForVersion<
-      Version
-    >;
+    firstAddressUint = prev.network.toUint() as NumberTypeForVersion<Version>;
 
     if (firstAddressUint <= toUint(version, 0)) {
       throw new ContextError({

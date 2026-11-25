@@ -13,11 +13,9 @@ export type AddressKnownProperties<
 /**
  * Object to set the known properties in an IPv6 address
  */
-export type IPv6KnownProperties =
-  & AddressKnownProperties<bigint>
-  & {
-    _byteArray?: Uint8Array;
-  };
+export type IPv6KnownProperties = AddressKnownProperties<bigint> & {
+  _byteArray?: Uint8Array;
+};
 
 /**
  * Object to set the known properties in an IPv6Address instance
@@ -41,9 +39,8 @@ export type SubmaskKnownProperties<
 /**
  * Object to set the known properties in an IPv6Submask instance
  */
-export type IPv6SubmaskKnownProperties =
-  & SubmaskKnownProperties<bigint>
-  & IPv6KnownProperties;
+export type IPv6SubmaskKnownProperties = SubmaskKnownProperties<bigint> &
+  IPv6KnownProperties;
 
 /**
  * All Known properties definitions
@@ -71,8 +68,7 @@ export type AddressOtherProperties<
 };
 
 type IPBaseKnownAddress<KnownProperties extends AllAddressKnownProperties> =
-  & AddressOtherProperties<KnownProperties>
-  & {
+  AddressOtherProperties<KnownProperties> & {
     protocol?: string;
     port?: number;
   };
@@ -88,7 +84,6 @@ export type IPv4AddressOtherProperties = IPBaseKnownAddress<
  * Other properties for IPv6Address
  */
 export type IPv6AddressOtherProperties =
-  & IPBaseKnownAddress<IPv6AddressKnownProperties>
-  & {
+  IPBaseKnownAddress<IPv6AddressKnownProperties> & {
     zoneId?: string;
   };

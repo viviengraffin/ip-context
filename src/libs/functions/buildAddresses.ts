@@ -16,16 +16,14 @@ export function next<Version extends AddressVersions>(
 ): IPAddressTypeForVersion<Version> {
   //    const { uintLimit } = ADDRESS_VERSIONS[version];
 
-  // @ts-expect-error
-  const uintNext: NumberTypeForVersion<Version> = current.toUint() +
-    toUint(version, 1);
+  const uintNext: NumberTypeForVersion<Version> =
+    // @ts-expect-error
+    current.toUint() + toUint(version, 1);
 
   return ipConstructor.fromUint(
     uintNext as never,
     isIPv6(current) ? (current.zoneId ?? undefined) : undefined,
-  ) as IPAddressTypeForVersion<
-    Version
-  >;
+  ) as IPAddressTypeForVersion<Version>;
 }
 
 export function prev<Version extends AddressVersions>(
@@ -40,9 +38,7 @@ export function prev<Version extends AddressVersions>(
   return ipConstructor.fromUint(
     uintPrev as never,
     isIPv6(current) ? (current.zoneId ?? undefined) : undefined,
-  ) as IPAddressTypeForVersion<
-    Version
-  >;
+  ) as IPAddressTypeForVersion<Version>;
 }
 
 export function nextAddressInContext<Version extends AddressVersions>(

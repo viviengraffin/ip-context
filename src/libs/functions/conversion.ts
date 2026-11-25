@@ -114,7 +114,7 @@ export function uint16ArrayToByteArray(
 
   for (let i = 0; i < array.length; i++) {
     res[index++] = array[i] >> 8;
-    res[index++] = array[i] & 0x00FF;
+    res[index++] = array[i] & 0x00ff;
   }
 
   return getArray ? Array.from(res) : res;

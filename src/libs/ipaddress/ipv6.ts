@@ -47,8 +47,8 @@ export class IPv6Address extends IPAddress<6> {
     return zoneId === undefined
       ? new IPv6Address(parseIPv6Address(address))
       : new IPv6Address(parseIPv6Address(address), {
-        zoneId: zoneId,
-      });
+          zoneId: zoneId,
+        });
   }
 
   protected _ipv4MappedString?: string;
@@ -191,7 +191,9 @@ export class IPv6Address extends IPAddress<6> {
       const d = Number("0x" + parts[i - 3]);
 
       if (
-        !Number.isInteger(a) || !Number.isInteger(b) || !Number.isInteger(c) ||
+        !Number.isInteger(a) ||
+        !Number.isInteger(b) ||
+        !Number.isInteger(c) ||
         !Number.isInteger(d)
       ) {
         throw new IncorrectAddressError({
@@ -250,8 +252,14 @@ export class IPv6Address extends IPAddress<6> {
    * ```
    */
   static override fromURL(url: string): IPURL<IPv6Address> {
-    const { protocol, address: addressString, port, pathname, search, hash } =
-      parseUrl(6, url);
+    const {
+      protocol,
+      address: addressString,
+      port,
+      pathname,
+      search,
+      hash,
+    } = parseUrl(6, url);
     const type = getIPv6AddressStringType(addressString);
     let address: IPv6Address;
     switch (type) {
@@ -343,8 +351,10 @@ export class IPv6Address extends IPAddress<6> {
       this._string = stringifyIPv6Address(this.array);
     }
 
-    return this._string +
-      (displayZoneId && this.zoneId !== null ? `%${this.zoneId}` : "");
+    return (
+      this._string +
+      (displayZoneId && this.zoneId !== null ? `%${this.zoneId}` : "")
+    );
   }
 
   /**
@@ -433,7 +443,7 @@ export class IPv6Address extends IPAddress<6> {
    * @returns {boolean} True if the address is link-local, false otherwise
    */
   isLocalLink(): boolean {
-    return (this.array[0] & 0b1111111111000000) === 0xFE80;
+    return (this.array[0] & 0b1111111111000000) === 0xfe80;
   }
 
   /**
@@ -442,7 +452,7 @@ export class IPv6Address extends IPAddress<6> {
    * @returns {boolean} True if the address is multicast, false otherwise
    */
   isMulticast(): boolean {
-    return (this.array[0] >> 8) === 0xFF;
+    return this.array[0] >> 8 === 0xff;
   }
 
   /**
@@ -451,7 +461,7 @@ export class IPv6Address extends IPAddress<6> {
    * @returns {boolean} True if the address is unique local, false otherwise
    */
   isUniqueLocal(): boolean {
-    return (this.array[0] & 0xFC00) === 0xFC00;
+    return (this.array[0] & 0xfc00) === 0xfc00;
   }
 
   /**
@@ -469,7 +479,7 @@ export class IPv6Address extends IPAddress<6> {
    * @returns {boolean} True if the address is reserved, false otherwise
    */
   isReserved(): boolean {
-    return (this.array[0] >> 8) === 0;
+    return this.array[0] >> 8 === 0;
   }
 
   /**
@@ -615,21 +625,13 @@ export class IPv6Address extends IPAddress<6> {
    * Get the next IPv6 Address
    */
   next(): IPv6Address {
-    return next(
-      6,
-      IPv6Address,
-      this,
-    );
+    return next(6, IPv6Address, this);
   }
 
   /**
    * Get the previous IPv6 Address
    */
   prev(): IPv6Address {
-    return prev(
-      6,
-      IPv6Address,
-      this,
-    );
+    return prev(6, IPv6Address, this);
   }
 }

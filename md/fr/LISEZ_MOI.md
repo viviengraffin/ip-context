@@ -142,8 +142,8 @@ Il y a trois méthodes pour cela :
 ```ts
 import { IPv4Address } from "@viviengraffin/ip-context";
 
-const ip=IPv4Address.fromString("192.168.1.1");
-const ctx=ip.createContextWithHosts(512);
+const ip = IPv4Address.fromString("192.168.1.1");
+const ctx = ip.createContextWithHosts(512);
 console.log(ctx.hosts); // 1022
 ```
 
@@ -156,11 +156,15 @@ console.log(ctx.hosts); // 1022
 Avec les classes pour IPv4
 
 ```ts
-import { IPv4Context, IPv4Address, IPv4Submask } from "@viviengraffin/ip-context";
+import {
+  IPv4Context,
+  IPv4Address,
+  IPv4Submask,
+} from "@viviengraffin/ip-context";
 
-const ctx=new IPv4Context(
+const ctx = new IPv4Context(
   IPv4Address.fromString("192.168.1.1"),
-  IPv4Submask.fromHosts(512)
+  IPv4Submask.fromHosts(512),
 );
 console.log(ctx.hosts); // 1022
 ```
@@ -172,6 +176,6 @@ En savoir plus sur la fonction contextWithHosts [ici](https://jsr.io/@viviengraf
 ```ts
 import { contextWithHosts } from "@viviengraffin/ip-context";
 
-const ctx=contextWithHosts("192.168.1.1",512);
+const ctx = contextWithHosts("192.168.1.1", 512);
 console.log(ctx.hosts); // 1022
 ```

@@ -42,31 +42,48 @@ export class IncorrectAddressError extends Error {
   static getErrorMessage(datas: IncorrectAddressErrorDatas): string {
     switch (datas.type) {
       case "incorrect-item":
-        return "The item " + datas.item + " is incorrect in " +
-          getStringOfAddressContainer(datas.version, datas.address);
+        return (
+          "The item " +
+          datas.item +
+          " is incorrect in " +
+          getStringOfAddressContainer(datas.version, datas.address)
+        );
       case "incorrect-format":
-        return "The format is incorrect in address " +
-          getStringOfAddressContainer(datas.version, datas.address);
+        return (
+          "The format is incorrect in address " +
+          getStringOfAddressContainer(datas.version, datas.address)
+        );
       case "too-many-shortcuts":
-        return "The IPv6 has too many shortcuts: " +
-          getStringOfAddressContainer(6, datas.address);
+        return (
+          "The IPv6 has too many shortcuts: " +
+          getStringOfAddressContainer(6, datas.address)
+        );
       case "has-one-after-zero":
-        return "The submask has a one after a zero: " +
-          getStringOfAddressContainer(datas.version, datas.address);
+        return (
+          "The submask has a one after a zero: " +
+          getStringOfAddressContainer(datas.version, datas.address)
+        );
       case "invalid-ipv6-tunneling":
-        return getStringOfAddressContainer(6, datas.address) +
-          " is not a valid " + datas.method + " IPv6 address";
+        return (
+          getStringOfAddressContainer(6, datas.address) +
+          " is not a valid " +
+          datas.method +
+          " IPv6 address"
+        );
       case "not-a-ipv6-tunneling":
-        return getStringOfAddressContainer(6, datas.address) +
-          " is not a IPv6 Tunneling";
+        return (
+          getStringOfAddressContainer(6, datas.address) +
+          " is not a IPv6 Tunneling"
+        );
       case "incorrect-zone-id":
         return "This zone id is not valid: " + datas.zoneId;
       case "incorrect-binary-string":
         return `"${datas.value}" is not a valid binary string in IPv${datas.version}`;
       case "ipv6-tunneling-mode-not-defined":
-        return `${
-          getStringOfAddressContainer(6, datas.address)
-        } has not defined tunneling mode`;
+        return `${getStringOfAddressContainer(
+          6,
+          datas.address,
+        )} has not defined tunneling mode`;
       case "teredo-incorrect-flags":
         return `${datas.flags} is not a valid Teredo flag`;
       case "teredo-incorrect-port":
@@ -87,15 +104,22 @@ export class ContextError extends Error {
   static getErrorMessage(datas: ContextErrorDatas): string {
     switch (datas.type) {
       case "different-ip-versions":
-        return "The IP versions of " + datas.addresses[0] + " and " +
-          datas.addresses[1] + " are different";
+        return (
+          "The IP versions of " +
+          datas.addresses[0] +
+          " and " +
+          datas.addresses[1] +
+          " are different"
+        );
       case "invalid-cidr":
         return "The cidr " + datas.cidr + " is not valid";
       case "ipv4-class-does-not-submask":
         return "The IPv4 class of " + datas.address + " doesn't have a submask";
       case "unknown-ip-version":
-        return "The IP version of this params is unknown: " +
-          JSON.stringify(datas.params);
+        return (
+          "The IP version of this params is unknown: " +
+          JSON.stringify(datas.params)
+        );
       case "invalid-string-with-cidr":
         return "The string with cidr is not valid: " + datas.value;
       case "invalid-hosts-number":
@@ -103,9 +127,10 @@ export class ContextError extends Error {
       case "unexpected-arg":
         return `Unexpected arg : ${datas.arg.toString()}`;
       case "impossible-next-or-prev":
-        return `Impossible to move address \nLimit: ${
-          getStringOfAddressContainer(datas.version, datas.limit)
-        }\nValue: ${getStringOfAddressContainer(datas.version, datas.value)}`;
+        return `Impossible to move address \nLimit: ${getStringOfAddressContainer(
+          datas.version,
+          datas.limit,
+        )}\nValue: ${getStringOfAddressContainer(datas.version, datas.value)}`;
       default:
         return "Unknown error";
     }

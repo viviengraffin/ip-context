@@ -83,7 +83,8 @@ export function addressTestEquality(
 export function testDatasFromContext<T extends IPv4Context | IPv6Context>(
   name: string,
   ctx: T,
-  datas: T extends IPv4Context ? IPv4GetDatasFromResult
+  datas: T extends IPv4Context
+    ? IPv4GetDatasFromResult
     : IPv6GetDatasFromResult,
 ): void {
   describe(name, () => {
@@ -135,8 +136,11 @@ export function testDatasFromContext<T extends IPv4Context | IPv6Context>(
 
     for (const include of datas.includes) {
       test(
-        "Check if " + include.address + " is " +
-          (include.value === false ? "not " : "") + "in this network",
+        "Check if " +
+          include.address +
+          " is " +
+          (include.value === false ? "not " : "") +
+          "in this network",
         () => {
           expect(ctx.includes(include.address)).toBe(include.value);
         },
@@ -145,8 +149,11 @@ export function testDatasFromContext<T extends IPv4Context | IPv6Context>(
 
     for (const isHost of datas.isHost) {
       test(
-        "Check if " + isHost.address + " is " +
-          (isHost.value === false ? "not " : "") + "an available host",
+        "Check if " +
+          isHost.address +
+          " is " +
+          (isHost.value === false ? "not " : "") +
+          "an available host",
         () => {
           expect(ctx.isHost(isHost.address)).toBe(isHost.value);
         },

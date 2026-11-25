@@ -1,0 +1,46 @@
+{
+  "name": "@viviengraffin/ip-context",
+  "version": "1.2.1",
+  "license": "MIT",
+  "zshy": "./src/main.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/viviengraffin/ip-context"
+  },
+  "devDependencies": {
+    "@std/path": "npm:@jsr/std__path@^1.1.6",
+    "@types/bun": "latest",
+    "esbuild": "^0.28.2",
+    "jsr": "^0.14.3",
+    "mitata": "^1.0.34",
+    "vitest": "^5.1.1",
+    "zshy": "^0.8.1"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "build:web": "bun scripts/build/web.ts",
+    "build:npm": "zshy --project tsconfig.build.json",
+    "clean": "bun scripts/clean.ts",
+    "typecheck": "bun check",
+    "bench": "bun benchmarks/*.ts && bun benchmarks/ip/*.ts && bun benchmarks/subnet/*.ts"
+  },
+  "module": "./dist/main.js",
+  "type": "module",
+  "peerDependencies": {
+    "typescript": "^7"
+  },
+  "files": [
+    "package.json",
+    "dist"
+  ],
+  "main": "./dist/main.cjs",
+  "types": "./dist/main.d.cts",
+  "exports": {
+    ".": {
+      "types": "./dist/main.d.cts",
+      "import": "./dist/main.js",
+      "require": "./dist/main.cjs"
+    }
+  }
+}

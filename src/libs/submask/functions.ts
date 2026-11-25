@@ -45,11 +45,10 @@ export function getSizeFromCidr<T extends AddressVersions>(
   const { totalBits } = ADDRESS_VERSIONS[version];
   const uIntTotalBits = BigInt(totalBits);
   const uIntCidr = BigInt(cidr);
-  const res = 1n <<
-    (uIntTotalBits - uIntCidr);
+  const res = 1n << (uIntTotalBits - uIntCidr);
   return version === 4
-    ? Number(res) as NumberTypeForVersion<T>
-    : res as NumberTypeForVersion<T>;
+    ? (Number(res) as NumberTypeForVersion<T>)
+    : (res as NumberTypeForVersion<T>);
 }
 
 /**
@@ -68,10 +67,9 @@ export function generateSubmaskFromHosts<T extends AddressVersions>(
   NumberTypeForVersion<T>
 > {
   const { totalBits } = ADDRESS_VERSIONS[version];
-  const maxHosts =
-    (version === 4
-      ? Number(1n << BigInt(totalBits))
-      : (1n << BigInt(totalBits))) as NumberTypeForVersion<T>;
+  const maxHosts = (
+    version === 4 ? Number(1n << BigInt(totalBits)) : 1n << BigInt(totalBits)
+  ) as NumberTypeForVersion<T>;
   const diff = (version === 4 ? 2 : 1n) as NumberTypeForVersion<T>;
 
   if (hosts < 0 || hosts > maxHosts) {
@@ -103,17 +101,13 @@ export function getHostsFromSizeAndCidr<T extends AddressVersions>(
   cidr: number,
 ): NumberTypeForVersion<T> {
   if (version === 4) {
-    return (cidr === 32
-      ? 1
-      : (cidr === 31
-        ? 2
-        : Math.max(0, (size as number) - 2))) as NumberTypeForVersion<T>;
+    return (
+      cidr === 32 ? 1 : cidr === 31 ? 2 : Math.max(0, (size as number) - 2)
+    ) as NumberTypeForVersion<T>;
   } else {
     const bSize = size as bigint;
-    return (cidr === 128
-      ? 1n
-      : (cidr === 127
-        ? 0n
-        : (bSize > 0n ? bSize - 1n : 0n))) as NumberTypeForVersion<T>;
+    return (
+      cidr === 128 ? 1n : cidr === 127 ? 0n : bSize > 0n ? bSize - 1n : 0n
+    ) as NumberTypeForVersion<T>;
   }
 }

@@ -38,7 +38,7 @@ function searchMaxZeroSuite(address: Uint16Array): [number, number] | null {
 
   if (
     currentSuite !== null &&
-    (res === null || (res[1] - res[0] < currentSuite[1] - currentSuite[0]))
+    (res === null || res[1] - res[0] < currentSuite[1] - currentSuite[0])
   ) {
     res = currentSuite;
   }

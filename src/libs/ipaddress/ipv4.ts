@@ -152,8 +152,14 @@ export class IPv4Address extends IPAddress<4> {
    * ```
    */
   static override fromURL(url: string): IPURL<IPv4Address> {
-    const { protocol, address: addressString, port, pathname, search, hash } =
-      parseUrl(4, url);
+    const {
+      protocol,
+      address: addressString,
+      port,
+      pathname,
+      search,
+      hash,
+    } = parseUrl(4, url);
     const address = this.fromString(addressString);
     return new IPURL(address, protocol, port, pathname, search, hash);
   }
@@ -265,9 +271,11 @@ export class IPv4Address extends IPAddress<4> {
    * @returns {boolean} True if the address is private, false otherwise
    */
   isPrivate(): boolean {
-    return this.array[0] === 10 ||
+    return (
+      this.array[0] === 10 ||
       (this.array[0] === 172 && (this.array[1] & 0b11110000) === 16) ||
-      (this.array[0] === 192 && this.array[1] === 168);
+      (this.array[0] === 192 && this.array[1] === 168)
+    );
   }
 
   /**
@@ -453,21 +461,13 @@ export class IPv4Address extends IPAddress<4> {
    * Get the next IPv4 Address
    */
   next(): IPv4Address {
-    return next(
-      4,
-      IPv4Address,
-      this,
-    );
+    return next(4, IPv4Address, this);
   }
 
   /**
    * Get the previous IPv4 Address
    */
   prev(): IPv4Address {
-    return prev(
-      4,
-      IPv4Address,
-      this,
-    );
+    return prev(4, IPv4Address, this);
   }
 }

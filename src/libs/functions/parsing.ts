@@ -63,7 +63,7 @@ export function parseIPv6Address(
   getArray: boolean = false,
 ): Uint16Array | number[] {
   if (
-    ((address.match(/::/g) ?? []).length > 1) ||
+    (address.match(/::/g) ?? []).length > 1 ||
     (address.includes("::") &&
       address.replaceAll("::", "").split(":").length >= 8) ||
     (!address.includes("::") && address.split(":").length !== 8)
@@ -96,7 +96,9 @@ export function parseIPv6Address(
     } else {
       const parsed = parseInt(part, 16);
       if (
-        !IPv6_ITEM_REGEX.test(part) || isNaN(parsed) || parsed < 0 ||
+        !IPv6_ITEM_REGEX.test(part) ||
+        isNaN(parsed) ||
+        parsed < 0 ||
         parsed > 65535
       ) {
         throw new IncorrectAddressError({
@@ -138,8 +140,10 @@ export function parseIPv4Address(
   for (let i = 0; i < splittedAddress.length; i++) {
     const nItem = Number(splittedAddress[i]);
     if (
-      !IPv4_ITEM_REGEX.test(splittedAddress[i]) || !Number.isInteger(nItem) ||
-      nItem < 0 || nItem > 255
+      !IPv4_ITEM_REGEX.test(splittedAddress[i]) ||
+      !Number.isInteger(nItem) ||
+      nItem < 0 ||
+      nItem > 255
     ) {
       throw new IncorrectAddressError({
         type: "incorrect-item",
@@ -187,9 +191,10 @@ export function parseUrl<Version extends AddressVersions>(
     });
   }
 
-  const address = version === 4
-    ? matched[4]
-    : matched[4].replace(URL_REGEXP_DELETE_HOOKS, "");
+  const address =
+    version === 4
+      ? matched[4]
+      : matched[4].replace(URL_REGEXP_DELETE_HOOKS, "");
   const port = matched[5];
   const pathname = matched[6]?.substring(1);
   const search = matched[7]?.substring(1);

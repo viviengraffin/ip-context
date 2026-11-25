@@ -85,9 +85,7 @@ export abstract class Address<
    * @returns {Address} New Address instance
    * @throws {Error} If not implemented by child class
    */
-  static fromByteArray(
-    _bytes: Uint8Array,
-  ): Address {
+  static fromByteArray(_bytes: Uint8Array): Address {
     throw new NonImplementedStaticMethodError();
   }
 
@@ -117,17 +115,18 @@ export abstract class Address<
     public version: Version,
     items: number[] | AddressArrayForVersion<Version>,
     check?: CheckAddressFunction<Version>,
-    { check: checkValue = true, knownProperties }: AddressOtherProperties<
-      AllAddressKnownProperties
-    > = {},
+    {
+      check: checkValue = true,
+      knownProperties,
+    }: AddressOtherProperties<AllAddressKnownProperties> = {},
   ) {
-    this._array = checkValue ? createAddressArray(version, items, check) : (
-      Array.isArray(items)
-        ? new ADDRESS_VERSIONS[version].arrayConstructor(
-          items,
-        ) as AddressArrayForVersion<Version>
-        : items
-    );
+    this._array = checkValue
+      ? createAddressArray(version, items, check)
+      : Array.isArray(items)
+        ? (new ADDRESS_VERSIONS[version].arrayConstructor(
+            items,
+          ) as AddressArrayForVersion<Version>)
+        : items;
 
     if (knownProperties !== undefined) {
       if (knownProperties._string !== undefined) {
@@ -226,7 +225,9 @@ export abstract class Address<
   toHexString(): string {
     if (this.version === 6) {
       const { totalBits } = ADDRESS_VERSIONS[this.version];
-      return this.toUint().toString(16).padStart(totalBits / 4, "0");
+      return this.toUint()
+        .toString(16)
+        .padStart(totalBits / 4, "0");
     } else {
       const { arrayLength, bitsByItem } = ADDRESS_VERSIONS[this.version];
       const pad = bitsByItem / 4;

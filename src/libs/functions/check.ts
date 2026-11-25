@@ -138,7 +138,7 @@ export function verifyZoneId(zoneId: unknown): boolean {
 }
 
 export function isCorrectPort(port: number): boolean {
-  return Number.isInteger(port) && port >= 0 && port <= 0xFFFF;
+  return Number.isInteger(port) && port >= 0 && port <= 0xffff;
 }
 
 export function getIPv6AddressStringType(

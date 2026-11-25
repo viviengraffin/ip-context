@@ -84,8 +84,8 @@ export type SubmaskTypeForVersion<Version extends AddressVersions> =
 /**
  * Type representing the Submask class for IP version
  */
-export type SubmaskForVersion<Version extends AddressVersions> = Version extends
-  4 ? IPv4Submask : IPv6Submask;
+export type SubmaskForVersion<Version extends AddressVersions> =
+  Version extends 4 ? IPv4Submask : IPv6Submask;
 
 /**
  * Type representing the context class for IP version

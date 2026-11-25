@@ -1,3 +1,5 @@
+import { bench as mitataBench } from "mitata";
+
 export function benchGenerateValue<T>(
   instanceCallback: () => T,
   benchs: { name: string; callback: (value: T) => void }[],
@@ -5,7 +7,7 @@ export function benchGenerateValue<T>(
   for (const bench of benchs) {
     const value = instanceCallback();
 
-    Deno.bench(bench.name, () => {
+    mitataBench(bench.name, () => {
       bench.callback(value);
     });
   }

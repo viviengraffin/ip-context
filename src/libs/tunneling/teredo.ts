@@ -26,7 +26,7 @@ export class Teredo implements TunnelingMode {
         address: ipv6.toString(),
       });
     }
-    return copyIPv6ToIPv4Address(ipv6.array, 6, (word) => word ^ 0xFFFF);
+    return copyIPv6ToIPv4Address(ipv6.array, 6, (word) => word ^ 0xffff);
   }
 
   static toIPv6(ipv4: IPv4Address, params: TeredoDatas): IPv6Address {
@@ -45,12 +45,12 @@ export class Teredo implements TunnelingMode {
     let ipv6 = fillPrefix([0x2001, 0]);
     ipv6 = copyIPv4ToIPv6Address(params.ipv4, ipv6, 2, true);
     ipv6[4] = params.flags;
-    ipv6[5] = params.port ^ 0xFFFF;
+    ipv6[5] = params.port ^ 0xffff;
     return copyIPv4ToIPv6Address(
       ipv4.array,
       ipv6,
       6,
-      (a, b) => copyIPv4ToIPv6AddressOperation(a, b) ^ 0xFFFF,
+      (a, b) => copyIPv4ToIPv6AddressOperation(a, b) ^ 0xffff,
     );
   }
 }

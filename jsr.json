@@ -1,0 +1,15 @@
+{
+  "name": "@viviengraffin/ip-context",
+  "version": "1.2.1",
+  "exports": "./src/main.ts",
+  "publish": {
+    "include": [
+      "src/",
+      "README.md",
+      "LICENSE",
+      "jsr.json",
+      "package.json",
+      "tsconfig.json"
+    ]
+  }
+}

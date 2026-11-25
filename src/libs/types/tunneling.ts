@@ -35,13 +35,15 @@ export type TunnelingModesObject = {
 /**
  * Type representing the URL Errors
  */
-export type URLErrorDatas = {
-  type: "invalid-port";
-  port: number;
-} | {
-  type: "invalid-format";
-  url: string;
-};
+export type URLErrorDatas =
+  | {
+      type: "invalid-port";
+      port: number;
+    }
+  | {
+      type: "invalid-format";
+      url: string;
+    };
 
 /**
  * Type representing all Tunneling method classes

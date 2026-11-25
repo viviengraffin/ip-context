@@ -64,17 +64,15 @@ export class IPURL<IPAddress extends IPv4Address | IPv6Address> {
    * @returns {string} string URL
    */
   toString(): string {
-    return (this.protocol ? this.protocol + "://" : "") + (
-      this.address instanceof IPv4Address
-        ? (
-          this.address.toString()
-        )
-        : (
-          "[" + this.address.toString() + "]"
-        )
-    ) + (this.port ? ":" + this.port : "") +
+    return (
+      (this.protocol ? this.protocol + "://" : "") +
+      (this.address instanceof IPv4Address
+        ? this.address.toString()
+        : "[" + this.address.toString() + "]") +
+      (this.port ? ":" + this.port : "") +
       (this.pathname ? "/" + this.pathname : "") +
       (this.search ? "?" + this.search : "") +
-      (this.hash ? "#" + this.hash : "");
+      (this.hash ? "#" + this.hash : "")
+    );
   }
 }

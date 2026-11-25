@@ -13,8 +13,9 @@ import {
  */
 export class Mapped implements TunnelingMode {
   static isValid(ipv6: IPv6Address): boolean {
-    return ipv6.array.slice(0, 5).every((v) => v === 0) &&
-      ipv6.array[5] === 0xffff;
+    return (
+      ipv6.array.slice(0, 5).every((v) => v === 0) && ipv6.array[5] === 0xffff
+    );
   }
 
   static toIPv4(ipv6: IPv6Address): IPv4Address {

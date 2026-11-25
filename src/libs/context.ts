@@ -169,8 +169,10 @@ export abstract class Context<Version extends AddressVersions> {
       address,
     ) as IPAddressTypeForVersion<Version>;
 
-    return address.toUint() >= this.firstHost.toUint() &&
-      address.toUint() <= this.lastHost.toUint();
+    return (
+      address.toUint() >= this.firstHost.toUint() &&
+      address.toUint() <= this.lastHost.toUint()
+    );
   }
 
   /**
@@ -344,13 +346,7 @@ export class IPv4Context extends Context<4> {
    */
   nextWithHosts(hosts: number): IPv4Context {
     const { submask } = generateSubmaskFromHosts(4, hosts);
-    return next(
-      4,
-      IPv4Context,
-      this,
-      this.broadcast,
-      new IPv4Submask(submask),
-    );
+    return next(4, IPv4Context, this, this.broadcast, new IPv4Submask(submask));
   }
 
   /**
@@ -428,13 +424,7 @@ export class IPv4Context extends Context<4> {
   prevWithHosts(hosts: number): IPv4Context {
     const { submask } = generateSubmaskFromHosts(4, hosts);
 
-    return prev(
-      4,
-      IPv4Context,
-      this,
-      this.network,
-      new IPv4Submask(submask),
-    );
+    return prev(4, IPv4Context, this, this.network, new IPv4Submask(submask));
   }
 }
 
@@ -511,13 +501,7 @@ export class IPv6Context extends Context<6> {
    */
   nextWithHosts(hosts: bigint): IPv6Context {
     const { submask } = generateSubmaskFromHosts(6, hosts);
-    return next(
-      6,
-      IPv6Context,
-      this,
-      this.lastHost,
-      new IPv6Submask(submask),
-    );
+    return next(6, IPv6Context, this, this.lastHost, new IPv6Submask(submask));
   }
 
   /**
@@ -526,11 +510,7 @@ export class IPv6Context extends Context<6> {
    * @returns this
    */
   nextAddress(): this {
-    this.address = nextAddressInContext(
-      6,
-      this.address,
-      this.lastHost,
-    );
+    this.address = nextAddressInContext(6, this.address, this.lastHost);
 
     return this;
   }
@@ -586,13 +566,7 @@ export class IPv6Context extends Context<6> {
    */
   prevWithHosts(hosts: bigint): IPv6Context {
     const { submask } = generateSubmaskFromHosts(6, hosts);
-    return prev(
-      6,
-      IPv6Context,
-      this,
-      this.network,
-      new IPv6Submask(submask),
-    );
+    return prev(6, IPv6Context, this, this.network, new IPv6Submask(submask));
   }
 }
 

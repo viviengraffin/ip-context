@@ -18,10 +18,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Deno
-        uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
 
-      - name: Publish package
-        run: deno publish
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
+
+      - name: Install dependancies
+        run: bun install
+
+      - name: Publish to JSR
+        run: bunx jsr publish
+
+      - name: Stage on npm
+        run: npm stage publish

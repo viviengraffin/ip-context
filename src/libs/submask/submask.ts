@@ -93,11 +93,7 @@ export abstract class Submask<
    */
   @memoize("_hosts")
   get hosts(): NumberTypeForVersion<Version> {
-    return getHostsFromSizeAndCidr(
-      this.version,
-      this.size,
-      this.cidr,
-    );
+    return getHostsFromSizeAndCidr(this.version, this.size, this.cidr);
   }
 
   override toString(): string {

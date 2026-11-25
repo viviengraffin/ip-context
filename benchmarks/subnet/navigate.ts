@@ -6,8 +6,7 @@ import {
   IPv6Context,
   IPv6Submask,
 } from "@viviengraffin/ip-context";
-
-const { bench } = Deno;
+import { bench, run } from "mitata";
 
 bench("IPv4 next with same CIDR /24", () => {
   const ctx = new IPv4Context(
@@ -37,10 +36,7 @@ bench("IPv4 next for 512 hosts", () => {
 });
 
 bench("IPv4 /24 -> 512 hosts -> /8", () => {
-  new IPv4Context(
-    new IPv4Address([192, 168, 0, 1]),
-    IPv4Submask.fromCidr(24),
-  )
+  new IPv4Context(new IPv4Address([192, 168, 0, 1]), IPv4Submask.fromCidr(24))
     .nextWithHosts(512)
     .next(8);
 });
@@ -80,3 +76,5 @@ bench("IPv6 /64 -> 1024 hosts -> /16", () => {
     .nextWithHosts(1024n)
     .next(16);
 });
+
+await run();

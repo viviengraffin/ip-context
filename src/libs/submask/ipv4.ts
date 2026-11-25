@@ -47,8 +47,12 @@ export class IPv4Submask extends Submask<4> {
    * @returns {IPv4Submask} New IPv4Submask instance
    */
   static override fromHosts(hosts: number): IPv4Submask {
-    const { submask, size, hosts: availableHosts, cidr } =
-      generateSubmaskFromHosts(4, hosts);
+    const {
+      submask,
+      size,
+      hosts: availableHosts,
+      cidr,
+    } = generateSubmaskFromHosts(4, hosts);
     return new IPv4Submask(submask, {
       check: false,
       knownProperties: {

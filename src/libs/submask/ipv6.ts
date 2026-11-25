@@ -47,8 +47,12 @@ export class IPv6Submask extends Submask<6> {
    * @returns {IPv6Submask} New IPv6Submask instance
    */
   static override fromHosts(hosts: bigint): IPv6Submask {
-    const { submask, size, hosts: availableHosts, cidr } =
-      generateSubmaskFromHosts(6, hosts);
+    const {
+      submask,
+      size,
+      hosts: availableHosts,
+      cidr,
+    } = generateSubmaskFromHosts(6, hosts);
     return new IPv6Submask(submask, {
       check: false,
       knownProperties: {

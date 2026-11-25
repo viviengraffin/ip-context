@@ -40,35 +40,10 @@ export const ADDRESS_VERSIONS = {
  * @constant {Record<AddressVersions, AddressArrays>}
  */
 export const SUBMASK_POSSIBLE_BLOCKS = {
-  4: new Uint8Array([
-    0,
-    128,
-    192,
-    224,
-    240,
-    248,
-    252,
-    254,
-    255,
-  ]),
+  4: new Uint8Array([0, 128, 192, 224, 240, 248, 252, 254, 255]),
   6: new Uint16Array([
-    0,
-    0x8000,
-    0xC000,
-    0xE000,
-    0xF000,
-    0xF800,
-    0xFC00,
-    0xFE00,
-    0xFF00,
-    0xFF80,
-    0xFFC0,
-    0xFFE0,
-    0xFFF0,
-    0xFFF8,
-    0xFFFC,
-    0xFFFE,
-    0xFFFF,
+    0, 0x8000, 0xc000, 0xe000, 0xf000, 0xf800, 0xfc00, 0xfe00, 0xff00, 0xff80,
+    0xffc0, 0xffe0, 0xfff0, 0xfff8, 0xfffc, 0xfffe, 0xffff,
   ]),
 } as const as Record<AddressVersions, AddressArrays>;
 
@@ -94,9 +69,9 @@ export const FORBIDDEN_CHARS = {
 } as const satisfies Record<AddressVersions, RegExp>;
 
 export const IPv4_CLASS_TO_SUBMASK = {
-  "A": CIDR_TO_MASK[4][8],
-  "B": CIDR_TO_MASK[4][16],
-  "C": CIDR_TO_MASK[4][24],
+  A: CIDR_TO_MASK[4][8],
+  B: CIDR_TO_MASK[4][16],
+  C: CIDR_TO_MASK[4][24],
 } as const satisfies Record<Exclude<IPv4AddressClasses, "D" | "E">, Uint8Array>;
 
 const URL_REGEXP_QUERY_HASH_COMMON = "[a-z0-9-._~%!$&'()*+,;=:@\\?/]+";

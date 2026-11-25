@@ -15,12 +15,7 @@ export function copyIPv6ToIPv4Address(
 ): IPv4Address {
   const one = operation(ipv6[index]);
   const two = operation(ipv6[index + 1]);
-  return new IPv4Address([
-    one >> 8,
-    one & 0xff,
-    two >> 8,
-    two & 0xff,
-  ]);
+  return new IPv4Address([one >> 8, one & 0xff, two >> 8, two & 0xff]);
 }
 
 export type CopyIPv4ToIPv6AddressOperationCallback = (
@@ -92,8 +87,9 @@ export function copyIPv4ToIPv6Address(
   ipv4: Uint8Array,
   ipv6: Uint16Array,
   index: number,
-  operation: CopyIPv4ToIPv6AddressOperationCallback | boolean =
-    copyIPv4ToIPv6AddressOperation,
+  operation:
+    | CopyIPv4ToIPv6AddressOperationCallback
+    | boolean = copyIPv4ToIPv6AddressOperation,
   getUint16Array: boolean = false,
 ): IPv6Address | Uint16Array {
   if (typeof operation === "boolean") {

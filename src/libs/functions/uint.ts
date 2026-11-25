@@ -16,8 +16,11 @@ export function arrayToUint<T extends AddressVersions>(
   array: AddressArrayForVersion<T>,
 ): NumberTypeForVersion<T> {
   if (version === 4) {
-    return (((array[0] << 24) | (array[1] << 16) | (array[2] << 8) |
-      array[3]) >>> 0) as NumberTypeForVersion<T>;
+    return (((array[0] << 24) |
+      (array[1] << 16) |
+      (array[2] << 8) |
+      array[3]) >>>
+      0) as NumberTypeForVersion<T>;
   } else {
     let result = 0n;
     for (let i = 0; i < 8; i++) {
@@ -65,10 +68,10 @@ export function UintToArray<T extends AddressVersions>(
     }
 
     return new Uint8Array([
-      (uint >>> 24) & 0xFF,
-      (uint >>> 16) & 0xFF,
-      (uint >>> 8) & 0xFF,
-      uint & 0xFF,
+      (uint >>> 24) & 0xff,
+      (uint >>> 16) & 0xff,
+      (uint >>> 8) & 0xff,
+      uint & 0xff,
     ]) as AddressArrayForVersion<T>;
   } else {
     const result = new Uint16Array(8);
@@ -83,7 +86,7 @@ export function UintToArray<T extends AddressVersions>(
     }
 
     for (let i = 7; i >= 0; i--) {
-      result[i] = Number(bigInt & 0xFFFFn);
+      result[i] = Number(bigInt & 0xffffn);
       bigInt >>= 16n;
     }
     return result as AddressArrayForVersion<T>;

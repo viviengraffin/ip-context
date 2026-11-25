@@ -27,17 +27,15 @@ export function createAddressArray<T extends AddressVersions>(
   if (address !== undefined) {
     const rCheck = check(version, address);
     if (!rCheck.valid) {
-      throw rCheck.reason;
+      throw (rCheck as { valid: false; reason: Error }).reason;
     }
   }
 
-  return (address === undefined
-    ? new arrayConstructor(arrayLength) as AddressArrayForVersion<T>
-    : (
-      address instanceof arrayConstructor
+  return address === undefined
+    ? (new arrayConstructor(arrayLength) as AddressArrayForVersion<T>)
+    : ((address instanceof arrayConstructor
         ? address
-        : new arrayConstructor(address)
-    ) as AddressArrayForVersion<T>);
+        : new arrayConstructor(address)) as AddressArrayForVersion<T>);
 }
 
 export function createAddress(

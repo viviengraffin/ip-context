@@ -82,13 +82,13 @@ test("IPv4Address fail waited (port 65536)", () => {
 });
 
 test("IPv4Address fail waited (address: 256.192.0.1)", () => {
-  expect(
-    () => IPv4Address.fromURL("http://256.192.0.1"),
-  ).toThrow(IncorrectAddressError);
+  expect(() => IPv4Address.fromURL("http://256.192.0.1")).toThrow(
+    IncorrectAddressError,
+  );
 });
 
 test("IPv4Address fail waited (incorrect format)", () => {
-  expect(
-    () => IPv4Address.fromURL("http://192.168.1.1://8080"),
-  ).toThrow(URLError);
+  expect(() => IPv4Address.fromURL("http://192.168.1.1://8080")).toThrow(
+    URLError,
+  );
 });

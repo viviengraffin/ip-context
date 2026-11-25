@@ -1,9 +1,10 @@
 import { IPv4Address, IPv6Address } from "@viviengraffin/ip-context";
 import { ADDRESS_VERSIONS } from "../src/libs/const.ts";
 import { arrayToUint } from "../src/libs/functions/uint.ts";
+import { bench, run } from "mitata";
 
 function benchMethods(name: string, address: IPv4Address | IPv6Address) {
-  Deno.bench(name + ".toBinaryString: array implementation", () => {
+  bench(name + ".toBinaryString: array implementation", () => {
     const { arrayLength, bitsByItem } = ADDRESS_VERSIONS[address.version];
 
     let res = "";
@@ -13,18 +14,18 @@ function benchMethods(name: string, address: IPv4Address | IPv6Address) {
     }
   });
 
-  Deno.bench(name + ".toBinaryString: uint impelementation", () => {
+  bench(name + ".toBinaryString: uint impelementation", () => {
     const { totalBits } = ADDRESS_VERSIONS[address.version];
 
     const uint = arrayToUint(address.version, address.array);
     uint.toString(2).padStart(totalBits, "0");
   });
 
-  Deno.bench(name + ".toBinaryString: actual implementation", () => {
+  bench(name + ".toBinaryString: actual implementation", () => {
     address.toBinaryString();
   });
 
-  Deno.bench(name + ".toHexString: array implementation", () => {
+  bench(name + ".toHexString: array implementation", () => {
     const { arrayLength, bitsByItem } = ADDRESS_VERSIONS[address.version];
     const pad = bitsByItem / 4;
     let res = "";
@@ -34,18 +35,19 @@ function benchMethods(name: string, address: IPv4Address | IPv6Address) {
     }
   });
 
-  Deno.bench(name + ".toHexString: uint implementation", () => {
+  bench(name + ".toHexString: uint implementation", () => {
     const { totalBits } = ADDRESS_VERSIONS[address.version];
-    arrayToUint(address.version, address.array).toString(16).padStart(
-      totalBits / 4,
-      "0",
-    );
+    arrayToUint(address.version, address.array)
+      .toString(16)
+      .padStart(totalBits / 4, "0");
   });
 
-  Deno.bench(name + ".toHexString: actual implementataion", () => {
+  bench(name + ".toHexString: actual implementataion", () => {
     address.toHexString();
   });
 }
 
 benchMethods("IPv4", IPv4Address.fromString("192.168.1.1"));
 benchMethods("IPv6", IPv6Address.fromString("2001:db6::1"));
+
+await run();

@@ -15,11 +15,11 @@ testSubmask<4>(
 testSubmask<6>(
   "cidr 64 and ffff:ffff:ffff:ffff::",
   IPv6Submask.fromCidr(64),
-  new Uint16Array([0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0, 0, 0, 0]),
+  new Uint16Array([0xffff, 0xffff, 0xffff, 0xffff, 0, 0, 0, 0]),
 );
 testSubmask<6>(
   "cidr 72 and ffff:ffff:ffff::",
   IPv6Submask.fromCidr(72),
-  new Uint16Array([0xFFFF, 0xFFFF, 0xFFFF, 0, 0, 0, 0, 0]),
+  new Uint16Array([0xffff, 0xffff, 0xffff, 0, 0, 0, 0, 0]),
   false,
 );

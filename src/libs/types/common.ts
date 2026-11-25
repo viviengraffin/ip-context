@@ -35,9 +35,11 @@ export type ParseUrlResult = {
  * Represents the result of a validation operation.
  * @template T - The type of the error reason if validation fails
  */
-export type Valid<T> = {
-  valid: true;
-} | {
-  valid: false;
-  reason: T;
-};
+export type Valid<T> =
+  | {
+      valid: true;
+    }
+  | {
+      valid: false;
+      reason: T;
+    };

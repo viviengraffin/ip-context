@@ -31,12 +31,7 @@ export function and(
   a: AddressArrays,
   b: AddressArrays,
 ): AddressArrays {
-  return operation(
-    version,
-    a,
-    b,
-    (itemA, itemB) => itemA & itemB,
-  );
+  return operation(version, a, b, (itemA, itemB) => itemA & itemB);
 }
 
 export function or(
@@ -44,18 +39,10 @@ export function or(
   a: AddressArrays,
   b: AddressArrays,
 ): AddressArrays {
-  return operation(
-    version,
-    a,
-    b,
-    (itemA, itemB) => itemA | itemB,
-  );
+  return operation(version, a, b, (itemA, itemB) => itemA | itemB);
 }
 
-export function not(
-  version: AddressVersions,
-  a: AddressArrays,
-): AddressArrays {
+export function not(version: AddressVersions, a: AddressArrays): AddressArrays {
   const { arrayConstructor, arrayLength } = ADDRESS_VERSIONS[version];
   const res = new arrayConstructor(arrayLength);
 
