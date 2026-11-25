@@ -12,7 +12,7 @@ import { isIPv6 } from "./checkVersion.ts";
 import { notUint } from "./operation.ts";
 import { parseIPv4Address, parseIPv6Address } from "./parsing.ts";
 import { toUint } from "./uint.ts";
-import { IPv4Submask, IPv6Submask } from "../submask/index.ts"
+import { IPv4Submask, IPv6Submask } from "../submask/index.ts";
 
 export function next<Version extends AddressVersions>(
   version: Version,
@@ -84,26 +84,30 @@ export function prevAddressInContext<Version extends AddressVersions>(
   return prevAddress as IPAddressTypeForVersion<Version>;
 }
 
-export function buildFromWildcard<Version extends AddressVersions>(version: Version, wildcard: string): SubmaskTypeForVersion<Version> {
+export function buildFromWildcard<Version extends AddressVersions>(
+  version: Version,
+  wildcard: string,
+): SubmaskTypeForVersion<Version> {
   const { arrayLength, arrayConstructor } = ADDRESS_VERSIONS[version];
   let submaskConstructor: typeof IPv4Submask | typeof IPv6Submask;
   let parser: typeof parseIPv4Address | typeof parseIPv6Address;
 
-  if(version===4) {
-    submaskConstructor=IPv4Submask;
-    parser=parseIPv4Address;
-  }
-  else {
-    submaskConstructor=IPv6Submask;
-    parser=parseIPv6Address;
+  if (version === 4) {
+    submaskConstructor = IPv4Submask;
+    parser = parseIPv4Address;
+  } else {
+    submaskConstructor = IPv6Submask;
+    parser = parseIPv6Address;
   }
 
-  const wildcardArray=parser(wildcard);
+  const wildcardArray = parser(wildcard);
   const submaskArray = new arrayConstructor(arrayLength);
 
-  for(let i=0; i<arrayLength; i++) {
-    submaskArray[i]=notUint(wildcardArray[i]);
+  for (let i = 0; i < arrayLength; i++) {
+    submaskArray[i] = notUint(wildcardArray[i]);
   }
 
-  return new submaskConstructor(submaskArray as any) as SubmaskTypeForVersion<Version>;
+  return new submaskConstructor(
+    submaskArray as any,
+  ) as SubmaskTypeForVersion<Version>;
 }

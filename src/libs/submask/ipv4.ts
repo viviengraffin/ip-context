@@ -121,7 +121,7 @@ export class IPv4Submask extends Submask<4> {
   }
 
   static fromWildcard(wildcard: string): IPv4Submask {
-    return buildFromWildcard(4,wildcard);
+    return buildFromWildcard(4, wildcard);
   }
 
   /**

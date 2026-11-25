@@ -1,10 +1,5 @@
 import { IPv4Submask, IPv6Submask } from "./submask/index.ts";
-import {
-  and,
-  andUint,
-  notUint,
-  orUint,
-} from "./functions/operation.ts";
+import { and, andUint, notUint, orUint } from "./functions/operation.ts";
 import {
   createAddress,
   createAddressFromUint,
