@@ -7,6 +7,12 @@
     "type": "git",
     "url": "git+https://github.com/viviengraffin/ip-context"
   },
+  "keywords": [
+    "ip",
+    "ipv4",
+    "ipv6",
+    "subnet"
+  ],
   "devDependencies": {
     "@std/path": "npm:@jsr/std__path@^1.1.6",
     "@types/bun": "latest",
@@ -32,7 +38,9 @@
   },
   "files": [
     "package.json",
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "main": "./dist/main.cjs",
   "types": "./dist/main.d.cts",
