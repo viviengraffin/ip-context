@@ -1,4 +1,3 @@
-//import { ADDRESS_VERSIONS } from "../const.ts";
 import { ADDRESS_VERSIONS } from "../const.ts";
 import { ContextError } from "../error.ts";
 import { IPv4Address, IPv6Address } from "../ipaddress/index.ts";
@@ -19,8 +18,6 @@ export function next<Version extends AddressVersions>(
   ipConstructor: Version extends 4 ? typeof IPv4Address : typeof IPv6Address,
   current: IPAddressTypeForVersion<Version>,
 ): IPAddressTypeForVersion<Version> {
-  //    const { uintLimit } = ADDRESS_VERSIONS[version];
-
   const uintNext: NumberTypeForVersion<Version> =
     // @ts-expect-error
     current.toUint() + toUint(version, 1);
@@ -86,25 +83,15 @@ export function prevAddressInContext<Version extends AddressVersions>(
 
 export function buildFromWildcard<Version extends AddressVersions>(
   version: Version,
-  wildcard: string,
+  submaskConstructor: Version extends 4 ? typeof IPv4Submask : typeof IPv6Submask,
+  wildcard: Version extends 4 ? Uint8Array : Uint16Array,
 ): SubmaskTypeForVersion<Version> {
   const { arrayLength, arrayConstructor } = ADDRESS_VERSIONS[version];
-  let submaskConstructor: typeof IPv4Submask | typeof IPv6Submask;
-  let parser: typeof parseIPv4Address | typeof parseIPv6Address;
 
-  if (version === 4) {
-    submaskConstructor = IPv4Submask;
-    parser = parseIPv4Address;
-  } else {
-    submaskConstructor = IPv6Submask;
-    parser = parseIPv6Address;
-  }
-
-  const wildcardArray = parser(wildcard);
   const submaskArray = new arrayConstructor(arrayLength);
 
   for (let i = 0; i < arrayLength; i++) {
-    submaskArray[i] = notUint(wildcardArray[i]);
+    submaskArray[i] = notUint(wildcard[i]);
   }
 
   return new submaskConstructor(
