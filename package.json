@@ -1,6 +1,6 @@
 {
   "name": "@viviengraffin/ip-context",
-  "version": "1.2.2-2",
+  "version": "1.2.2",
   "license": "MIT",
   "description": "TypeScript library to have datas for network context or an IPv4/IPv6 address",
   "author": "viviengraffin",
