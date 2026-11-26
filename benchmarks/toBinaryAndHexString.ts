@@ -1,4 +1,4 @@
-import { IPv4Address, IPv6Address } from "@viviengraffin/ip-context";
+import { IPv4Address, IPv6Address } from "../src/main.ts";
 import { ADDRESS_VERSIONS } from "../src/libs/const.ts";
 import { arrayToUint } from "../src/libs/functions/uint.ts";
 import { bench, run } from "mitata";

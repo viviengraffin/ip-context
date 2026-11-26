@@ -115,11 +115,7 @@ export class IPv6Submask extends Submask<6> {
   }
 
   static fromWildcard(wildcard: string): IPv6Submask {
-    return buildFromWildcard(
-      6,
-      IPv6Submask,
-      parseIPv6Address(wildcard)
-    );
+    return buildFromWildcard(6, IPv6Submask, parseIPv6Address(wildcard));
   }
 
   /**

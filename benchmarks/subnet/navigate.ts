@@ -5,7 +5,7 @@ import {
   IPv6Address,
   IPv6Context,
   IPv6Submask,
-} from "@viviengraffin/ip-context";
+} from "../../src/main.ts";
 import { bench, run } from "mitata";
 
 bench("IPv4 next with same CIDR /24", () => {

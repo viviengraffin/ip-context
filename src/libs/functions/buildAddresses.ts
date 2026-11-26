@@ -83,7 +83,9 @@ export function prevAddressInContext<Version extends AddressVersions>(
 
 export function buildFromWildcard<Version extends AddressVersions>(
   version: Version,
-  submaskConstructor: Version extends 4 ? typeof IPv4Submask : typeof IPv6Submask,
+  submaskConstructor: Version extends 4
+    ? typeof IPv4Submask
+    : typeof IPv6Submask,
   wildcard: Version extends 4 ? Uint8Array : Uint16Array,
 ): SubmaskTypeForVersion<Version> {
   const { arrayLength, arrayConstructor } = ADDRESS_VERSIONS[version];
