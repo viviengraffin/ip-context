@@ -1,5 +1,5 @@
 import { testSubmask } from "../libs.ts";
-import { IPv4Submask, IPv6Submask } from "../../src/libs/submask/index.ts";
+import { IPv4Submask, IPv6Submask } from "../../src/main.ts";
 
 testSubmask<4>(
   "IPv4Submask.fromHosts(254) and cidr 24",

@@ -6,7 +6,7 @@
     "module": "Preserve",
     "moduleDetection": "force",
     "allowJs": true,
-    "types": ["@types/node", "bun"],
+    "types": ["bun"],
 
     // Bundler mode
     "moduleResolution": "bundler",

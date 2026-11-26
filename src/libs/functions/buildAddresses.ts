@@ -9,7 +9,6 @@ import type {
 } from "../types/address.ts";
 import { isIPv6 } from "./checkVersion.ts";
 import { notUint } from "./operation.ts";
-import { parseIPv4Address, parseIPv6Address } from "./parsing.ts";
 import { toUint } from "./uint.ts";
 import { IPv4Submask, IPv6Submask } from "../submask/index.ts";
 
